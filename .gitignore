@@ -114,11 +114,9 @@ fabric.properties
 .idea/misc.xml
 .idea/modules.xml
 .idea/vcs.xml
-Makefile
-api/
-app.js
-front/
-package.json
-server/
-/.gitignore
-!/.gitignore
+
+
+!/api/README.md
+!/front/README.md
+!/server/README.md
+!/README.md
