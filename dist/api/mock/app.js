@@ -22,7 +22,7 @@ app.use(_swaggerExpress2.default.init(app, {
     swaggerVersion: '1.0',
     swaggerURL: '/swagger',
     swaggerJSON: '/api-docs.json',
-    swaggerUI: './api/mock/public/swagger/',
+    swaggerUI: './public/swagger/',
     basePath: 'http://localhost:3500',
     info: {
         title: 'swagger-express happy home',
@@ -31,7 +31,7 @@ app.use(_swaggerExpress2.default.init(app, {
     apis: ['./api.yml']
 }));
 
-app.get('/login', _mock2.default.login);
+app.get('/sample', _mock2.default.sample);
 
 app.listen(port, function () {
     console.log('mock api listening on port ' + port + '!');

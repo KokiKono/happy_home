@@ -1,8 +1,8 @@
-resourcePath: /user
+resourcePath: /sample
 description: All about API
 apis:
 
-- path: /login
+- path: /sample
   operations:
 
   - httpMethod: GET
