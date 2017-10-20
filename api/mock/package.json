@@ -1,11 +1,10 @@
 {
-  "name": "happy_home",
+  "name": "mock",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js --exec babel-node",
-    "lint": "eslint *.js"
+    "start": "nodemon app.js --exec babel-node"
   },
   "author": "k.kono",
   "license": "MIT",
