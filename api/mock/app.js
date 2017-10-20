@@ -10,11 +10,11 @@ app.use(swagger.init(app, {
     swaggerVersion: '1.0',
     swaggerURL: '/swagger',
     swaggerJSON: '/api-docs.json',
-    swaggerUI: './public/swagger/',
-    basePath: 'http://localhost:3500',
+    swaggerUI: './public/swagger',
+    basePath: 'http://localhost:3500/api',
     info: {
         title: 'swagger-express happy home',
-        description: 'Swagger + Express = {swagger-express}'
+        description: 'Swagger + Express = {swagger-express}',
     },
     apis: ['./api.yml'],
 }));
