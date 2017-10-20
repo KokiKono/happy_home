@@ -1,26 +1,26 @@
 # happy_home
 
-#set up
+# set up
 <pre>
 make install
 </pre>
 
-#run
+# run
 <pre>
 npm start
 </pre>
 
-#swagger & mock api
+# swagger & mock api
 <pre>
 make swagger
 </pre>
 
-#branch
+# branch
 <pre>
 your_name/any
 </pre>
 
-#commit
+# commit
 - eslint（コードスタイル）
     コミットする前にeslintに通してください。
     eslintはairbnbガイドラインに沿っておりes6記法でjsを書いてください。
