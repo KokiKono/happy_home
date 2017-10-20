@@ -10,9 +10,19 @@ make install
 npm start
 </pre>
 
+# no secure server run
+comming soon!
+
 # swagger & mock api
+- run swagger and mock api
 <pre>
 make swagger
+</pre>
+- run secure api run  
+comming soon!
+- open swagger
+<pre>
+make open-swagger
 </pre>
 
 # branch
