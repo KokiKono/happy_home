@@ -1,36 +1,128 @@
-resourcePath: /sample
+resourcePath: /new/notice_list
 description: All about API
 apis:
-
-- path: /sample
+- path: /new/notice_list
   operations:
-
   - httpMethod: GET
-    summary: Login with username and password
-    notes: Returns a user based on username
-    responseClass: User
-    nickname: login
-    consumes:
-      - text/html
+    summary: 通知リストを取得。
+    responseClass: Notice
+    nickname: new_notice_list
     parameters:
-
-    - name: username
-      dataType: string
-      paramType: query
-      required: true
-      description: Your username
-
-    - name: password
-      dataType: string
-      paramType: query
-      required: true
-      description: Your password
+      - name: family_structure_id
+        dataType: integer
+        paramType: query
+        required: true
+        description: 家族構成ID
+- path: /new/notice_list/{id}
+  operations:
+  - httpMethod: GET
+    summary: 通知詳細を取得
+    responseClass: NoticeDetail
+    nickname: new_notice_detail
+    parameters:
+      - in: path
+        name: id
+        dataType: integer
+        required: true
+        description: 通知ID
+resourcePath: /suggestion
+apis:
+- path: /suggestion/{id}
+  operations:
+  - httpMethod: GET
+    summary: 提案詳細を取得
+    responceClass: SuggestionDetail
+    nickname: suggestion_detail
+    parameters:
+      - in: path
+        name: id
+        dataType: integer
+        required: true
+        description: 提案ID
 
 models:
-    User:
-      id: User
+    FamilyStructure:
+      id: FamilyStructure
       properties:
-        username:
-          type: String
-        password:
-          type: String
+        id:
+          type: integer
+          descroption: 家族構成ID
+        family_id:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+          descroption: 家族タイプ、父とか
+    Notice:
+      id: Notice
+      properties:
+        id:
+          type: integer
+        family_structure_id:
+          type: integer
+          description: 家族構成ID
+        title:
+          type: string
+          description: 通知タイトル
+        suggestion_id:
+          type: integer
+          description: 提案受け入れID nullの場合は、提案受け入れまだ。
+    NoticeDetail:
+      id: NoticeDetail
+      properties:
+        id:
+          type: integer
+        family_structure_id:
+          type: integer
+          description: 家族構成ID
+        title:
+          type: string
+          description: 通知タイトル
+        notice_contents:
+          type: string
+          descriptions: 通知内容
+        suggestion_id:
+          type: integer
+          description: 提案受け入れID
+        suggestion_list:
+          type: array
+          items:
+            type: Suggestion
+    Suggestion:
+      id: Suggestion
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+    SuggestionDetail:
+      id: SuggestionDetail
+      properties:
+        id:
+          type: integer
+          description: 提案詳細ID
+        title:
+          type: string
+        point:
+          type: integer
+        family_structure:
+          type: FamilyStructure
+        task_list:
+          type: SuggestionTask
+    SuggestionTask:
+      id: SuggestionTask
+      properties:
+        id:
+          type: integer
+          description: タスクID
+        contents:
+          typse: string
+          description: タスク内容
+        is_done:
+          type: bool
+          description: タスク完了(true)、未完了(false)
+
+
+
+

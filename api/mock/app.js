@@ -19,7 +19,11 @@ app.use(swagger.init(app, {
     apis: ['./api.yml'],
 }));
 
-app.get('/sample', api.sample);
+app.get('/api/new/notice_list', api.newNoticeList);
+
+app.get('/api/new/notice_list/{id}', api.newNoticeDetail);
+
+app.get('/api/suggestion/{id}', api.suggestionDetail);
 
 app.listen(port, () => {
     console.log(`mock api listening on port ${port}!`);
