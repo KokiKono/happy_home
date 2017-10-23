@@ -2,6 +2,8 @@ setup:
 	git pull
 install:
 	npm i && cd swagger && npm i
+run:
+	npm start
 run-swagger:
 	cd swagger && npm start
 open-swagger:
