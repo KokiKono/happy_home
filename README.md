@@ -5,7 +5,7 @@
 make install
 </pre>
 
-# run
+# server run
 <pre>
 npm start
 </pre>
