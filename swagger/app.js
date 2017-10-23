@@ -15,10 +15,10 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   swaggerExpress.register(app);
   require('./swagger-ui-router.js')(app);
 
-  var port = process.env.npm_package_config_port || 10010;
+  var port = process.env.npm_package_config_port || 3500;
   app.listen(port);
 
   if (swaggerExpress.runner.swagger.paths['/hello']) {
-    console.log('try this:\ncurl http://127.0.0.1:' + port + '/hello?name=Scott');
+    console.log(`happy home api listening on ${port}`);
   }
 });
