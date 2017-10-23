@@ -10,6 +10,11 @@ make install
 npm start
 </pre>
 
+# server debug
+<pre>
+make run-debug
+</pre>
+
 # no secure server run
 comming soon!
 
