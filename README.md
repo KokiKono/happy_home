@@ -30,7 +30,7 @@ make open-swagger
 your_name/any
 </pre>
 
-# commit
+# commit 必ず読んでね。
 - eslint（コードスタイル）
     コミットする前にeslintに通してください。
     eslintはairbnbガイドラインに沿っておりes6記法でjsを書いてください。
