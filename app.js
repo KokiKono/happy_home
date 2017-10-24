@@ -4,7 +4,6 @@ import apiRouter from './routers/api';
 
 const app = express();
 const config = configFile[process.env.NODE_ENV];
-const port = config.server.port;
 
 app.use(express.static('front'));
 
@@ -14,7 +13,6 @@ app.get('/', (req, res) => {
 
 app.use('/api', apiRouter);
 
-
-app.listen(port, () => {
-    console.log(`happy home app listening on ${port}`);
+app.listen(config.server.port, () => {
+    console.log(`happy home app listening on ${config.server.port}`);
 });
