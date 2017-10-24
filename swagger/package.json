@@ -14,11 +14,12 @@
   },
   "devDependencies": {
     "should": "^7.1.0",
-    "supertest": "^1.0.0"
+    "supertest": "^1.0.0",
+    "nodemon": "^1.12.1"
   },
   "scripts": {
-    "start": "node app.js -- --port=3500",
-    "test": "swagger project test"
+    "start": "nodemon -e yaml,js --watch app.js --watch ./*/*/*.yaml",
+    "test": " swaggerproject test"
   },
   "config": {
     "port": "3500"

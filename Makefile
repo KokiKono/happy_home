@@ -10,5 +10,7 @@ run-swagger:
 	cd swagger && npm start
 open-swagger:
 	open http://localhost:3500/docs/
+edit-swagger:
+	swagger project edit swagger
 lint:
 	eslint *.js

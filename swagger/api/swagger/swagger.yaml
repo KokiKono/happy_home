@@ -16,36 +16,21 @@ consumes:
 # format of the responses to the client (Accepts)
 produces:
   - application/json
+tags:
+- name: "notice_list/new"
+  description: "最新通知リスト関連"
+- name: "notice_list/old"
+  description: "過去通知リスト関連"
+- name: "suggestion"
+  description: "提案関連"
 paths:
-  /hello:
-    # binds a127 app logic to a route
-    x-swagger-router-controller: hello_world
-    get:
-      description: Returns 'Hello' to the caller
-      # used as the method name of the controller
-      operationId: hello
-      parameters:
-        - name: name
-          in: query
-          description: The name of the person to whom to say hello
-          required: false
-          type: string
-      responses:
-        "200":
-          description: Success
-          schema:
-            # a pointer to a definition
-            $ref: "#/definitions/HelloWorldResponse"
-        # responses may fall through to errors
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-  /new/notice_list:
+  /notice_list/new:
     x-swagger-router-controller: new_notice_list
     get:
+      tags:
+      - "notice_list/new"
       summary: 最新の通知リストを取得
-      operationId: get
+      operationId: getNewNoticeList
       parameters:
         - name: family_structure_id
           in: query
@@ -58,7 +43,100 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/NoticeResponce"
+              $ref: "#/definitions/Notice"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /notice_list/new/{id}:
+    x-swagger-router-controller: new_notice_list
+    get:
+      tags:
+      - "notice_list/new"
+      summary: 最新の通知リストの詳細取得
+      operationId: getNewNoticeDetail
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "通知ID"
+        required: true
+        type: integer
+        format: base64
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/NoticeDetail"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /notice_list/old:
+    x-swagger-router-controller: old_notice_list
+    get:
+      tags:
+      - "notice_list/old"
+      summary: 過去の通知リストを取得
+      operationId: getOldNoticeList
+      parameters:
+        - name: family_structure_id
+          in: query
+          description: 端末の利用者を識別する。
+          required: true
+          type: integer
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Notice"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /notice_list/old/{id}:
+    x-swagger-router-controller: old_notice_list
+    get:
+      tags:
+      - "notice_list/old"
+      summary: 最新の通知リストの詳細取得
+      operationId: getOldNoticeDetail
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "通知ID"
+        required: true
+        type: integer
+        format: base64
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/NoticeDetail"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /suggestion/{id}:
+    x-swagger-router-controller: suggestion
+    get:
+      tags:
+      - "suggestion"
+      summary: 提案詳細取得
+      operationId: getSuggesrionDetail
+      parameters:
+      - name: "id"
+        in: "path"
+        description: 提案ID
+        required: true
+        type: integer
+        format: base64
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/SuggestionDetail"
         default:
           description: Error
           schema:
@@ -74,9 +152,15 @@ definitions:
   ErrorResponse:
     required:
       - message
+      - status
+      - ok
     properties:
       message:
         type: string
+      status:
+        type: integer
+      ok:
+        type: boolean
   SuggestionTask:
     properties:
       id:
@@ -88,7 +172,7 @@ definitions:
       is_done:
         type: boolean
         description: タスク完了(true)、未完了(false)
-  NoticeResponce:
+  Notice:
     properties:
       id:
         type: string
