@@ -18,13 +18,13 @@ produces:
   - application/json
 tags:
 - name: "notice_list/new"
-  description: "最新通知リスト関連"
+  description: "最新通知リスト関連（高井）"
 - name: "notice_list/old"
-  description: "過去通知リスト関連"
+  description: "過去通知リスト関連（高井）"
 - name: "suggestion"
-  description: "提案関連"
+  description: "提案関連（浅川）"
 - name: "emotions"
-  description: "感情関連"
+  description: "感情関連（浅川）"
 paths:
   /notice_list/new:
     x-swagger-router-controller: new_notice_list
