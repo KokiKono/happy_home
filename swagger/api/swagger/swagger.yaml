@@ -45,7 +45,7 @@ paths:
             items:
               $ref: "#/definitions/Notice"
         default:
-          description: Error
+          description: ErrorResponse
           schema:
             $ref: "#/definitions/ErrorResponse"
   /notice_list/new/{id}:
