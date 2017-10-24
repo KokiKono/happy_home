@@ -17,6 +17,8 @@ consumes:
 produces:
   - application/json
 tags:
+- name: "sample"
+  description: "サンプルAPI"
 - name: "notice_list/new"
   description: "最新通知リスト関連（高井）"
 - name: "notice_list/old"
@@ -26,6 +28,24 @@ tags:
 - name: "emotions"
   description: "感情関連（浅川）"
 paths:
+  /sample:
+    x-swagger-router-controller: sample
+    get:
+      tags:
+      - "sample"
+      summary: サンプルget
+      parameters:
+        - name: id
+          in: query
+          required: true
+          type: integer
+      responses:
+        "200":
+          description: Success
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /notice_list/new:
     x-swagger-router-controller: new_notice_list
     get:

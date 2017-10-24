@@ -1,8 +1,10 @@
 import express from 'express';
+import configFile from './config.json';
 import apiRouter from './routers/api';
 
 const app = express();
-const port = 8080;
+const config = configFile[process.env.NODE_ENV];
+const port = config.server.port;
 
 app.use(express.static('front'));
 

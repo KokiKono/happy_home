@@ -1,9 +1,10 @@
-import  express from 'express';
+import express from 'express';
+import contollers from '../server/api/controllers';
 
 const router = express.Router();
-
-router.get('/hoge', (req, res) => {
-    res.json({ message: 'hello hoge' });
+// ../server/models/dao系から値を取得する場合や非同期処理系はasync,awaitを使用する。
+router.get('/sample', async (req, res) => {
+    res.json({ message: 'hello sample', calc: await contollers.sample.select() });
 });
 
 export default router;
