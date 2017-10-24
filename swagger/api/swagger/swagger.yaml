@@ -2,9 +2,7 @@ swagger: "2.0"
 info:
   version: "0.0.1"
   title: Happy Home API
-# during dev, should point to your local machine
-host: localhost:3500
-# basePath prefixes all resource paths 
+# basePath prefixes all resource paths
 basePath: /api
 # 
 schemes:

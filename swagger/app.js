@@ -14,11 +14,9 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   // install middleware
   swaggerExpress.register(app);
   require('./swagger-ui-router.js')(app);
-
-  var port = process.env.npm_package_config_port || 3500;
-  app.listen(port);
+  app.listen(3500);
 
   if (swaggerExpress.runner.swagger.paths['/hello']) {
-    console.log(`happy home api listening on ${port}`);
+    console.log(`happy home api listening on 3500`);
   }
 });

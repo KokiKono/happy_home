@@ -20,6 +20,9 @@ indexHtml = indexHtml.replace(
 module.exports = function docsRouter(app) {
     // --------------------------- SwaggerUI -------------------------------------
     app.get("/docs/swagger/", function(req, res){
+        var config = require('./config.json')[process.env.NODE_ENV];
+        var apiPort = config.server.port;
+        swaggerJson.host = 'localhost:' + apiPort;
         res.send(swaggerJson); //return swagger json
     });
     // serve the modified index.html for swagger ui
@@ -27,6 +30,7 @@ module.exports = function docsRouter(app) {
         res.setHeader('content-type', 'text/html');
         res.send(indexHtml);
     });
+
 
     // serve the static assets for swagger ui
     app.use(SWAGGER_UI_PATH, serveStatic(SWAGGER_UI_FILES));
