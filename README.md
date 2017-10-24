@@ -21,7 +21,7 @@ comming soon!
 # swagger & mock api
 - run swagger and mock api
 <pre>
-make swagger
+make run-swagger
 </pre>
 - run secure api run  
 comming soon!
