@@ -4,13 +4,14 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js --exec babel-node",
-    "lint": "eslint *.js"
+    "start": "nodemon app.js localhost 8080 --exec babel-node",
+    "test": "DEBUG=express:* nodemon app.js localhost 8080 --exec babel-node"
   },
   "author": "k.kono",
   "license": "MIT",
   "dependencies": {
-    "express": "4.16.2"
+    "express": "^4.16.2",
+    "morgan": "^1.9.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

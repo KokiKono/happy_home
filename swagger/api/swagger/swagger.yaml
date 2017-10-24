@@ -1,0 +1,151 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Happy Home API
+# during dev, should point to your local machine
+host: localhost:3500
+# basePath prefixes all resource paths 
+basePath: /api
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /hello:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: hello_world
+    get:
+      description: Returns 'Hello' to the caller
+      # used as the method name of the controller
+      operationId: hello
+      parameters:
+        - name: name
+          in: query
+          description: The name of the person to whom to say hello
+          required: false
+          type: string
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/HelloWorldResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /new/notice_list:
+    x-swagger-router-controller: new_notice_list
+    get:
+      summary: 最新の通知リストを取得
+      operationId: get
+      parameters:
+        - name: family_structure_id
+          in: query
+          description: 端末の利用者を識別する。
+          required: true
+          type: integer
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/NoticeResponce"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+# complex objects have schema definitions
+definitions:
+  HelloWorldResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+  SuggestionTask:
+    properties:
+      id:
+        type: integer
+        description: タスクID
+      contents:
+        type: string
+        description: タスク内容
+      is_done:
+        type: boolean
+        description: タスク完了(true)、未完了(false)
+  NoticeResponce:
+    properties:
+      id:
+        type: string
+      family_structure_id:
+        type: integer
+        description: 家族構成ID
+      title:
+        type: string
+        description: 通知タイトル
+      suggestion_id:
+        type: integer
+        description: 提案受け入れID、まだの場合はnull
+  Suggestion:
+    properties:
+      id:
+        type: integer
+      title:
+        type: string
+  FamilyStructure:
+    properties:
+      id:
+        type: integer
+      family_id:
+        type: integer
+      name:
+        type: string
+      family_type:
+        type: string
+  SuggestionDetail:
+    properties:
+      id:
+        type: integer
+        description: 提案ID
+      title:
+        type: string
+      point:
+        type: integer
+      family_structure:
+        $ref: "#/definitions/FamilyStructure"
+      task_list:
+        type: array
+        items:
+          $ref: "#/definitions/SuggestionTask"
+  NoticeDetail:
+    properties:
+      id:
+        type: integer
+      family_strcuture_id:
+        type: integer
+        description: 家族構成ID
+      title:
+        type: string
+        description: 通知タイトル
+      notice_contents:
+        type: string
+        description: 通知内容
+      suggestion_list:
+        type: array
+        items:
+          $ref: "#/definitions/Suggestion"
