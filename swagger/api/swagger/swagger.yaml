@@ -23,6 +23,8 @@ tags:
   description: "過去通知リスト関連"
 - name: "suggestion"
   description: "提案関連"
+- name: "emotions"
+  description: "感情関連"
 paths:
   /notice_list/new:
     x-swagger-router-controller: new_notice_list
@@ -141,14 +143,33 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /emotions:
+    x-swagger-router-controller: emotions
+    post:
+      tags:
+      - "emotions"
+      summary: 感情データ登録
+      operationId: postEmotions
+      parameters:
+      - name: "json_data"
+        in: "formData"
+        description: 感情情報JSON
+        required: true
+        type: string
+      - name: "image_path"
+        in: "formData"
+        description: 読み取った感情画像パス
+        required: true
+        type: string
+      responses:
+        "204":
+          description: Success
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 # complex objects have schema definitions
 definitions:
-  HelloWorldResponse:
-    required:
-      - message
-    properties:
-      message:
-        type: string
   ErrorResponse:
     required:
       - message
@@ -161,6 +182,7 @@ definitions:
         type: integer
       ok:
         type: boolean
+        default: false
   SuggestionTask:
     properties:
       id:
