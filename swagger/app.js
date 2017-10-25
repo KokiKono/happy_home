@@ -2,6 +2,7 @@
 
 var SwaggerExpress = require('swagger-express-mw');
 var app = require('express')();
+var corser = require("corser");
 module.exports = app; // for testing
 
 var config = {
@@ -13,6 +14,7 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
 
   // install middleware
   swaggerExpress.register(app);
+  app.use(corser.create());
   require('./swagger-ui-router.js')(app);
   app.listen(3500);
 

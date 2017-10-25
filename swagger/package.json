@@ -8,6 +8,7 @@
   "license": "",
   "main": "app.js",
   "dependencies": {
+    "corser": "^2.0.1",
     "express": "^4.12.3",
     "swagger-express-mw": "^0.1.0",
     "swagger-ui": "2.1.0"

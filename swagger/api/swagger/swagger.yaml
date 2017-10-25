@@ -40,6 +40,8 @@ paths:
       responses:
         "200":
           description: Success
+          schema:
+            $ref: "#/definitions/Sample"
         default:
           description: Error
           schema:
@@ -167,6 +169,7 @@ paths:
       tags:
       - "emotions"
       summary: 感情データ登録
+      description: 家族IDはt_family.timestampから最新のIDをAPIが取得し紐付ける。
       operationId: postEmotions
       parameters:
       - name: "json_data"
@@ -188,6 +191,14 @@ paths:
             $ref: "#/definitions/ErrorResponse"
 # complex objects have schema definitions
 definitions:
+  Sample:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      age:
+        type: integer
   ErrorResponse:
     required:
       - message

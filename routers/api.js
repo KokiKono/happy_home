@@ -1,10 +1,11 @@
 import express from 'express';
+import corser from 'corser';
 import logger from 'morgan';
 import selfRouter from './self_api';
 
 const router = express.Router();
 router.use(logger());
-
+router.use(corser.create());
 router.use('/', selfRouter);
 
 // 404 message
