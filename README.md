@@ -33,6 +33,11 @@ make real-swagger
 <pre>
 make open-swagger
 </pre>
+- レスポンス情報を見るとりあえず。
+<pre>
+npm i -g swagger
+make edit swagger
+</pre>
 
 # branch
 <pre>
