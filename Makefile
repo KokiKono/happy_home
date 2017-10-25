@@ -9,7 +9,7 @@ run-debug:
 mock-swagger:
 	cd swagger && npm start
 real-swagger:
-	cd swagger && NODE_ENV=production nodemon -e yaml,js --watch app.js --watch ./*/*/*.yaml
+	cd swagger && NODE_ENV=production node app.js
 open-swagger:
 	open http://localhost:3500/docs/
 edit-swagger:

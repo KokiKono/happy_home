@@ -15,7 +15,7 @@ export default class Dao {
             host: config.mysql.host || 'localhost',
             user: config.mysql.user || 'root',
             password: config.mysql.password || '',
-            database: config.mysql.database || 'wp41',
+            database: config.mysql.database || 'wp',
         });
     }
 
