@@ -21,7 +21,7 @@ comming soon!
 # swagger api doc
 - run swagger and mock api
 <pre>
-make mock-swagger
+make mock-swagger　今調整中。
 </pre>
 - run swagger and real api  
   実際のAPIをswagger ui上で叩けるようになります。  
