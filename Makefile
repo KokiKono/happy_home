@@ -5,9 +5,9 @@ install:
 update:
 	git pull && npm i && cd swagger && npm i
 mock-run:
-	npm run mock-run
+	npm run mock-run && open http://localhost:3500/docs/
 real-run:
-	npm run real-run
+	npm run real-run && open http://localhost:3500/docs/
 run-debug:
 	DEBUG=express:* nodemon app.js localhost 8080 --exec babel-node
 open-swagger:
