@@ -226,7 +226,7 @@ definitions:
   Notice:
     properties:
       id:
-        type: string
+        type: integer
       family_structure_id:
         type: integer
         description: 家族構成ID
