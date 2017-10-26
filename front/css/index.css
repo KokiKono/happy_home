@@ -37,17 +37,60 @@ body{
 .events {
   float:left;
   margin-top: 10px;
-  background-color: #f00;
   width:50%;
   height:55%;
+  border: solid 1px #bbb;
+}
+
+.events p{
+  text-align: center;
+  color: #999;
+  background-color: #ccc;
+  margin: 0px;
+}
+
+.events ul{
+  height: 100%;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.events li{
+  font-size: 80%;
+  text-align: center;
+  border-bottom: solid 1px #bbb;
+  padding:5px;
 }
 
 .logs{
   float:left;
   margin-top: 10px;
-  background-color: #0f0;
-  width:50%;
+  margin-left: 4px;
+  width:49%;
   height:55%;
+  border: solid 1px #bbb;
+}
+
+.logs p{
+  text-align: center;
+  color: #999;
+  background-color: #ccc;
+  margin: 0px;
+}
+
+.logs ul {
+  height: 100%;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.logs li{
+    font-size: 80%;
+    text-align: center;
+    border-bottom: solid 1px #bbb;
+    padding:5px;
 }
 
 #canvas {

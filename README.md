@@ -60,6 +60,8 @@ npm i -g eslint
 - branch名
     your_name/any <- anyは各コードっぽく。
 
+- database
+    テストする際はddlを読み込んでください
 
     
     
