@@ -8,6 +8,7 @@
   "license": "",
   "main": "app.js",
   "dependencies": {
+    "corser": "^2.0.1",
     "express": "^4.12.3",
     "swagger-express-mw": "^0.1.0",
     "swagger-ui": "2.1.0"
@@ -18,7 +19,7 @@
     "nodemon": "^1.12.1"
   },
   "scripts": {
-    "start": "nodemon -e yaml,js --watch app.js --watch ./*/*/*.yaml",
+    "start": "NODE_ENV=development nodemon -e yaml,js --watch app.js --watch ./*/*/*.yaml",
     "test": " swaggerproject test"
   },
   "config": {

@@ -1,8 +1,9 @@
 import express from 'express';
+import configFile from './config.json';
 import apiRouter from './routers/api';
 
 const app = express();
-const port = 8080;
+const config = configFile[process.env.NODE_ENV];
 
 app.use(express.static('front'));
 
@@ -12,7 +13,6 @@ app.get('/', (req, res) => {
 
 app.use('/api', apiRouter);
 
-
-app.listen(port, () => {
-    console.log(`happy home app listening on ${port}`);
+app.listen(config.server.port, () => {
+    console.log(`happy home app listening on ${config.server.port}`);
 });

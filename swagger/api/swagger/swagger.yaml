@@ -2,9 +2,7 @@ swagger: "2.0"
 info:
   version: "0.0.1"
   title: Happy Home API
-# during dev, should point to your local machine
-host: localhost:3500
-# basePath prefixes all resource paths 
+# basePath prefixes all resource paths
 basePath: /api
 # 
 schemes:
@@ -17,13 +15,37 @@ consumes:
 produces:
   - application/json
 tags:
+- name: "sample"
+  description: "サンプルAPI"
 - name: "notice_list/new"
-  description: "最新通知リスト関連"
+  description: "最新通知リスト関連（高井）"
 - name: "notice_list/old"
-  description: "過去通知リスト関連"
+  description: "過去通知リスト関連（高井）"
 - name: "suggestion"
-  description: "提案関連"
+  description: "提案関連（浅川）"
+- name: "emotions"
+  description: "感情関連（浅川）"
 paths:
+  /sample:
+    x-swagger-router-controller: sample
+    get:
+      tags:
+      - "sample"
+      summary: サンプルget
+      parameters:
+        - name: id
+          in: query
+          required: true
+          type: integer
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Sample"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /notice_list/new:
     x-swagger-router-controller: new_notice_list
     get:
@@ -141,14 +163,42 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /emotions:
+    x-swagger-router-controller: emotions
+    post:
+      tags:
+      - "emotions"
+      summary: 感情データ登録
+      description: 家族IDはt_family.timestampから最新のIDをAPIが取得し紐付ける。
+      operationId: postEmotions
+      parameters:
+      - name: "json_data"
+        in: "formData"
+        description: 感情情報JSON
+        required: true
+        type: string
+      - name: "image_path"
+        in: "formData"
+        description: 読み取った感情画像パス
+        required: true
+        type: string
+      responses:
+        "204":
+          description: Success
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 # complex objects have schema definitions
 definitions:
-  HelloWorldResponse:
-    required:
-      - message
+  Sample:
     properties:
-      message:
+      id:
+        type: integer
+      name:
         type: string
+      age:
+        type: integer
   ErrorResponse:
     required:
       - message
@@ -161,6 +211,7 @@ definitions:
         type: integer
       ok:
         type: boolean
+        default: false
   SuggestionTask:
     properties:
       id:

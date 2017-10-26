@@ -6,8 +6,10 @@ run:
 	npm start
 run-debug:
 	DEBUG=express:* nodemon app.js localhost 8080 --exec babel-node
-run-swagger:
+mock-swagger:
 	cd swagger && npm start
+real-swagger:
+	cd swagger && NODE_ENV=production node app.js
 open-swagger:
 	open http://localhost:3500/docs/
 edit-swagger:

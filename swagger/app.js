@@ -2,6 +2,7 @@
 
 var SwaggerExpress = require('swagger-express-mw');
 var app = require('express')();
+var corser = require("corser");
 module.exports = app; // for testing
 
 var config = {
@@ -13,12 +14,11 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
 
   // install middleware
   swaggerExpress.register(app);
+  app.use(corser.create());
   require('./swagger-ui-router.js')(app);
-
-  var port = process.env.npm_package_config_port || 3500;
-  app.listen(port);
+  app.listen(3500);
 
   if (swaggerExpress.runner.swagger.paths['/hello']) {
-    console.log(`happy home api listening on ${port}`);
+    console.log(`happy home api listening on 3500`);
   }
 });

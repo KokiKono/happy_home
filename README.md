@@ -18,16 +18,25 @@ make run-debug
 # no secure server run
 comming soon!
 
-# swagger & mock api
+# swagger api doc
 - run swagger and mock api
 <pre>
-make run-swagger
+make mock-swagger　今調整中。
 </pre>
-- run secure api run  
-comming soon!
+- run swagger and real api  
+  実際のAPIをswagger ui上で叩けるようになります。  
+  npm start必須
+<pre>
+make real-swagger
+</pre>
 - open swagger
 <pre>
 make open-swagger
+</pre>
+- レスポンス情報を見るとりあえず。
+<pre>
+npm i -g swagger
+make edit swagger
 </pre>
 
 # branch

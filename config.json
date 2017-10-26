@@ -1,0 +1,28 @@
+{
+  "development": {
+    "server": {
+      "schema": "http://",
+      "url": "localhost:",
+      "port": 8080
+    },
+    "mysql": {
+      "host": "localhost",
+      "user": "root",
+      "password": "",
+      "database": "happy_home"
+    }
+  },
+  "production": {
+    "server": {
+      "schema": "http://",
+      "url": "localhost:",
+      "port": 8080
+    },
+    "mysql": {
+      "host": "localhost",
+      "user": "root",
+      "password": "",
+      "database": "happy_home"
+    }
+  }
+}
