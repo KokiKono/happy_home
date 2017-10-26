@@ -1,5 +1,5 @@
 {
-  "name": "swagger",
+  "name": "swagger-doc",
   "version": "0.0.1",
   "private": true,
   "description": "New Swagger API Project",
@@ -14,13 +14,16 @@
     "swagger-ui": "2.1.0"
   },
   "devDependencies": {
+    "nodemon": "^1.12.1",
     "should": "^7.1.0",
     "supertest": "^1.0.0",
-    "nodemon": "^1.12.1"
+    "swagger": "^0.7.5"
   },
   "scripts": {
-    "start": "NODE_ENV=development nodemon -e yaml,js --watch app.js --watch ./*/*/*.yaml",
-    "test": " swaggerproject test"
+    "mock": "NODE_ENV=mock $(npm bin)/nodemon -e yaml,js --watch app.js --watch ./*/*/*.yaml",
+    "real": "NODE_ENV=real $(npm bin)/nodemon -e yaml,js --watch app.js --watch ./*/*/*.yaml",
+    "test": "$(npm bin)/swagger project test",
+    "edit": "$(npm bin)/swagger project edit"
   },
   "config": {
     "port": "3500"

@@ -4,7 +4,7 @@ info:
   title: Happy Home API
 # basePath prefixes all resource paths
 basePath: /api
-# 
+host: localhost:3800
 schemes:
   # tip: remove http to make production-grade
   - http

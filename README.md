@@ -10,30 +10,24 @@ make install
 npm start
 </pre>
 
-# server debug
+# server run and swagger doc
+## mock
 <pre>
-make run-debug
+make mock-run
 </pre>
-
-# no secure server run
-comming soon!
-
-# swagger api doc
-- run swagger and mock api
+or
 <pre>
-make mock-swagger　今調整中。
+npm run mock-run
 </pre>
-- run swagger and real api  
-  実際のAPIをswagger ui上で叩けるようになります。  
-  npm start必須
+## real
 <pre>
-make real-swagger
+make real-run
 </pre>
-- open swagger
+or
 <pre>
-make open-swagger
+npm run real-run
 </pre>
-- レスポンス情報を見るとりあえず。
+### レスポンス情報を見るとりあえず。
 <pre>
 npm i -g swagger
 make edit swagger
@@ -51,10 +45,6 @@ your_name/any
     eslintチェックコマンド
 <pre>
 make lint
-</pre>
-*npm eslintコマンドをグローバルにインストールしていない場合は以下を実行してください。
-<pre>
-npm i -g eslint
 </pre>
 
 - branch名

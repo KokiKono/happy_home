@@ -2,11 +2,18 @@ import express from 'express';
 import corser from 'corser';
 import logger from 'morgan';
 import selfRouter from './self_api';
+import mockRouter from './mock';
 
 const router = express.Router();
 router.use(logger());
 router.use(corser.create());
-router.use('/', selfRouter);
+
+const nodeEnv = process.env.NODE_ENV ? process.env.NODE_ENV : 'real';
+if (nodeEnv === 'mock') {
+    router.use('/', mockRouter);
+} else {
+    router.use('/', selfRouter);
+}
 
 // 404 message
 router.use((req, res, next) => {

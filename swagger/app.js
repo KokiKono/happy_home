@@ -16,9 +16,9 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   swaggerExpress.register(app);
   app.use(corser.create());
   require('./swagger-ui-router.js')(app);
-  app.listen(3500);
-
-  if (swaggerExpress.runner.swagger.paths['/hello']) {
-    console.log(`happy home api listening on 3500`);
-  }
+  var config = require('./config.json')[process.env.NODE_ENV];
+  var port = config.server.port;
+  app.listen(port, () => {
+      console.log(`happy home swagger mode is ${process.env.NODE_ENV} listening on ${config.server.port}`);
+  });
 });

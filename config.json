@@ -24,5 +24,18 @@
       "password": "",
       "database": "happy_home"
     }
+  },
+  "mock": {
+    "server": {
+      "schema": "http://",
+      "url": "localhost:",
+      "port": 8080
+    },
+    "mysql": {
+      "host": "localhost",
+      "user": "root",
+      "password": "",
+      "database": "happy_home"
+    }
   }
 }

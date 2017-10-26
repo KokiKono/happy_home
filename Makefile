@@ -2,17 +2,17 @@ setup:
 	git pull
 install:
 	npm i && cd swagger && npm i
-run:
-	npm start
+update:
+	git pull && npm i && cd swagger && npm i
+mock-run:
+	npm run mock-run
+real-run:
+	npm run real-run
 run-debug:
 	DEBUG=express:* nodemon app.js localhost 8080 --exec babel-node
-mock-swagger:
-	cd swagger && npm start
-real-swagger:
-	cd swagger && NODE_ENV=production node app.js
 open-swagger:
 	open http://localhost:3500/docs/
 edit-swagger:
-	swagger project edit swagger
+	cd swagger && $(npm bin)/swagger project edit swagger
 lint:
-	eslint *.js
+	npm run lint

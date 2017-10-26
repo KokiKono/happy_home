@@ -14,5 +14,5 @@ app.get('/', (req, res) => {
 app.use('/api', apiRouter);
 
 app.listen(config.server.port, () => {
-    console.log(`happy home app listening on ${config.server.port}`);
+    console.log(`happy home app mode is ${process.env.NODE_ENV} listening on ${config.server.port}`);
 });

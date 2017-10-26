@@ -4,8 +4,14 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "NODE_ENV=development nodemon app.js localhost 8080 --exec babel-node",
-    "test": "DEBUG=express:* nodemon app.js localhost 8080 --exec babel-node"
+    "start": "NODE_ENV=development $(npm bin)/nodemon app.js localhost 8080 --exec babel-node",
+    "test": "DEBUG=express:* nodemon app.js localhost 8080 --exec babel-node",
+    "lint": "$(npm bin)/eslint *.js",
+    "edit": "$(npm bin)/swagger project edit swagger",
+    "mock": "NODE_ENV=mock $(npm bin)/nodemon app.js --exec babel-node",
+    "real": "NODE_ENV=development $(npm bin)/nodemon app.js --exec babel-node",
+    "mock-run": "$(npm bin)/concurrently \"npm run mock\" \"cd swagger && npm run mock\"",
+    "real-run": "$(npm bin)/concurrently \"npm run real\" \"cd swagger && npm run real\""
   },
   "author": "k.kono",
   "license": "MIT",
@@ -19,12 +25,14 @@
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.0.1",
     "babel-preset-env": "^1.6.1",
+    "concurrently": "^3.5.0",
     "eslint": "^4.9.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.4.0",
-    "nodemon": "^1.12.1"
+    "nodemon": "^1.12.1",
+    "swagger": "^0.7.5"
   }
 }

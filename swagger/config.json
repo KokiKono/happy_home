@@ -1,28 +1,26 @@
 {
-  "development": {
+  "mock": {
     "server": {
       "schema": "http://",
       "url": "localhost:",
       "port": "3500"
     },
-    "mysql": {
-      "host": "localhost",
-      "user": "root",
-      "password": "",
-      "database": "wp"
-    }
-  },
-  "production": {
-    "server": {
+    "api": {
       "schema": "http://",
       "url": "localhost:",
       "port": "8080"
+    }
+  },
+  "real": {
+    "server": {
+      "schema": "http://",
+      "url": "localhost:",
+      "port": "3500"
     },
-    "mysql": {
-      "host": "localhost",
-      "user": "root",
-      "password": "",
-      "database": "wp"
+    "api": {
+      "schema": "http://",
+      "url": "localhost:",
+      "port": "8080"
     }
   }
 }
