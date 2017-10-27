@@ -25,6 +25,12 @@ tags:
   description: "提案関連（浅川）"
 - name: "emotions"
   description: "感情関連（浅川）"
+- name: "login"
+  description: "端末識別用のログイン（河野）"
+- name: "points"
+  description: "幸せ稼ぎリスト（高井）"
+- name: "family_list"
+  description: "サーバー側で管理している現在の家族情報リスト（河野）"
 paths:
   /sample:
     x-swagger-router-controller: sample
@@ -189,6 +195,59 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /login:
+    post:
+      tags:
+      - "login"
+      summary: ログイン
+      parameters:
+      - name: "family_id"
+        in: "formData"
+        description: 家族ID
+        required: true
+        type: integer
+      - name: "family_structre_id"
+        in: "formData"
+        description: 家族構成ID
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: Success
+        "403":
+          description: Error
+  /points:
+    get:
+      tags:
+      - "points"
+      summary: 幸せ稼ぎリスト
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Point"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /family_list:
+    get:
+      tags:
+      - "family_list"
+      summary: 家族リスト
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/FamilyStructure"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"  
 # complex objects have schema definitions
 definitions:
   Sample:
@@ -280,7 +339,24 @@ definitions:
       notice_contents:
         type: string
         description: 通知内容
+      result_contents:
+        type: string
+        description: 行動結果内容 or null
       suggestion_list:
         type: array
         items:
           $ref: "#/definitions/Suggestion"
+  Point:
+    properties:
+      id:
+        type: integer
+      tag_icon:
+        type: string
+        description: 左アイコンURL
+      contents:
+        type: string
+      point:
+        type: integer
+      family_icon:
+        type: string
+        description: 右アイコンURL
