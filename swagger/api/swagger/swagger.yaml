@@ -214,6 +214,8 @@ paths:
       responses:
         "204":
           description: Success
+          schema:
+            $ref: "#/definitions/LoginSuccess"
         "403":
           description: Error
   /points:
@@ -360,3 +362,10 @@ definitions:
       family_icon:
         type: string
         description: 右アイコンURL
+  LoginSuccess:
+    properties:
+      token:
+        type: string
+      is_validity:
+        type: boolean
+        description: このtokenの有効性、家族シーンが終了した時にはfalse。
