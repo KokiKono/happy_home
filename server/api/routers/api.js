@@ -12,7 +12,7 @@ router.use(corser.create());
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
-router.post('/login', (req, res, next) => {
+router.post('/login', (req, res) => {
     // auth
     jwt.sign({
         user: {
@@ -21,7 +21,11 @@ router.post('/login', (req, res, next) => {
         },
     }, 'secret', { algorithm: 'HS256' }, (err, token) => {
         if (err) {
-            return res.sendStatus(403);
+            return res.sendStatus(403).send({
+                message: 'ユーザー認証失敗',
+                status: 403,
+                ok: false,
+            });
         }
         // ここで家族シーンと紐付け。
         return res.json({
@@ -29,7 +33,7 @@ router.post('/login', (req, res, next) => {
             is_validity: true,
         });
     });
-})
+});
 
 router.all('/*', (req, res, next) => {
     if (req.path === 'login') {

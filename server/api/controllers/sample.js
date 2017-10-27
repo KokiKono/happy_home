@@ -6,7 +6,7 @@ import SampleModel from '../../models/sample';
 const select = () => {
     const sampleModel = new SampleModel();
     return sampleModel.select();
-}
+};
 
 
 export default {
