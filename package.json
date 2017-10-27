@@ -6,7 +6,7 @@
   "scripts": {
     "start": "NODE_ENV=development $(npm bin)/nodemon app.js localhost 8080 --exec babel-node",
     "test": "DEBUG=express:* nodemon app.js localhost 8080 --exec babel-node",
-    "lint": "$(npm bin)/eslint *.js",
+    "lint": "$(npm bin)/eslint ./routers/*.js ./server/*.js ./front/*.js",
     "edit": "$(npm bin)/swagger project edit swagger",
     "mock": "NODE_ENV=mock $(npm bin)/nodemon app.js --exec babel-node",
     "real": "NODE_ENV=development $(npm bin)/nodemon app.js --exec babel-node",
