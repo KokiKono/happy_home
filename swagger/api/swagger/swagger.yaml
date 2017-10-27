@@ -25,6 +25,8 @@ tags:
   description: "提案関連（浅川）"
 - name: "emotions"
   description: "感情関連（浅川）"
+- name: "login"
+  description: "端末識別用のログイン"
 paths:
   /sample:
     x-swagger-router-controller: sample
@@ -189,6 +191,27 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /login:
+    post:
+      tags:
+      - "login"
+      summary: ログイン
+      parameters:
+      - name: "family_id"
+        in: "formData"
+        description: 家族ID
+        required: true
+        type: integer
+      - name: "family_structre_id"
+        in: "formData"
+        description: 家族構成ID
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: Success
+        "403":
+          description: Error
 # complex objects have schema definitions
 definitions:
   Sample:
@@ -280,6 +303,9 @@ definitions:
       notice_contents:
         type: string
         description: 通知内容
+      result_contents:
+        type: string
+        description: 行動結果内容 or null
       suggestion_list:
         type: array
         items:
