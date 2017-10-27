@@ -200,17 +200,16 @@ paths:
       tags:
       - "login"
       summary: ログイン
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
       parameters:
-      - name: "family_id"
-        in: "formData"
-        description: 家族ID
+      - in: "body"
+        name: "body"
         required: true
-        type: integer
-      - name: "family_structre_id"
-        in: "formData"
-        description: 家族構成ID
-        required: true
-        type: integer
+        schema:
+          $ref: "#/definitions/LoginParameter"
       responses:
         "204":
           description: Success
@@ -369,3 +368,9 @@ definitions:
       is_validity:
         type: boolean
         description: このtokenの有効性、家族シーンが終了した時にはfalse。
+  LoginParameter:
+    properties:
+      family_id:
+        type: integer
+      family_structure_id:
+        type: integer

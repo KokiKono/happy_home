@@ -1,4 +1,5 @@
 import express from 'express';
+import sha256 from 'sha256';
 
 const router = express.Router();
 router.get('/sample', (req, res) => {
@@ -111,6 +112,47 @@ router.get('/suggestion/:id', (req, res) => {
         task_list: createTaskList(),
     };
    res.json(resObj);
+});
+
+router.post('/login', (req, res) => {
+    const resObj = {
+        token: sha256(req.param('family_id').toString()),
+        is_validity: true,
+    };
+    res.json(resObj);
+});
+
+router.get('/points', (req, res) => {
+    let resObj = [];
+    for (let i = 1; i < 20; i += 1) {
+        resObj = [
+            ...resObj,
+            {
+                id: i,
+                tag_icon: 'https://png.icons8.com/search',
+                contents: 'ポイント稼ぎ内容',
+                point: parseInt((Math.random() * 100), 10),
+                family_icon: 'https://png.icons8.com/search',
+            },
+        ];
+    }
+    res.json(resObj);
+});
+
+router.get('/family_list', (req, res) => {
+    let resObj = [];
+    for (let i = 1; i < 20; i += 1) {
+        resObj = [
+            ...resObj,
+            {
+                id: parseInt((Math.random() * 10), 10),
+                family_id: parseInt((Math.random() * 10), 10),
+                name: '家族名前',
+                type: 'おとうさん',
+            },
+        ];
+    }
+    res.json(resObj);
 });
 
 export default router;

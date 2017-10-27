@@ -1,12 +1,15 @@
 import express from 'express';
 import corser from 'corser';
 import logger from 'morgan';
+import bodyParser from 'body-parser';
 import selfRouter from './self_api';
 import mockRouter from './mock';
 
 const router = express.Router();
 router.use(logger());
 router.use(corser.create());
+router.use(bodyParser.json());
+router.use(bodyParser.urlencoded({ extended: true }));
 
 const nodeEnv = process.env.NODE_ENV ? process.env.NODE_ENV : 'real';
 if (nodeEnv === 'mock') {
