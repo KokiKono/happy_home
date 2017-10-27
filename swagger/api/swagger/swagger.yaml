@@ -26,9 +26,11 @@ tags:
 - name: "emotions"
   description: "感情関連（浅川）"
 - name: "login"
-  description: "端末識別用のログイン"
+  description: "端末識別用のログイン（河野）"
 - name: "points"
-  description: "幸せ稼ぎリスト"
+  description: "幸せ稼ぎリスト（高井）"
+- name: "family_list"
+  description: "サーバー側で管理している現在の家族情報リスト（河野）"
 paths:
   /sample:
     x-swagger-router-controller: sample
@@ -230,6 +232,22 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /family_list:
+    get:
+      tags:
+      - "family_list"
+      summary: 家族リスト
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/FamilyStructure"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"  
 # complex objects have schema definitions
 definitions:
   Sample:
