@@ -1,5 +1,4 @@
 import express from 'express';
-import contollers from '../server/api/controllers';
 
 const router = express.Router();
 router.get('/sample', (req, res) => {
@@ -13,7 +12,7 @@ router.post('/emotions', (req, res) => {
 
 router.get('/notice_list/new', (req, res) => {
    let resObj = [];
-   for (let i = 1; i < 20; i++) {
+   for (let i = 1; i < 20; i += 1) {
        resObj = [
            ...resObj,
            {
@@ -29,7 +28,7 @@ router.get('/notice_list/new', (req, res) => {
 
 router.get('/notice_list/new/:id', (req, res) => {
     let resObj = [];
-    for (let i = 1; i < 20; i++) {
+    for (let i = 1; i < 20; i += 1) {
         resObj = [
             ...resObj,
             {
