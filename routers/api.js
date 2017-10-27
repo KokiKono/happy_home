@@ -23,12 +23,12 @@ router.use((req, res, next) => {
 });
 
 // error handling
-router.use((err, req, res, next) => {
+router.use((err, req, res) => {
     res.json({
         message: err.message ? err.message : 'initial server error',
         status: err.status ? err.status : 500,
         ok: err.ok ? err.ok : false,
     });
-})
+});
 
 export default router;
