@@ -1,6 +1,6 @@
 import express from 'express';
 import configFile from './config.json';
-import apiRouter from './routers/api';
+import apiRouter from './server/api/routers/api';
 
 const app = express();
 const config = configFile[process.env.NODE_ENV];
