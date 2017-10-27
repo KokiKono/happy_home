@@ -27,6 +27,8 @@ tags:
   description: "感情関連（浅川）"
 - name: "login"
   description: "端末識別用のログイン"
+- name: "points"
+  description: "幸せ稼ぎリスト"
 paths:
   /sample:
     x-swagger-router-controller: sample
@@ -212,6 +214,22 @@ paths:
           description: Success
         "403":
           description: Error
+  /points:
+    get:
+      tags:
+      - "points"
+      summary: 幸せ稼ぎリスト
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Point"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 # complex objects have schema definitions
 definitions:
   Sample:
@@ -310,3 +328,17 @@ definitions:
         type: array
         items:
           $ref: "#/definitions/Suggestion"
+  Point:
+    properties:
+      id:
+        type: integer
+      tag_icon:
+        type: string
+        description: 左アイコンURL
+      contents:
+        type: string
+      point:
+        type: integer
+      family_icon:
+        type: string
+        description: 右アイコンURL
