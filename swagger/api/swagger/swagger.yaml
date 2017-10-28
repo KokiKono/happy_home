@@ -70,12 +70,6 @@ paths:
       - "notice_list/new"
       summary: 最新の通知リストを取得
       operationId: getNewNoticeList
-      parameters:
-        - name: family_structure_id
-          in: query
-          description: 端末の利用者を識別する。
-          required: true
-          type: integer
       responses:
         "200":
           description: Success
@@ -117,12 +111,6 @@ paths:
       - "notice_list/old"
       summary: 過去の通知リストを取得
       operationId: getOldNoticeList
-      parameters:
-        - name: family_structure_id
-          in: query
-          description: 端末の利用者を識別する。
-          required: true
-          type: integer
       responses:
         "200":
           description: Success

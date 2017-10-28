@@ -22,7 +22,7 @@ router.get('/notice_list/new', (req, res) => {
            ...resObj,
            {
                id: i,
-               family_structure_id: i + 5,
+               family_structure_id: req.user.family_structure_id,
                title: 'タイトル',
                suggestion_id: i + 10,
            },
@@ -38,7 +38,7 @@ router.get('/notice_list/new/:id', (req, res) => {
             ...resObj,
             {
                 id: req.param('id'),
-                family_structure_id: 1,
+                family_structure_id: req.user.family_structure_id,
                 title: 'タイトル',
                 notice_contents: '通知内容',
                 suggestion_list: {
@@ -58,7 +58,7 @@ router.get('/notice_list/old', (req, res) => {
             ...resObj,
             {
                 id: i,
-                family_structure_id: i + 5,
+                family_structure_id: req.user.family_structure_id,
                 title: 'タイトル',
                 suggestion_id: i + 10,
             },
@@ -74,7 +74,7 @@ router.get('/notice_list/old/:id', (req, res) => {
             ...resObj,
             {
                 id: req.param('id'),
-                family_structure_id: 1,
+                family_structure_id: req.user.family_structure_id,
                 title: 'タイトル',
                 notice_contents: '通知内容',
                 suggestion_list: {
@@ -109,7 +109,7 @@ router.get('/suggestion/:id', (req, res) => {
         point: parseInt(((Math.random() * 10) * (Math.random() * 10)), 10),
         family_structure: {
             id: parseInt((Math.random() * 10), 10),
-            family_id: parseInt((Math.random() * 10), 10),
+            family_id: req.user.family_id,
             name: '家族名前',
             type: 'おとうさん',
         },
