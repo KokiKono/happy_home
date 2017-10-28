@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 
 const filter = express.Router();
 
-const noSecurityPathList = ['/login'];
+const noSecurityPathList = ['/login', '/family_list', '/emotions'];
 
 // filtering
 filter.all('/*', (req, res, next) => {

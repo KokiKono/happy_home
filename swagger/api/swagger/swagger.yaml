@@ -68,6 +68,8 @@ paths:
     get:
       tags:
       - "notice_list/new"
+      security:
+      - Bearer: []
       summary: 最新の通知リストを取得
       operationId: getNewNoticeList
       responses:
@@ -86,6 +88,8 @@ paths:
     get:
       tags:
       - "notice_list/new"
+      security:
+      - Bearer: []
       summary: 最新の通知リストの詳細取得
       operationId: getNewNoticeDetail
       parameters:
@@ -109,6 +113,8 @@ paths:
     get:
       tags:
       - "notice_list/old"
+      security:
+      - Bearer: []
       summary: 過去の通知リストを取得
       operationId: getOldNoticeList
       responses:
@@ -127,6 +133,8 @@ paths:
     get:
       tags:
       - "notice_list/old"
+      security:
+      - Bearer: []
       summary: 最新の通知リストの詳細取得
       operationId: getOldNoticeDetail
       parameters:
@@ -150,6 +158,8 @@ paths:
     get:
       tags:
       - "suggestion"
+      security:
+      - Bearer: []
       summary: 提案詳細取得
       operationId: getSuggesrionDetail
       parameters:
@@ -220,6 +230,8 @@ paths:
     get:
       tags:
       - "points"
+      security:
+      - Bearer: []
       summary: 幸せ稼ぎリスト
       responses:
         "200":
@@ -236,6 +248,7 @@ paths:
     get:
       tags:
       - "family_list"
+      security: []
       summary: 家族リスト
       responses:
         "200":
