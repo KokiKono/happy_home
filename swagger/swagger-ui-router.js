@@ -6,7 +6,7 @@ var serveStatic = require('serve-static');
 var yaml = require('js-yaml');
 
 var SWAGGER_UI_PATH    = '/docs';
-var SWAGGER_UI_FILES   = './node_modules/swagger-ui/dist';
+var SWAGGER_UI_FILES   = './dist';
 
 var indexHtml = fs.readFileSync(path.join(SWAGGER_UI_FILES, 'index.html'), 'utf-8');
 var swaggerJson = yaml.safeLoad(fs.readFileSync('./api/swagger/swagger.yaml', 'utf-8'));

@@ -3,7 +3,11 @@ import sha256 from 'sha256';
 
 const router = express.Router();
 router.get('/sample', (req, res) => {
-    res.json({ message: 'hello sample', calc: 'hogehoge' });
+    res.json({
+        message: 'hello sample',
+        calc: 'hogehoge',
+        user: req.user,
+    });
 });
 
 router.post('/emotions', (req, res) => {

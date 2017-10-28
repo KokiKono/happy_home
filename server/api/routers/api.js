@@ -41,7 +41,7 @@ router.all('/*', (req, res, next) => {
         return;
     }
    // check auth
-    const token = req.body.token || req.query.token || req.headers['x-access-token'];
+    const token = req.body.token || req.query.token || req.get('Authorization');
     jwt.verify(token, 'secret', (err, decoded) => {
         if (err) {
            res.status(403).send({
