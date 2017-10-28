@@ -1,7 +1,31 @@
 import express from 'express';
-import sha256 from 'sha256';
+import jwt from 'jsonwebtoken';
 
 const router = express.Router();
+
+router.post('/login', (req, res) => {
+    // auth
+    jwt.sign({
+        user: {
+            family_id: req.param('family_id'),
+            family_structure_id: req.param('family_structure_id'),
+        },
+    }, 'secret', { algorithm: 'HS256' }, (err, token) => {
+        if (err) {
+            return res.sendStatus(403).send({
+                message: 'ユーザー認証失敗',
+                status: 403,
+                ok: false,
+            });
+        }
+        // ここで家族シーンと紐付け。
+        return res.json({
+            token,
+            is_validity: true,
+        });
+    });
+});
+
 router.get('/sample', (req, res) => {
     res.json({
         message: 'hello sample',
@@ -116,14 +140,6 @@ router.get('/suggestion/:id', (req, res) => {
         task_list: createTaskList(),
     };
    res.json(resObj);
-});
-
-router.post('/login', (req, res) => {
-    const resObj = {
-        token: sha256(req.param('family_id').toString()),
-        is_validity: true,
-    };
-    res.json(resObj);
 });
 
 router.get('/points', (req, res) => {
