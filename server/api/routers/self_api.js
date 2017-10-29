@@ -1,6 +1,7 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import contollers from '../controllers';
+import SampleModel from '../../models/sample';
+import FamilyModel from '../../models/family';
 
 const router = express.Router();
 
@@ -27,12 +28,27 @@ router.post('/login', (req, res) => {
     });
 });
 
-// ../server/models/dao系から値を取得する場合や非同期処理系はasync,awaitを使用する。
-router.get('/sample', async (req, res) => {
-    res.json({ message: 'hello sample', calc: await contollers.sample.select() });
+router.get('/sample', (req, res, next) => {
+    const sampleModel = new SampleModel();
+    sampleModel.select()
+        .then((result) => {
+            res.json(result);
+        })
+        .catch((err) => {
+            next(err);
+        });
 });
 
-router.post('/family_list', async (req, res) => {
-    res.json({ message: 'hello', result: await contollers.familyList.insertFamily() });
-})
+router.post('/family_list', (req, res, next) => {
+    const familyModel = new FamilyModel();
+    //res.json(req.body);
+    familyModel.postFamily(req.body)
+        .then((result) => {
+           res.json({ message: 'ok', result });
+        })
+        .catch((err) => {
+            next(err);
+        });
+});
+
 export default router;

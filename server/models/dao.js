@@ -10,7 +10,6 @@ const config = configFile[process.env.NODE_ENV];
 
 export default class Dao {
     constructor() {
-        console.log(process.env.NODE_ENV);
         this.connection = mysql.createConnection({
             host: config.mysql.host || 'localhost',
             user: config.mysql.user || 'root',
