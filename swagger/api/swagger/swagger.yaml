@@ -36,6 +36,10 @@ tags:
   description: "幸せ稼ぎリスト（高井）"
 - name: "family_list"
   description: "サーバー側で管理している現在の家族情報リスト（河野）"
+- name: "scene"
+  description: "家族シーン、留守シーンのどちらか。"
+- name: "family"
+  description: "家族関連"
 paths:
   /sample:
     x-swagger-router-controller: sample
@@ -260,7 +264,29 @@ paths:
         default:
           description: Error
           schema:
-            $ref: "#/definitions/ErrorResponse"  
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      tags:
+      - "family_list"
+      security: []
+      summary: 家族登録
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: array
+          items:
+            $ref: "#/definitions/PostFamily"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/FamilyStructure"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 # complex objects have schema definitions
 definitions:
   Sample:
@@ -386,3 +412,9 @@ definitions:
         type: integer
       family_structure_id:
         type: integer
+  PostFamily:
+    properties:
+      type:
+        type: string
+      name:
+        type: string
