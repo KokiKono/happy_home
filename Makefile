@@ -1,9 +1,22 @@
-setup:
+root-sp:
 	git pull
+database-sp:
+	cd database && git pull
+setup:
+	$(MAKE) root-sp
+	$(MAKE) database-sp
+root-ins:
+	npm i
+swagger-ins:
+	cd swagger && npm i
+database-ins:
+	cd database && npm i
 install:
-	npm i && cd swagger && npm i
-update:
-	git pull && npm i && cd swagger && npm i
+	$(MAKE) root-ins
+	$(MAKE) swagger-ins
+	$(MAKE) database-ins
+db-migrate-up:
+	cd database && npm run up
 mock-run:
 	npm run mock-run
 real-run:
@@ -16,3 +29,7 @@ edit-swagger:
 	cd swagger && $(npm bin)/swagger project edit swagger
 lint:
 	npm run lint
+update:
+	git pull
+	$(MAKE) install
+	$(MAKE) db-migrate-up
