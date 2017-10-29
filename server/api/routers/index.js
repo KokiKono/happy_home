@@ -24,9 +24,10 @@ router.use((reqF, resF, nextF) => {
     error.status = 404;
     nextF(error);
 });
+
 // error handling
 router.use('/', (err, req, res, next) => { // eslint-disable-line
-    res.statusCode = err.status;
+    res.statusCode = err.status ? err.status : 500;
     res.json({
         message: err.message ? err.message : 'initial server error',
         status: err.status ? err.status : 500,
