@@ -19,10 +19,10 @@ export default class Dao {
         });
     }
 
-    query(sql) {
+    query(sql, value = []) {
         return new Promise((resolve, reject) => {
             this.connection.connect();
-            this.connection.query(sql, (error, results, fields) => {
+            this.connection.query(sql, value, (error, results, fields) => {
                 this.connection.end();
                 return error ? reject(error) : resolve({ results, fields });
             });
