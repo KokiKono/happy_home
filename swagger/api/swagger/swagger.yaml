@@ -272,7 +272,7 @@ paths:
       summary: 家族登録
       parameters:
       - in: "body"
-        name: "body"
+        name: "family_list"
         required: true
         schema:
           type: array
@@ -416,5 +416,7 @@ definitions:
     properties:
       type:
         type: string
+        example: "父"
       name:
         type: string
+        example: "お父さん"
