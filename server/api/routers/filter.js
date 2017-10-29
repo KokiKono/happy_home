@@ -6,7 +6,20 @@ import jwt from 'jsonwebtoken';
 
 const filter = express.Router();
 
-const noSecurityPathList = ['/login', '/family_list', '/emotions'];
+const createNoSecurity = (path, method) => {
+    const result = {
+        path,
+        method,
+    };
+    return result;
+};
+
+const noSecurityPathList = [
+    createNoSecurity('/login', 'POST'),
+    createNoSecurity('/family_list', 'GET'),
+    createNoSecurity('/emotions', 'POST'),
+    createNoSecurity('/family_list', 'POST'),
+];
 
 // filtering
 filter.all('/*', (req, res, next) => {
@@ -14,8 +27,17 @@ filter.all('/*', (req, res, next) => {
         next();
         return;
     }
-    // no secure
-    if (noSecurityPathList.indexOf(req.path) >= 0) {
+    // no secure check
+    let secure = true;
+    noSecurityPathList.some((item) => {
+        if (item.path === req.path && item.method === req.method) {
+            secure = false;
+            return true;
+        }
+        return false;
+    });
+    if (!secure) {
+        // no secure
         next();
         return;
     }

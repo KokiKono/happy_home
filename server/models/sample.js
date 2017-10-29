@@ -5,7 +5,7 @@ import Dao from './dao';
 
 export default class SampleModel extends Dao {
     select() {
-        return super.query('SELECT * FROM sample')
+        return super.query('SELECT * FROM sample WHERE id = ? OR id = ?', [1, 2])
             .then((success) => {
                 return success;
             })

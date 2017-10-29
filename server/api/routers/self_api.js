@@ -32,4 +32,7 @@ router.get('/sample', async (req, res) => {
     res.json({ message: 'hello sample', calc: await contollers.sample.select() });
 });
 
+router.post('/family_list', async (req, res) => {
+    res.json({ message: 'hello', result: await contollers.familyList.insertFamily() });
+})
 export default router;
