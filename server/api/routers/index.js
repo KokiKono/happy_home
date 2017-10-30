@@ -9,6 +9,7 @@ const router = express.Router();
 router.use(logger());
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
+
 router.use(filterRouter);
 
 const nodeEnv = process.env.NODE_ENV ? process.env.NODE_ENV : 'real';
