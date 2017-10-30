@@ -32,7 +32,7 @@ router.get('/sample', (req, res, next) => {
     const sampleModel = new SampleModel();
     sampleModel.select()
         .then((result) => {
-            res.json(result);
+            res.json(result.results);
         })
         .catch((err) => {
             next(err);
