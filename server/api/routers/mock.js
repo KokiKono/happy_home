@@ -34,11 +34,6 @@ router.get('/sample', (req, res) => {
     });
 });
 
-router.post('/emotions', (req, res) => {
-    res.statusCode = 204;
-    res.send();
-});
-
 router.get('/notice_list/new', (req, res) => {
    let resObj = [];
    for (let i = 1; i < 20; i += 1) {
@@ -173,6 +168,23 @@ router.get('/family_list', (req, res) => {
         ];
     }
     res.json(resObj);
+});
+
+router.post('/event/emotions', (req, res) => {
+    res.statusCode = 204;
+    res.send();
+});
+router.post('/event/iot', (req, res) => {
+    res.statusCode = 204;
+    res.send();
+});
+router.post('/event/scenes', (req, res) => {
+    res.statusCode = 204;
+    res.send();
+});
+router.post('/event/animations', (req, res) => {
+    res.statusCode = 204;
+    res.send();
 });
 
 export default router;
