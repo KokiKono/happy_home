@@ -44,13 +44,13 @@ export default class FamilyDao extends Dao {
                     return reject(transactionError);
                 }
                 // 家族登録
-                const insertFamilyResult = await this.insertFamily().catch((e) => {
-                    const error = new Error('post family insertId not found')
+                const insertFamilyResult = await this.insertFamily().catch(() => {
+                    const error = new Error('post family insertId not found');
                     return reject(error);
                 });
                 if (!insertFamilyResult.insertId) {
                     this.connection.rollback();
-                    const error = new Error('post family insertId not found')
+                    const error = new Error('post family insertId not found');
                     return reject(error);
                 }
                 // 家族構成登録
@@ -62,6 +62,37 @@ export default class FamilyDao extends Dao {
                     });
                 this.connection.commit();
                 return resolve('ok');
+            });
+        });
+    }
+
+    /**
+     * 指定familyIdのtimestampを更新する。
+     * @param familyId Number
+     * @returns {Promise}
+     */
+    updateFamily(familyId) {
+        return new Promise((resolve, reject) => {
+            this.connection.query('UPDATE SET timestamp=NOW() WHERE id=?', [familyId], (queryError, results) => {
+                if (queryError) {
+                    return reject(queryError);
+                }
+                return resolve(results);
+            });
+        });
+    }
+
+    /**
+     * timestampで最新のfamily情報を取得する。
+     * @returns {Promise}
+     */
+    latestFamily() {
+        return new Promise((resolve, reject) => {
+            this.connection.query('SELECT * FROM m_family ORDER BY timestamp DESC LIMIT 1', (error, results) => {
+                if (error) {
+                    return reject(error);
+                }
+                return resolve(results);
             });
         });
     }
