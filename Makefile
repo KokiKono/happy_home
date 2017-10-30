@@ -6,7 +6,7 @@ setup:
 	$(MAKE) root-sp
 	$(MAKE) database-sp
 root-ins:
-	npm i
+	cd server && npm i
 swagger-ins:
 	cd swagger && npm i
 database-ins:
@@ -18,9 +18,9 @@ install:
 db-migrate-up:
 	cd database && npm run up
 mock-run:
-	npm run mock-run
+	cd server && npm run mock-run
 real-run:
-	npm run real-run
+	cd server && npm run real-run
 run-debug:
 	DEBUG=express:* nodemon app.js localhost 8080 --exec babel-node
 open-swagger:

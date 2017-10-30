@@ -117,6 +117,9 @@ fabric.properties
 dist/
 
 !/server/api/README.md
-!/front/README.md
+!/server/views/sub/README.md
 !/server/README.md
 !/README.md
+!/server/contorller/api/README.md
+!/swagger/dist/
+!/server/views/main/README.md

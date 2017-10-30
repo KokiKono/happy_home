@@ -1,13 +1,16 @@
 import express from 'express';
-import configFile from './config.json';
-import apiRouter from './server/api/routers';
+import configFile from '../config.json';
+import apiRouter from './routers/api';
+import managementRouter from './management/routers';
 
 const app = express();
 const config = configFile[process.env.NODE_ENV];
-const socket = require('./server/socket')(app);
 
-app.use(express.static('front'));
+const socket = require('./socket/index')(app);
 
+app.set('view engine', 'ejs');
+
+app.use(express.static('views/sub'));
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
@@ -20,6 +23,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api', apiRouter);
+
+app.use('/management', managementRouter);
 
 app.listen(config.server.port, () => {
     console.log(`happy home app mode is ${process.env.NODE_ENV} listening on ${config.server.port}`);

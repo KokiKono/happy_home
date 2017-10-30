@@ -9,7 +9,7 @@
       "host": "localhost",
       "user": "root",
       "password": "",
-      "database": "happy_home"
+      "database": "wp"
     }
   },
   "production": {
