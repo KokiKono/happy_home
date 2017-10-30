@@ -1,7 +1,7 @@
 root-sp:
 	git pull
 database-sp:
-	cd database && git pull
+	git submodule update -i && cd database && git pull
 setup:
 	$(MAKE) root-sp
 	$(MAKE) database-sp
