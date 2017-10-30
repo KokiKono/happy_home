@@ -39,9 +39,19 @@ router.get('/sample', (req, res, next) => {
         });
 });
 
+router.get('/family_list', (req, res, next) => {
+    const familyModel = new FamilyModel();
+    familyModel.latestFamily()
+        .then((result) => {
+            res.json(result);
+        })
+        .catch((error) => {
+            next(error);
+        });
+});
+
 router.post('/family_list', (req, res, next) => {
     const familyModel = new FamilyModel();
-    //res.json(req.body);
     familyModel.postFamily(req.body)
         .then((result) => {
            res.json({ message: 'ok', result });
