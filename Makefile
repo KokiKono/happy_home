@@ -31,5 +31,6 @@ lint:
 	npm run lint
 update:
 	git pull
+	$(MAKE) database-sp
 	$(MAKE) install
 	$(MAKE) db-migrate-up
