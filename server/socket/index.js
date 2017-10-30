@@ -1,11 +1,20 @@
-const Socket = function (io) {
+const ioEvent = function (io) {
+
   io.on('connection', (socket) => {
-    // クライアントから受け取ったメッセージをサーバーで処理するようイベントを登録
-    // （c2s→client to server | s2c→server to client）
-    socket.on('add', (val) => {
-      io.emit('add', val);
-      console.log('動いたよ');
-    });
+      socket.on('chat message', (msg) => {
+          io.emit('chat message', msg);
+      });
   });
 };
-module.exports = Socket;
+
+const init = function (app) {
+
+  const server = require('http').Server(app);
+
+  const io = require('socket.io')(server);
+
+  ioEvent(io);
+  return server;
+
+};
+module.exports = init;
