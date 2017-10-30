@@ -1,6 +1,10 @@
 # happy_home
 
 # set up
+[環境構築](https://github.com/KokiKono/happy_home.wiki.git)
+
+
+
 <pre>
 make install
 </pre>
