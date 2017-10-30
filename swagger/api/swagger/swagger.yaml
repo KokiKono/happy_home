@@ -40,6 +40,12 @@ tags:
   description: "家族シーン、留守シーンのどちらか。"
 - name: "family"
   description: "家族関連"
+- name: "animation"
+  description: "アニメーションの進行管理"
+- name: "iot"
+  description: "iOT関連"
+- name: "event"
+  description: "イベント取り分系"
 paths:
   /sample:
     x-swagger-router-controller: sample
@@ -182,11 +188,12 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /emotions:
+  /event/emotions:
     x-swagger-router-controller: emotions
     post:
       tags:
       - "emotions"
+      - "event"
       summary: 感情データ登録
       description: 家族IDはt_family.timestampから最新のIDをAPIが取得し紐付ける。
       operationId: postEmotions
@@ -283,6 +290,60 @@ paths:
           description: Success
           schema:
             $ref: "#/definitions/FamilyStructure"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /event/scenes:
+    post:
+      tags:
+      - "event"
+      - "scene"
+      security: []
+      summary: シーン登録
+      responses:
+        "200":
+          description: Success
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /event/animations:
+    post:
+      tags:
+      - "event"
+      - "animation"
+      security: []
+      summary: アニメーション管理
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/PostAnimation"
+      responses:
+        "200":
+          description: Success
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /event/iot:
+    post:
+      tags:
+      - "event"
+      - "iot"
+      security: []
+      summary: iOTのイベントを登録する。
+      parameters:
+      - in: "body"
+        name: "iot"
+        required: true
+        schema:
+          $ref: "#/definitions/PostIOT"
+      responses:
+        "200":
+          description: Success
         default:
           description: Error
           schema:
@@ -420,3 +481,17 @@ definitions:
       name:
         type: string
         example: "お父さん"
+  PostAnimation:
+    properties:
+      type:
+        type: string
+        example: "end"
+  PostIOT:
+    properties:
+      type:
+        type: string
+        example: "door"
+      content:
+        type: string
+        example: "open"
+      
