@@ -4,8 +4,10 @@ import apiRouter from './server/api/routers';
 
 const app = express();
 const config = configFile[process.env.NODE_ENV];
+const socket = require('./server/socket')(app);
 
 app.use(express.static('front'));
+
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
