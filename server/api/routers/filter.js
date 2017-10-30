@@ -28,6 +28,10 @@ filter.all('/*', (req, res, next) => {
         return;
     }
     // no secure check
+    if (req.originalUrl.match('/event')) {
+        next();
+        return;
+    }
     let secure = true;
     noSecurityPathList.some((item) => {
         if (item.path === req.path && item.method === req.method) {
@@ -36,6 +40,7 @@ filter.all('/*', (req, res, next) => {
         }
         return false;
     });
+
     if (!secure) {
         // no secure
         next();
