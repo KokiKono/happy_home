@@ -1,7 +1,7 @@
 import express from 'express';
 import configFile from '../config.json';
 import apiRouter from './routers/api';
-import managementRouter from './management/routers';
+import managementRouter from './routers/management';
 
 const app = express();
 const config = configFile[process.env.NODE_ENV];
