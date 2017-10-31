@@ -123,3 +123,4 @@ dist/
 !/server/contorller/api/README.md
 !/swagger/dist/
 !/server/views/main/README.md
+!/server/.babelrc
