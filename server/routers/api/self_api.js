@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import SampleModel from '../../models/sample';
 import FamilyModel from '../../models/family';
 import NoticeNewModel from '../../models/notice_list_new';
+import SuggestionModel from '../../models/suggestion';
 
 const router = express.Router();
 
@@ -72,5 +73,17 @@ router.get('/notice_list/new', (req, res, next) => {
             next(err);
         });
 });
+
+router.get('/suggestion', (req, res, next) => {
+    const suggestionModel = new SuggestionModel();
+    suggestionModel.selectSuggestionDetail(req.id)
+        .then((result) => {
+            res.json(result.results);
+        })
+        .catch((err) => {
+            next(err);
+        });
+});
+
 
 export default router;
