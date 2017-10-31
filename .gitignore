@@ -124,3 +124,4 @@ dist/
 !/swagger/dist/
 !/server/views/main/README.md
 !/server/.babelrc
+!/server/.eslintrc.json
