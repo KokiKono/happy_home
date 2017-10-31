@@ -1,20 +1,24 @@
+import http from 'http';
+import socketIo from 'socket.io';
+
 const ioEvent = function (io) {
 
-  io.on('connection', (socket) => {
-      socket.on('chat message', (msg) => {
-          io.emit('chat message', msg);
-      });
-  });
+    io.on('connection', (socket) => {
+        socket.on('add date', (msg) => {
+            console.log('動いた');
+            io.emit('add date', msg);
+        });
+    });
 };
 
 const init = function (app) {
 
-  const server = require('http').Server(app);
+    const server = http.Server(app);
 
-  const io = require('socket.io')(server);
+    const io = socketIo(server);
 
-  ioEvent(io);
-  return server;
+    ioEvent(io);
+    return server;
 
 };
 module.exports = init;
