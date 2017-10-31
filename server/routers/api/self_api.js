@@ -75,10 +75,44 @@ router.get('/notice_list/new', (req, res, next) => {
 });
 
 router.get('/suggestion', (req, res, next) => {
+
+    const createTaskList = (result) => {
+        let resObj = [];
+        for (let i = 0; i < result.results.length; i++) {
+            resObj = [
+                ...resObj,
+                {
+                    id: result.results[i].sd_id,
+                    contents: result.results[i].task_contents,
+                    is_done: i % 2 === 0,//test用
+                },
+            ];
+        }
+        return resObj;
+    };
+
     const suggestionModel = new SuggestionModel();
-    suggestionModel.selectSuggestionDetail(req.id)
+    suggestionModel.selectSuggestionDetail(req.param('id'))
         .then((result) => {
-            res.json(result.results);
+            let resObj = [];
+            for (let i = 0; i < result.results.length; i++) {
+                resObj = [
+                    {
+                        id: result.results[0].suggestion_id,
+                        title: result.results[0].title,
+                        point: result.results[0].point,
+
+                        family_structure : {
+                            id: 'id',
+                            family_id: req.user.family_id,
+                            name: '家族名前',
+                            type: 'おとうさん',
+                        },
+                        task_list: createTaskList(result),
+                    },
+                ];
+            }
+            res.json(resObj);
         })
         .catch((err) => {
             next(err);
