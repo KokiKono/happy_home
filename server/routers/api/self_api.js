@@ -2,6 +2,7 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import SampleModel from '../../models/sample';
 import FamilyModel from '../../models/family';
+import NoticeNewModel from '../../models/notice_list_new';
 
 const router = express.Router();
 
@@ -55,6 +56,17 @@ router.post('/family_list', (req, res, next) => {
     familyModel.postFamily(req.body)
         .then((result) => {
            res.json({ message: 'ok', result });
+        })
+        .catch((err) => {
+            next(err);
+        });
+});
+
+router.get('/notice_list/new', (req, res, next) => {
+    const noticeNewModel = new NoticeNewModel();
+    noticeNewModel.select()
+        .then((result) => {
+            res.json(result.results);
         })
         .catch((err) => {
             next(err);
