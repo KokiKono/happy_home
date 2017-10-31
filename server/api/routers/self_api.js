@@ -63,4 +63,32 @@ router.get('/notice_list/new', (req, res, next) => {
         });
 });
 
+router.get('/notice_list/new/:id', (req, res, next) => {
+    const noticeNewModel = new NoticeNewModel();
+    noticeNewModel.selectAtId(req.param('id'))
+        .then((result) => {
+            let resObj = [];
+            for (let i = 0; i < result.results.length; i++) {
+                resObj = [
+                    ...resObj,
+                    {
+                        id: result.results[i].id,
+                        family_structure_id: result.results[i].family_structure_id,
+                        title: result.results[i].title,
+                        notice_contents: result.results[i].notice_contents,
+                        result_contents: result.results[i].result_contents,
+                        suggestion_list: {
+                            id: result.results[i].suggestion_id,
+                            title: result.results[i].suggestion_title
+                        }
+                    },
+                ];
+            }
+            res.json(resObj);
+        })
+        .catch((err) => {
+            next(err);
+        });
+});
+
 export default router;
