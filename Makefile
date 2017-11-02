@@ -34,3 +34,5 @@ update:
 	$(MAKE) database-sp
 	$(MAKE) install
 	$(MAKE) db-migrate-up
+git-submodule-update:
+	git submodule foreach git pull origin master
