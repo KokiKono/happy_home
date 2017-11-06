@@ -43,16 +43,15 @@
     });
 
     $(() => {
-        $(button).on('click', () => {
-            const date = Math.floor(Math.random() * (100 + 1 - 1)) + 1;
-            socket.emit('add date', date);
-            return false;
-        });
 
         socket.on('add date', (date) => {
             const max_size = chart.data.datasets[0].data.length;
             chart.data.datasets[0].data[max_size] = date;
             chart.update();
+        });
+
+        socket.on('change logs', (log) => {
+
         });
 
     });

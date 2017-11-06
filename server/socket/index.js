@@ -5,10 +5,15 @@ const ioEvent = function (io) {
 
     io.on('connection', (socket) => {
         socket.on('add date', (msg) => {
-            console.log('動いた');
             io.emit('add date', msg);
         });
+
+        io.on('change logs', (log) => {
+           io.emit('change log', log);
+        });
     });
+
+
 };
 
 const init = function (app) {
