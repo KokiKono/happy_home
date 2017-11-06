@@ -113,7 +113,7 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: "#/definitions/NoticeDetail"
+            $ref: "#/definitions/NewNoticeDetail"
         default:
           description: Error
           schema:
@@ -158,7 +158,7 @@ paths:
         "200":
           description: Success
           schema:
-            $ref: "#/definitions/NoticeDetail"
+            $ref: "#/definitions/OldNoticeDetail"
         default:
           description: Error
           schema:
@@ -431,7 +431,7 @@ definitions:
         type: array
         items:
           $ref: "#/definitions/SuggestionTask"
-  NoticeDetail:
+  NewNoticeDetail:
     properties:
       id:
         type: integer
@@ -444,13 +444,26 @@ definitions:
       notice_contents:
         type: string
         description: 通知内容
-      result_contents:
-        type: string
-        description: 行動結果内容 or null
       suggestion_list:
         type: array
         items:
           $ref: "#/definitions/Suggestion"
+  OldNoticeDetail:
+    properties:
+      id:
+        type: integer
+      family_strcuture_id:
+        type: integer
+        description: 家族構成ID
+      title:
+        type: string
+        description: 通知タイトル
+      result_contents:
+        type: string
+        description: 行動結果
+      behavior_result:
+        type: string
+        description: '行動内容'
   Point:
     properties:
       id:
