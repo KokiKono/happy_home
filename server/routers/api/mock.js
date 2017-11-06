@@ -94,12 +94,9 @@ router.get('/notice_list/old/:id', (req, res) => {
             {
                 id: req.param('id'),
                 family_structure_id: req.user.family_structure_id,
-                title: 'タイトル',
-                notice_contents: '通知内容',
-                suggestion_list: {
-                    id: i + 1,
-                    title: 'タスクのタイトル',
-                },
+                title: '奥さんの機嫌をあなたさんの〇〇で解決されました。',
+                result_contents: '行動結果内容',
+                behavior_result: 'あなたの行動内容',
             },
         ];
     }

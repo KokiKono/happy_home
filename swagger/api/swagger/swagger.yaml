@@ -458,7 +458,7 @@ definitions:
       title:
         type: string
         description: 通知タイトル
-      resulet_contents:
+      result_contents:
         type: string
         description: 行動結果
       behavior_result:
