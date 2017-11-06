@@ -116,6 +116,10 @@ fabric.properties
 .idea/vcs.xml
 dist/
 
+# happy_home
+package-lock.json
+config.json
+
 !/server/api/README.md
 !/server/views/sub/README.md
 !/server/README.md
