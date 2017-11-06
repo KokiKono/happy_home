@@ -1,0 +1,48 @@
+{
+  "development": {
+    "server": {
+      "schema": "http://",
+      "url": "localhost:",
+      "port": 8080
+    },
+    "mysql": {
+      "host": "localhost",
+      "user": "root",
+      "password": "",
+      "database": "wp"
+    }
+  },
+  "production": {
+    "server": {
+      "schema": "http://",
+      "url": "localhost:",
+      "port": 8080
+    },
+    "mysql": {
+      "host": "localhost",
+      "user": "root",
+      "password": "",
+      "database": "happy_home"
+    }
+  },
+  "mock": {
+    "server": {
+      "schema": "http://",
+      "url": "localhost:",
+      "port": 8080
+    },
+    "mysql": {
+      "host": "localhost",
+      "user": "root",
+      "password": "",
+      "database": "happy_home"
+    }
+  },
+  "api-key": {
+    "faceAPI": "",
+    "emotionAPI": ""
+  },
+  "led": {
+    "ip_address": "192.168.0.255"
+  }
+}
