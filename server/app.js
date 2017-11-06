@@ -2,11 +2,12 @@ import express from 'express';
 import configFile from '../config.json';
 import apiRouter from './routers/api';
 import managementRouter from './routers/management';
+import socket from './socket/index';
 
 const app = express();
 const config = configFile[process.env.NODE_ENV];
 
-const socket = require('./socket/index')(app);
+const Socket = socket(app);
 
 app.set('view engine', 'ejs');
 
@@ -26,6 +27,6 @@ app.use('/api', apiRouter);
 
 app.use('/management', managementRouter);
 
-app.listen(config.server.port, () => {
+Socket.listen(config.server.port, () => {
     console.log(`happy home app mode is ${process.env.NODE_ENV} listening on ${config.server.port}`);
 });
