@@ -1,3 +1,6 @@
 [submodule "database"]
 	path = database
 	url = https://github.com/KokiKono/happy_home_er.git
+[submodule "happy_home.wiki"]
+	path = happy_home.wiki
+	url = https://github.com/KokiKono/happy_home.wiki.git
