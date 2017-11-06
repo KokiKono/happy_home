@@ -1,6 +1,11 @@
 import chokidar from 'chokidar';
+import fs from 'fs';
+import * as jsdiff from 'diff';
 
-const watchEvent = function (watcher) {
+let eventText = '';
+let motionText = '';
+
+const watchEvent = function (watcher, io) {
     // イベント定義
     watcher.on('ready', () => {
         // 準備完了
@@ -8,29 +13,50 @@ const watchEvent = function (watcher) {
 
         // ファイルの追加
         watcher.on('add', (path) => {
-            console.log(`${path} added.`);
+            console.log(`${path}added.`);
         });
 
         // ファイルの編集
         watcher.on('change', (path, stats) => {
-            console.log(`${path} changed.`);
-            console.log(stats.size());
+            console.log(`./${path}`);
+            fs.readFile(`./${path}`, 'utf-8', (err, text) => {
+                let sabun = '';
+                let okikae = '';
+               switch (path) {
+                   case 'tmp/event.log':
+                       sabun = jsdiff.diffChars(eventText, text);
+                       okikae = sabun[1].value.slice(1);
+                       io.emit('change event logs', okikae);
+                       eventText = text;
+                       break;
+                   case 'tmp/motion.log':
+                       sabun = jsdiff.diffChars(motionText, text);
+                       okikae = sabun[1].value.slice(1);
+                       io.emit('change motion logs', okikae);
+                       motionText = text;
+                       break;
+                   default:
+                       break;
+               }
+            });
         });
     });
 };
 
 
-const init = function () {
+const init = function (io) {
     const watcher = chokidar.watch('.', {
         ignored: /[\/\\]\./,
         persistent: true,
     });
-    console.log('動いた');
+    fs.readFile('./tmp/event.log', 'utf-8', (err, text) => {
+        eventText = text;
+    });
+    fs.readFile('./tmp/motion.log', 'utf-8', (err, text) => {
+        motionText = text;
+    });
+    watchEvent(watcher, io);
 
-    watchEvent(watcher);
-    // chokidar.watch('.', { ignored: /[\/\\]\./ }).on('all', (event, path) => {
-    //     console.log(event, path);
-    // });
 };
 
 module.exports = init;

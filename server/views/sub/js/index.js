@@ -1,6 +1,8 @@
 (function ($) {
     const ctx = document.getElementById('canvas').getContext('2d');
     const button = '#add';
+    const event = '#events';
+    const motion = '#logs';
     const socket = io.connect('http://localhost:8080');
     // var socket = io.connect('http://localhost');
     const chart = new Chart(ctx, {
@@ -50,10 +52,20 @@
             chart.update();
         });
 
-        socket.on('change logs', (log) => {
-
+        socket.on('change event logs', (data) => {
+            console.log(`event: ${data}`);
+            $(event).append(`<li>${data}</li>`);
         });
 
+        socket.on('change motion logs', (data) => {
+            console.log(`motion: ${data}`);
+            $(motion).append(`<li>${data}</li>`);
+            window.scrollTo(0, motion.scrollHeight);
+        });
+
+        socket.on('voice', (text) => {
+            speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+        });
     });
 
     $.graph = {
