@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import SampleModel from '../../models/sample';
 import FamilyModel from '../../models/family';
 import NoticeNewModel from '../../models/notice_list_new';
+import SuggestionModel from '../../models/suggestion';
 import NoticeOldModel from '../../models/notice_list_old';
 
 const router = express.Router();
@@ -74,6 +75,66 @@ router.get('/notice_list/new', (req, res, next) => {
         });
 });
 
+function createTaskList(id, notice_id) {
+    const suggestionModel = new SuggestionModel();
+    let resObj = [];
+    return new Promise((resolve, reject) => {
+        suggestionModel.selectSuggestionTask(id, notice_id).
+        then((result) => {
+            for (let i = 0; i < result.length; i += 1) {
+                resObj = [
+                    ...resObj,
+                    {
+                        id: result[i].id,
+                        contents: result[i].task_contents,
+                        is_done: result[i].done % 2 === 1,
+                    },
+                ];
+            }
+            resolve(resObj);
+        })
+        .catch((err) => (reject(err)));
+    })
+};
+
+function getFamilyStructure(family_structure_id, fam_id){
+    const suggestionModel = new SuggestionModel();
+    return new Promise((resolve, reject) => {
+        suggestionModel.selectFamilyStructure(family_structure_id, fam_id)
+        .then((result) => {
+            const resObj = [
+                {
+                    id: family_structure_id,
+                    family_id: fam_id,
+                    name: result[0].name,
+                    type: result[0].type,
+                },
+            ];
+            resolve(resObj);
+        })
+        .catch((err) => (reject(err)));
+    })
+};
+
+router.get('/suggestion/:id', (req, res, next) => {
+    const suggestionModel = new SuggestionModel();
+    suggestionModel.selectSuggestion(req.param('id'))
+    .then(async (result) => {
+        const resObj = {
+
+            id: result.results[0].id,
+            title: result.results[0].title,
+            point: result.results[0].point,
+
+            family_structure: await getFamilyStructure(req.user.family_structure_id, req.user.family_id),
+
+            task_list: await createTaskList(req.param('id'), req.param('notice_id')),
+        };
+       res.json(resObj);
+    })
+   .catch((err) => {
+       next(err);
+   });
 router.get('/notice_list/new/:id', (req, res, next) => {
     const noticeNewModel = new NoticeNewModel();
     noticeNewModel.selectAtId(req.param('id'))
