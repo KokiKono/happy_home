@@ -51,22 +51,22 @@ router.get('/notice_list/new', (req, res) => {
 });
 
 router.get('/notice_list/new/:id', (req, res) => {
-    let resObj = [];
-    for (let i = 1; i < 20; i += 1) {
-        resObj = [
-            ...resObj,
+    const resObj = {
+        id: req.param('id'),
+        family_structure_id: req.user.family_structure_id,
+        title: 'タイトル',
+        notice_contents: '通知内容',
+        suggestion_list: [
             {
-                id: req.param('id'),
-                family_structure_id: req.user.family_structure_id,
-                title: 'タイトル',
-                notice_contents: '通知内容',
-                suggestion_list: {
-                    id: i + 1,
-                    title: 'タスクのタイトル',
-                },
+                id: 1,
+                title: 'タスクのタイトル',
             },
-        ];
-    }
+            {
+                id: 1,
+                title: 'タスクのタイトル',
+            },
+        ],
+    };
     res.json(resObj);
 });
 
