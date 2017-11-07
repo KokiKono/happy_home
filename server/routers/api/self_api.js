@@ -77,23 +77,24 @@ router.get('/notice_list/new/:id', (req, res, next) => {
     const noticeNewModel = new NoticeNewModel();
     noticeNewModel.selectAtId(req.param('id'))
         .then((result) => {
-            let resObj = [];
+            let suggestion_list = [];
             for (let i = 0; i < result.results.length; i++) {
-                resObj = [
-                    ...resObj,
+                suggestion_list = [
+                    ...suggestion_list,
                     {
-                        id: result.results[i].id,
-                        family_structure_id: result.results[i].family_structure_id,
-                        title: result.results[i].title,
-                        notice_contents: result.results[i].notice_contents,
-                        result_contents: result.results[i].result_contents,
-                        suggestion_list: {
                         id: result.results[i].suggestion_id,
                         title: result.results[i].suggestion_title
-                    }
-                },    
-            ];
-        }
+                    },    
+                ];
+            }
+            let resObj = {
+                id: result.results[0].id,
+                family_structure_id: result.results[0].family_structure_id,
+                title: result.results[0].title,
+                notice_contents: result.results[0].notice_contents,
+                result_contents: result.results[0].result_contents,
+                suggestion_list
+            };
         res.json(resObj);
     })
     .catch((err) => {
