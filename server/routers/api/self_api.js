@@ -4,6 +4,7 @@ import SampleModel from '../../models/sample';
 import FamilyModel from '../../models/family';
 import NoticeNewModel from '../../models/notice_list_new';
 import SuggestionModel from '../../models/suggestion';
+import NoticeOldModel from '../../models/notice_list_old';
 
 const router = express.Router();
 
@@ -74,7 +75,6 @@ router.get('/notice_list/new', (req, res, next) => {
         });
 });
 
-
 function createTaskList(id, notice_id) {
     const suggestionModel = new SuggestionModel();
     let resObj = [];
@@ -135,6 +135,73 @@ router.get('/suggestion/:id', (req, res, next) => {
    .catch((err) => {
        next(err);
    });
+router.get('/notice_list/new/:id', (req, res, next) => {
+    const noticeNewModel = new NoticeNewModel();
+    noticeNewModel.selectAtId(req.param('id'))
+        .then((result) => {
+            let suggestion_list = [];
+            for (let i = 0; i < result.results.length; i++) {
+                suggestion_list = [
+                    ...suggestion_list,
+                    {
+                        id: result.results[i].suggestion_id,
+                        title: result.results[i].suggestion_title
+                    },    
+                ];
+            }
+            let resObj = {
+                id: result.results[0].id,
+                family_structure_id: result.results[0].family_structure_id,
+                title: result.results[0].title,
+                notice_contents: result.results[0].notice_contents,
+                result_contents: result.results[0].result_contents,
+                suggestion_list
+            };
+        res.json(resObj);
+    })
+    .catch((err) => {
+        next(err);
+    });
+});
+
+router.get('/notice_list/old', (req, res, next) => {
+    const noticeOldModel = new NoticeOldModel();
+    noticeOldModel.select()
+        .then((result) => {
+            res.json(result.results);
+        })
+        .catch((err) => {
+            next(err);
+        });
+});
+
+router.get('/notice_list/old/:id', (req, res, next) => {
+    const noticeOldModel = new NoticeOldModel();
+    noticeOldModel.selectAtId(req.param('id'))
+        .then((result) => {
+            let suggestion_list = [];
+            for (let i = 0; i < result.results.length; i++) {
+                suggestion_list = [
+                    ...suggestion_list,
+                    {
+                        id: result.results[i].suggestion_id,
+                        title: result.results[i].suggestion_title
+                    },    
+                ];
+            }
+            let resObj = {
+                id: result.results[0].id,
+                family_structure_id: result.results[0].family_structure_id,
+                title: result.results[0].title,
+                notice_contents: result.results[0].notice_contents,
+                result_contents: result.results[0].result_contents,
+                suggestion_list
+            };
+        res.json(resObj);
+    })
+    .catch((err) => {
+        next(err);
+    });
 });
 
 export default router;

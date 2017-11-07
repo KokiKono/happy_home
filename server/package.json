@@ -17,6 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.18.2",
+    "chokidar": "^1.7.0",
     "corser": "^2.0.1",
     "ejs": "^2.5.7",
     "express": "^4.16.2",
@@ -26,7 +27,8 @@
     "mysql": "^2.15.0",
     "sha256": "^0.2.0",
     "sharp": "^0.18.4",
-    "socket.io": "^2.0.4"
+    "socket.io": "^2.0.4",
+    "node-milight-promise": "^0.2.32"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
