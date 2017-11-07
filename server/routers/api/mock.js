@@ -87,19 +87,13 @@ router.get('/notice_list/old', (req, res) => {
 });
 
 router.get('/notice_list/old/:id', (req, res) => {
-    let resObj = [];
-    for (let i = 1; i < 20; i += 1) {
-        resObj = [
-            ...resObj,
-            {
-                id: req.param('id'),
-                family_structure_id: req.user.family_structure_id,
-                title: '奥さんの機嫌をあなたさんの〇〇で解決されました。',
-                result_contents: '行動結果内容',
-                behavior_result: 'あなたの行動内容',
-            },
-        ];
-    }
+    const resObj = {
+        id: req.param('id'),
+        family_structure_id: req.user.family_structure_id,
+        title: '奥さんの機嫌をあなたさんの〇〇で解決されました。',
+        result_contents: '行動結果内容',
+        behavior_result: 'あなたの行動内容',
+    };
     res.json(resObj);
 });
 
