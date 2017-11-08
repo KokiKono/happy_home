@@ -135,6 +135,8 @@ router.get('/suggestion/:id', (req, res, next) => {
    .catch((err) => {
        next(err);
    });
+});
+
 router.get('/notice_list/new/:id', (req, res, next) => {
     const noticeNewModel = new NoticeNewModel();
     noticeNewModel.selectAtId(req.param('id'))
@@ -146,7 +148,7 @@ router.get('/notice_list/new/:id', (req, res, next) => {
                     {
                         id: result.results[i].suggestion_id,
                         title: result.results[i].suggestion_title
-                    },    
+                    },
                 ];
             }
             let resObj = {
@@ -186,7 +188,7 @@ router.get('/notice_list/old/:id', (req, res, next) => {
                     {
                         id: result.results[i].suggestion_id,
                         title: result.results[i].suggestion_title
-                    },    
+                    },
                 ];
             }
             let resObj = {
