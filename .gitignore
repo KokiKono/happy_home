@@ -130,3 +130,4 @@ config.json
 !/server/.babelrc
 !/server/.eslintrc.json
 /server/ai/camera/.idea/
+/server/.python-version
