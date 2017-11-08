@@ -36,3 +36,5 @@ update:
 	$(MAKE) db-migrate-up
 git-submodule-update:
 	git submodule foreach git pull origin master
+camera-clean:
+	rm -rf server/ai/images/*.jpg
