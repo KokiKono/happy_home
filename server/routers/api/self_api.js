@@ -5,6 +5,7 @@ import FamilyModel from '../../models/family';
 import NoticeNewModel from '../../models/notice_list_new';
 import SuggestionModel from '../../models/suggestion';
 import NoticeOldModel from '../../models/notice_list_old';
+import PointsModel from '../../models/points';
 
 const router = express.Router();
 
@@ -204,6 +205,17 @@ router.get('/notice_list/old/:id', (req, res, next) => {
     .catch((err) => {
         next(err);
     });
+});
+
+router.get('/points', (req, res, next) => {
+    const pointsModel = new PointsModel();
+    pointsModel.select()
+        .then((result) => {
+            res.json(result.results);
+        })
+        .catch((err) => {
+            next(err);
+        });
 });
 
 export default router;
