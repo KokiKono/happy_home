@@ -45,6 +45,11 @@
     });
 
     $(() => {
+        $(button).on('click', () => {
+            chart.data.labels.splice(0, 1);
+            chart.data.datasets.data.splice(0, 1);
+            chart.update();
+        });
 
         socket.on('add date', (date) => {
             const max_size = chart.data.datasets[0].data.length;
@@ -66,10 +71,17 @@
         socket.on('voice', (text) => {
             speechSynthesis.speak(new SpeechSynthesisUtterance(text));
         });
-    });
 
+        socket.on('graph update', () => {
+
+        });
+    });
+    //todo グラフ削除部分検証中
     $.graph = {
-        replace: () => {
+        add: () => {
+
+        },
+        delete: () => {
 
         },
     };
