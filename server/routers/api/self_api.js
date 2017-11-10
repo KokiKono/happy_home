@@ -103,14 +103,13 @@ function getFamilyStructure(family_structure_id, fam_id){
     return new Promise((resolve, reject) => {
         suggestionModel.selectFamilyStructure(family_structure_id, fam_id)
         .then((result) => {
-            const resObj = [
+            const resObj =
                 {
                     id: family_structure_id,
                     family_id: fam_id,
                     name: result[0].name,
                     type: result[0].type,
-                },
-            ];
+                };
             resolve(resObj);
         })
         .catch((err) => (reject(err)));
