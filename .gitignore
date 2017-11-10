@@ -129,3 +129,5 @@ config.json
 !/server/views/main/README.md
 !/server/.babelrc
 !/server/.eslintrc.json
+/server/ai/camera/.idea/
+/server/.python-version
