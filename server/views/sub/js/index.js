@@ -69,7 +69,9 @@
     });
 
     $.graph = {
+        replace: () => {
 
+        },
     };
 
 }(jQuery));

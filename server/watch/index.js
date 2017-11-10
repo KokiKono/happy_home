@@ -25,13 +25,21 @@ const watchEvent = function (watcher, io) {
                switch (path) {
                    case 'tmp/event.log':
                        sabun = jsdiff.diffChars(eventText, text);
-                       okikae = sabun[1].value.slice(1);
+                       if (sabun.length != 1) {
+                           okikae = sabun[1].value.replace('/\r\n|\r|\n/g', '');
+                       } else {
+                           okikae = sabun[0].value;
+                       }
                        io.emit('change event logs', okikae);
                        eventText = text;
                        break;
                    case 'tmp/motion.log':
                        sabun = jsdiff.diffChars(motionText, text);
-                       okikae = sabun[1].value.slice(1);
+                       if (sabun.length != 1) {
+                           okikae = sabun[1].value.replace('/\r\n|\r|\n/g', '');
+                       } else {
+                           okikae = sabun[0].value;
+                       }
                        io.emit('change motion logs', okikae);
                        motionText = text;
                        break;
