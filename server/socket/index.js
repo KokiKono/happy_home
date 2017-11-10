@@ -24,9 +24,9 @@ const init = function (app) {
 
     const server = http.Server(app);
     const io = socketIo(server);
-    const watch = new Watch(io);
+    // const watch = new Watch(io);
     ioEvent(io);
-    return server;
+    return { server, io };
 
 };
 module.exports = init;
