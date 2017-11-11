@@ -1,8 +1,16 @@
 import * as childProcess from 'child_process';
+import * as path from 'path';
 
-const run = (num) => { // eslint-disable-line
+const run = (num, imagePath) => { // eslint-disable-line
     return new Promise((resolve, reject) => { // eslint-disable-line
-        return childProcess.exec(`python camera.py ${num}`, (err, stdout) => {
+        console.log(`python ${path.join(__dirname, 'camera.py')} ${num} ${imagePath}`);
+        // childProcess.exec(`python ./camera.py ${num}`, (err, stdout) => {
+        //     if (err) {
+        //         reject(err);
+        //     }
+        //     resolve(stdout);
+        // });
+        childProcess.exec(`python ${path.join(__dirname, 'camera.py')} ${num} ${imagePath}`, (err, stdout) => {
             if (err) {
                 reject(err);
             }

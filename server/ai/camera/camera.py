@@ -44,7 +44,8 @@ if __name__ == "__main__":
     # 写真をとる枚数
     if argc > 0:
         imagePage = int(argvs[1])
-    
+        print(argvs[2])
+        image_path = argvs[2]
     while(True):
 
         # 動画ストリームからフレームを取得
@@ -74,8 +75,7 @@ if __name__ == "__main__":
         cv2.imshow("Show FLAME Image", frame)
         now = datetime.now().strftime('%Y-%m-%d:%H:%M:%S')
         # 認識結果の保存
-        image_path = '../images/' + now + '-' + str(imagePage) +'.jpg'
-        cv2.imwrite(image_path, frame)
+        cv2.imwrite(image_path + now + '-' + str(imagePage) +'.jpg', frame)
 
         if imagePage == 0:
             break
