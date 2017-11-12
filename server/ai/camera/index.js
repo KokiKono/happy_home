@@ -5,6 +5,7 @@ import Async from 'async';
 import momentTimezone from 'moment-timezone';
 import moment from 'moment';
 import deepEqual from 'deep-equal';
+import oxford from 'project-oxford';
 
 export default class Camera {
     constructor(imageNum, imagePath) {
@@ -98,8 +99,11 @@ export default class Camera {
     static findDetects(faceId, detects) {
         let detect = null;
         detects.some((detectDetail) => {
-            detect = detectDetail.result.find(item => item.faceId === faceId);
-            if (detect) return true;
+            const result = detectDetail.result.find(item => item.faceId === faceId);
+            if (result) {
+                detect = { result, filePath: detectDetail.filePath };
+                return true;
+            };
             return false;
         })
         return detect;
@@ -109,8 +113,9 @@ export default class Camera {
         return new Promise((resolve, reject) => {
             let process = 1;
             const responseBody = [];
+            const client = new oxford.Client('');
             Async.each(filePaths, (filePath) => {
-                microsoftAzure.postEmotion(fs.createReadStream(filePath))
+                client.emotion.analyzeEmotion({ path: filePath })
                     .then((result) => {
                         process += 1;
                         if (result.length > 0) {
@@ -136,12 +141,20 @@ export default class Camera {
     static findEmotion(emotions, faceRectangle) {
         let emotion = null;
         emotions.some((emotionDetail) => {
-            emotion = emotionDetail.result.find(item => {
-                return deepEqual(item.faceRectangle, faceRectangle);
+            emotion = emotionDetail.find((item) => {
+                return deepEqual(item.emotion.faceRectangle, faceRectangle);
             });
             if (emotion) return true;
             return false;
         });
         return emotion;
+    }
+
+    static mostFindSimilar(similarList) {
+        let most = { confidence: 0 };
+        similarList.forEach((item) => {
+            if (item.confidence > most.confidence) most = item;
+        });
+        return most;
     }
 }
