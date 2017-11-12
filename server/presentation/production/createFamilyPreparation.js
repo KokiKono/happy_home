@@ -9,9 +9,8 @@ import Async from 'async';
 
 
 import camera from '../../ai/camera';
-// import microsoftAzure from '../../ai/microsoftAzure';
-import * as microsoftAzure from '../mock/microsoftAzure';
-import TmpFaceAPI from '../models/tmpFaceAPI';
+import * as microsoftAzure from '../../ai/microsoftAzure';
+// import * as microsoftAzure from '../mock/microsoftAzure';
 import TmpFaceDao from '../models/tmpFace';
 
 // format YYYY-MM-DD:HH:mm:ss
@@ -20,11 +19,11 @@ export default class createFamilyPreparation {
     constructor(imageNum, imagePath) {
         this.imageNum = imageNum;
         this.imagePath = imagePath;
-        const nowTime = momentTimezone().tz("Asia/Tokyo").format();
+        const nowTime = momentTimezone().tz('Asia/Tokyo').format();
         this.now = moment(nowTime);
     }
 
-    fileStatus(filePath) {
+    fileStatus(filePath) { // eslint-disable-line
         return new Promise((resolve, reject) => {
             fs.stat(filePath, (err, stats) => {
                 if (err) reject(err);
@@ -48,11 +47,11 @@ export default class createFamilyPreparation {
                     const status = await this.fileStatus(`${this.imagePath}/${file}`).catch((err2) => { reject(err2); });
                     const atime = moment(status.atime);
                     const diffSec = atime.diff(this.now.format(), 'milliseconds');
-                    // if (diffSec > 0) {
-                    //     fileList.push(`${this.imagePath}/${file}`);
-                    // }
+                    if (diffSec > 0) {
+                        fileList.push(`${this.imagePath}/${file}`);
+                    }
                     // デバッグ用
-                    fileList.push(`${this.imagePath}/${file}`);
+                    // fileList.push(`${this.imagePath}/${file}`);
                 }, (err3) => {
                     if (err3) reject(err3);
                     resolve(fileList);
@@ -60,23 +59,19 @@ export default class createFamilyPreparation {
             });
         });
     }
-    postFaceAPIDetects(filePaths) {
+    postFaceAPIDetects(filePaths) { // eslint-disable-line
         return new Promise((resolve, reject) => {
-            let processd = 0;
+            let processd = 1;
             const responseBody = [];
             Async.each(filePaths, (filePath) => {
                 microsoftAzure.postFaceDetect(fs.createReadStream(filePath))
                     .then(async (result) => {
+                        processd += 1;
                         if (result.length > 0) {
-                            processd += 1;
                             responseBody.push({ result, filePath });
-                            // DBインサート tmp_faceAPI廃止
-                            // const tmpFaceAPIDao = new TmpFaceAPI();
-                            // await tmpFaceAPIDao.insert(filePath, JSON.stringify(result))
-                            //     .catch((err) => { console.log(err); })
-                            if (processd === filePaths.length) {
-                                resolve(responseBody);
-                            }
+                        }
+                        if (processd === filePaths.length) {
+                            resolve(responseBody);
                         }
                     }).catch((postErr) => {
                         console.log(postErr);
@@ -87,6 +82,7 @@ export default class createFamilyPreparation {
                 });
             }, (err) => {
                 if (err) reject(err);
+                resolve(responseBody);
             });
         });
     }
@@ -94,7 +90,7 @@ export default class createFamilyPreparation {
     start() {
         return new Promise(async (resolve, reject) => {
             // カメラ起動して複数枚写真をとる。
-            // await camera(this.imageNum, this.imagePath).catch((err) => { reject(err); });
+            await camera(this.imageNum, this.imagePath).catch((err) => { reject(err); });
             // 撮った写真の取得
             const files = await this.readCarefullySelectedImageFiles()
                 .catch((err) => { reject(err); });
@@ -107,9 +103,12 @@ export default class createFamilyPreparation {
                     faceIds.push(face.faceId);
                 });
             });
-            // faceIdsをグルーピング
-            const { groups } = await microsoftAzure.postFaceGroup(faceIds);
+            // // faceIdsをグルーピング
+            const { groups } = await microsoftAzure.postFaceGroup(faceIds).catch((err) => {
+                console.log(err);
+            });
             // グルーピングしたものから適当な代表faceIdを決定しDBにインサート
+            const saveImageFile = [];
             Async.each(groups, async (group) => {
                 // 代表faceId
                 const modelFaceId = group[Math.floor(Math.random() * group.length)];
@@ -119,6 +118,8 @@ export default class createFamilyPreparation {
                     detect = detect[0]; // eslint-disable-line
                 }
                 const { result, filePath } = detect;
+                // 保存しておく画像パスをpush
+                saveImageFile.push(filePath);
                 // faceGroup情報をDBにインサート
                 const tmpFaceDao = new TmpFaceDao();
                 await tmpFaceDao.insertRelation(modelFaceId, filePath, JSON.stringify(result))
@@ -131,8 +132,16 @@ export default class createFamilyPreparation {
                         reject(err);
                     });
             });
+            // 不要な画像ファイルを削除
+            files.forEach((item) => {
+                const isSave = saveImageFile.find(save => (item === save));
+                if (isSave === undefined) {
+                    fs.unlink(item, (err) => {
+                        if (err) console.log(`${item}の削除に失敗`);
+                    });
+                }
+            });
             resolve();
         });
     }
-
 }

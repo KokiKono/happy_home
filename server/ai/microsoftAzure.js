@@ -52,13 +52,15 @@ export const postFaceGroup = (faceIds) => {
         url,
         method: 'POST',
         headers: {
-            'Content-Type': 'application/octet-stream',
+            'Content-Type': 'application/json',
             'Ocp-Apim-Subscription-Key': `${configFile['api-key'].faceAPI}`,
         },
-        body: faceIds,
+        json: true,
+        body: { faceIds },
     };
     return new Promise((resolve, reject) => {
         request(options, (error, response, body) => {
+            console.log(body);
             if (error) {
                 return reject(error);
             }
@@ -72,7 +74,7 @@ export const postFaceGroup = (faceIds) => {
             if (response.statusCode === 429) {
                 console.log('FaceAP アクセスオーバー');
             }
-            return resolve(JSON.parse(body));
+            return resolve(body);
         });
     });
 };
