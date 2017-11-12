@@ -141,7 +141,7 @@ export default class createFamilyPreparation {
                     });
                 }
             });
-            resolve();
+            resolve('success');
         });
     }
 }

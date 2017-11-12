@@ -68,4 +68,42 @@ export default class TmpFace {
             });
         });
     }
+
+    /**
+     * tmp情報を全て削除する。
+     * @returns {Promise}
+     */
+    deleteAll() {
+        return new Promise((resolve, reject) => {
+            this.connection.connect((connectErr) => {
+                if (connectErr) reject(connectErr);
+                this.connection.beginTransaction((beginTransactionErr) => {
+                    if (beginTransactionErr) reject(beginTransactionErr);
+                    this.connection.query(
+                        'DELETE FROM tmp_face_group',
+                        (queryErr) => {
+                            if (queryErr) {
+                                this.connection.rollback(() => (reject(queryErr)));
+                            }
+                            this.connection.query(
+                                'DELETE FROM face_relation',
+                                (queryErr2) => {
+                                    if (queryErr2) {
+                                        this.connection.rollback(() => (reject(queryErr)));
+                                    }
+                                    this.connection.commit((commitErr) => {
+                                        if (commitErr) {
+                                            this.connection.rollback(() => (reject(commitErr)));
+                                        }
+                                        this.connection.end();
+                                        resolve('success');
+                                    });
+                                },
+                            );
+                        },
+                    );
+                });
+            });
+        });
+    }
 }
