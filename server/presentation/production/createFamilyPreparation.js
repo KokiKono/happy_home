@@ -16,32 +16,14 @@ export default class createFamilyPreparation {
         this.imagePath = imagePath;
     }
 
-    postFaceAPIDetects(filePaths) { // eslint-disable-line
-        return new Promise((resolve, reject) => {
-            let process = 1;
-            const responseBody = [];
-            Async.each(filePaths, (filePath) => {
-                microsoftAzure.postFaceDetect(fs.createReadStream(filePath))
-                    .then(async (result) => {
-                        process += 1;
-                        if (result.length > 0) {
-                            responseBody.push({ result, filePath });
-                        }
-                        if (process === filePaths.length) {
-                            resolve(responseBody);
-                        }
-                    }).catch((postErr) => {
-                        console.log(postErr);
-                        process += 1;
-                        if (process === filePaths.length) {
-                            resolve(responseBody);
-                        }
-                });
-            }, (err) => {
-                if (err) reject(err);
-                resolve(responseBody);
-            });
+    static findDetects(faceId, detects) {
+        let detect = null;
+        detects.some((detectDetail) => {
+            detect = detectDetail.result.find(item => item.faceId === faceId);
+            if (detect) return true;
+            return false;
         });
+        return detect;
     }
 
     start() {
@@ -53,7 +35,8 @@ export default class createFamilyPreparation {
             const files = await camera.readCarefullySelectedImageFiles()
                 .catch((err) => { reject(err); });
             // 撮った写真をfaceAPIに投げる
-            const detects = await this.postFaceAPIDetects(files).catch((err) => { reject(err); });
+            const detects = await camera.postFaceAPIDetects(microsoftAzure, files)
+                .catch((err) => { reject(err); });
             // faceListからfaceIdを抽出
             const faceIds = [];
             Async.each(detects, (detect) => {
@@ -61,7 +44,7 @@ export default class createFamilyPreparation {
                     faceIds.push(face.faceId);
                 });
             });
-            // // faceIdsをグルーピング
+            // faceIdsをグルーピング
             const { groups } = await microsoftAzure.postFaceGroup(faceIds).catch((err) => {
                 console.log(err);
             });
@@ -71,10 +54,7 @@ export default class createFamilyPreparation {
                 // 代表faceId
                 const modelFaceId = group[Math.floor(Math.random() * group.length)];
                 // 代表faceIdのdetect情報
-                let detect = detects.filter((detect) => detect.result.find(face => (face.faceId === modelFaceId)));// eslint-disable-line
-                if (detect instanceof Array) {
-                    detect = detect[0]; // eslint-disable-line
-                }
+                const detect = this.findDetects(modelFaceId, detects);
                 const { result, filePath } = detect;
                 // 保存しておく画像パスをpush
                 saveImageFile.push(filePath);
