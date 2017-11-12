@@ -49,7 +49,6 @@ export default class createFamilyPreparation {
             // カメラ起動して複数枚写真をとる。
             const camera = new Camera(this.imageNum, this.imagePath);
             await camera.take();
-            // await camera(this.imageNum, this.imagePath).catch((err) => { reject(err); });
             // 撮った写真の取得
             const files = await camera.readCarefullySelectedImageFiles()
                 .catch((err) => { reject(err); });
