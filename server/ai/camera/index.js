@@ -4,6 +4,7 @@ import * as fs from 'fs';
 import Async from 'async';
 import momentTimezone from 'moment-timezone';
 import moment from 'moment';
+import deepEqual from 'deep-equal';
 
 export default class Camera {
     constructor(imageNum, imagePath) {
