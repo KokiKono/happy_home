@@ -67,3 +67,65 @@ export const postFaceGroup = (faceIds) => {
         });
     });
 };
+
+export const postEmotion = () => (
+    new Promise((resolve) => (
+        resolve([
+            {
+                faceRectangle: {
+                    left: 68,
+                    top: 97,
+                    width: 64,
+                    height: 97,
+                },
+                scores: {
+                    anger: 0.00300731952,
+                    contempt: 5.14648448E-08,
+                    disgust: 9.180124E-06,
+                    fear: 0.0001912825,
+                    happiness: 0.9875571,
+                    neutral: 0.0009861537,
+                    sadness: 1.889955E-05,
+                    surprise: 0.008229999,
+                },
+            },
+            {
+                faceRectangle: {
+                    top: 226,
+                    left: 606,
+                    width: 235,
+                    height: 235,
+                },
+                scores: {
+                    anger: 0.00300731952,
+                    contempt: 5.14648448E-08,
+                    disgust: 9.180124E-06,
+                    fear: 0.0001912825,
+                    happiness: 0.9875571,
+                    neutral: 0.0009861537,
+                    sadness: 1.889955E-05,
+                    surprise: 0.008229999,
+                },
+            },
+        ])
+        ))
+);
+
+export const postFindSimilars = (faceId, faceIds) => {
+    return new Promise((resolve, reject) => {
+        resolve([
+            {
+                faceId: 'dab5b257-d825-4bd3-ba8d-0e1c351f8039',
+                confidence: 0.9,
+            },
+            {
+                faceId: '56a1854d-74ff-4772-a156-deb9a9c6d2c9',
+                confidence: 0.8,
+            },
+            {
+                faceId: '56a1854d-74ff-4772-a156-deb9a9c6d2c9',
+                confidence: 1.0,
+            },
+        ]);
+    });
+};
