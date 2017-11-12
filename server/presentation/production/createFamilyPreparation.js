@@ -16,16 +16,6 @@ export default class createFamilyPreparation {
         this.imagePath = imagePath;
     }
 
-    static findDetects(faceId, detects) {
-        let detect = null;
-        detects.some((detectDetail) => {
-            detect = detectDetail.result.find(item => item.faceId === faceId);
-            if (detect) return true;
-            return false;
-        });
-        return detect;
-    }
-
     start() {
         return new Promise(async (resolve, reject) => {
             // カメラ起動して複数枚写真をとる。
@@ -54,7 +44,7 @@ export default class createFamilyPreparation {
                 // 代表faceId
                 const modelFaceId = group[Math.floor(Math.random() * group.length)];
                 // 代表faceIdのdetect情報
-                const detect = this.findDetects(modelFaceId, detects);
+                const detect = Camera.findDetects(modelFaceId, detects);
                 const { result, filePath } = detect;
                 // 保存しておく画像パスをpush
                 saveImageFile.push(filePath);

@@ -65,4 +65,82 @@ export default class Camera {
             });
         });
     }
+
+    postFaceAPIDetects(microsoftAzure, filePaths) { // eslint-disable-line
+        return new Promise((resolve, reject) => {
+            let process = 1;
+            const responseBody = [];
+            Async.each(filePaths, (filePath) => {
+                microsoftAzure.postFaceDetect(fs.createReadStream(filePath))
+                    .then((result) => {
+                        process += 1;
+                        if (result.length > 0) {
+                            responseBody.push({ result, filePath });
+                        }
+                        if (process === filePaths.length) {
+                            resolve(responseBody);
+                        }
+                    }).catch((postErr) => {
+                    console.log(postErr);
+                    process += 1;
+                    if (process === filePaths.length) {
+                        resolve(responseBody);
+                    }
+                });
+            }, (err) => {
+                if (err) reject(err);
+                resolve(responseBody);
+            });
+        });
+    }
+
+    static findDetects(faceId, detects) {
+        let detect = null;
+        detects.some((detectDetail) => {
+            detect = detectDetail.result.find(item => item.faceId === faceId);
+            if (detect) return true;
+            return false;
+        })
+        return detect;
+    }
+
+    postEmotionAPI(microsoftAzure, filePaths) {
+        return new Promise((resolve, reject) => {
+            let process = 1;
+            const responseBody = [];
+            Async.each(filePaths, (filePath) => {
+                microsoftAzure.postEmotion(fs.createReadStream(filePath))
+                    .then((result) => {
+                        process += 1;
+                        if (result.length > 0) {
+                            responseBody.push({ result, filePath });
+                        }
+                        if (process === filePaths.length) {
+                            resolve(responseBody);
+                        }
+                    }).catch((postErr) => {
+                    console.log(postErr);
+                    process += 1;
+                    if (process === filePaths.length) {
+                        resolve(responseBody);
+                    }
+                });
+            }, (err) => {
+                if (err) reject(err);
+                resolve(responseBody);
+            });
+        });
+    }
+
+    static findEmotion(emotions, faceRectangle) {
+        let emotion = null;
+        emotions.some((emotionDetail) => {
+            emotion = emotionDetail.result.find(item => {
+                return deepEqual(item.faceRectangle, faceRectangle);
+            });
+            if (emotion) return true;
+            return false;
+        });
+        return emotion;
+    }
 }
