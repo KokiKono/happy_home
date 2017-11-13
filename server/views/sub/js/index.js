@@ -9,7 +9,7 @@
         // The type of chart we want to create
         type: 'bar',
         data: {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'February', 'March', 'April', 'May', 'June'],
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
             datasets: [{
                 backgroundColor: 'rgba(0,0,0,0)',
                 borderColor: 'rgb(255, 0, 0)',
@@ -18,7 +18,7 @@
             }, {
                 label: '父',
                 backgroundColor: 'rgb(255, 99, 132)',
-                data: [20, 10, 5, 2, 20, 30, 45, 10, 5, 2, 20, 30, 45],
+                data: [20, 10, 5, 2, 20, 30, 45],
             }, {
                 label: '母',
                 backgroundColor: 'rgb(255, 99, 0)',
@@ -47,7 +47,9 @@
     $(() => {
         $(button).on('click', () => {
             chart.data.labels.splice(0, 1);
-            chart.data.datasets.data.splice(0, 1);
+            chart.data.datasets[0].data.splice(0, 1);
+            chart.data.labels.push('新しいの');
+            chart.data.datasets[0].data.push(100);
             chart.update();
         });
 
@@ -72,17 +74,28 @@
             speechSynthesis.speak(new SpeechSynthesisUtterance(text));
         });
 
-        socket.on('graph update', () => {
-
+        socket.on('graph update', (data) => {
+            chart.data.labels.splice(0, 1);
+            // chart.data.datasets[0].data.splice(0, 1);
+            $.graph.delete();
+            chart.data.labels.push('新しいの');
+            $.graph.add();
+            // chart.data.datasets[0].data.push(data);
+            chart.update();
         });
     });
+
     //todo グラフ削除部分検証中
     $.graph = {
         add: () => {
-
+            chart.data.datasets.forEach((dataset, index) => {
+                dataset.data.push(Math.floor(Math.random() * 101));
+            });
         },
         delete: () => {
-
+            chart.data.datasets.forEach((dataset, index) => {
+                dataset.data.shift();
+            });
         },
     };
 
