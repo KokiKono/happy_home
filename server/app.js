@@ -1,4 +1,5 @@
 import express from 'express';
+import morgan from 'morgan';
 import configFile from '../config.json';
 import apiRouter from './routers/api';
 import managementRouter from './routers/management';
@@ -12,8 +13,11 @@ const config = configFile[process.env.NODE_ENV];
 const Socket = socket(app);
 const watch = Watch(Socket.io);
 
+app.socket = Socket;
+
 app.set('view engine', 'ejs');
 
+app.use(morgan({ format: 'dev', immediate: true }));
 app.use(express.static('views/sub'));
 
 app.use((req, res, next) => {
