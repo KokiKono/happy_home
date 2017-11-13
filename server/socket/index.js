@@ -9,11 +9,15 @@ const ioEvent = function (io) {
             io.emit('add date', msg);
         });
 
-        io.on('change event logs', (log) => {
+        socket.on('change event logs', (log) => {
             console.log('うごいた');
             io.emit('change log', log);
         });
 
+        setInterval(() => {
+            const rand = Math.floor(Math.random() * 101);
+            io.emit('graph update', rand);
+        }, 5000);
 
     });
 
