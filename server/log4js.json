@@ -14,7 +14,7 @@
   "categories": {
     "default": {
       "appenders": ["multi", "console"],
-      "level": "debug"
+      "level": "info"
     },
     "console": {
       "appenders": ["console"],
