@@ -4,10 +4,11 @@
  */
 import * as fs from 'fs';
 import Async from 'async';
+import oxford from 'project-oxford';
+// import oxford from '../mock/project-oxford';
 
+import configFile from '../../../config.json';
 import Camera from '../../ai/camera';
-import * as microsoftAzure from '../../ai/microsoftAzure';
-// import * as microsoftAzure from '../mock/microsoftAzure';
 import TmpFaceDao from '../models/tmpFace';
 
 export default class createFamilyPreparation {
@@ -18,6 +19,8 @@ export default class createFamilyPreparation {
 
     start() {
         return new Promise(async (resolve, reject) => {
+            // MicroSoft Azure API Client
+            const faceClient = new oxford.Client(configFile['api-key'].faceAPI, configFile.azureApi.region);
             // カメラ起動して複数枚写真をとる。
             const camera = new Camera(this.imageNum, this.imagePath);
             await camera.take();
@@ -25,7 +28,7 @@ export default class createFamilyPreparation {
             const files = await camera.readCarefullySelectedImageFiles()
                 .catch((err) => { reject(err); });
             // 撮った写真をfaceAPIに投げる
-            const detects = await camera.postFaceAPIDetects(microsoftAzure, files)
+            const detects = await camera.postFaceAPIDetects(faceClient.face.detect, files)
                 .catch((err) => { reject(err); });
             // faceListからfaceIdを抽出
             const faceIds = [];
@@ -35,9 +38,10 @@ export default class createFamilyPreparation {
                 });
             });
             // faceIdsをグルーピング
-            const { groups } = await microsoftAzure.postFaceGroup(faceIds).catch((err) => {
-                console.log(err);
-            });
+            const { groups } = await faceClient.face.grouping(faceIds)
+                .catch((err) => {
+                    console.log('グルーピング失敗', err);
+                });
             // グルーピングしたものから適当な代表faceIdを決定しDBにインサート
             const saveImageFile = [];
             Async.each(groups, async (group) => {
