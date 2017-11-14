@@ -1,11 +1,16 @@
 import express from 'express';
 import morgan from 'morgan';
+
+import { eventLogger, motionLogger} from './log';
 import configFile from '../config.json';
 import apiRouter from './routers/api';
 import managementRouter from './routers/management';
 import socket from './socket/index';
 import Watch from './watch/index';
 import presentation from './presentation/mock';
+
+eventLogger.debug('boot');
+motionLogger.debug('boot');
 
 const app = express();
 const config = configFile[process.env.NODE_ENV];
