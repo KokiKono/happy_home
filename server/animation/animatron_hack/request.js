@@ -1,6 +1,7 @@
 'use strict';
 
-const apiUrl = 'http://localhost:8080/event/animations';
+const apiUrl = 'http://localhost:8080/api/event/animations';
+let isPaused = false;
 
 $(() => {
 	const target = $('div#target');
@@ -14,13 +15,20 @@ $(() => {
 		// 再生開始時
 		if (target.hasClass('anm-state-playing')) {
 			// ここに再生開始時に実行したい処理を書く
-			console.log('playing!');
-			postStatus('begin');
+			if (isPaused) {
+				console.log('resume!');
+				postStatus('resume');
+			}
+			else {
+				console.log('playing!');
+				postStatus('begin');
+			}
 		}
 		// 一時停止時
 		else if (target.hasClass('anm-state-paused')) {
 			// ここに一時停止時に実行したい処理を書く
 			console.log('paused!');
+			isPaused = true;
 			postStatus('pause');
 		}
 		// 再生終了時
