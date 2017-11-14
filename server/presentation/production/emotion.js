@@ -52,8 +52,8 @@ export default class Emotion {
     start() {
         return new Promise(async (resolve, reject) => {
             // MicroSoft Azure API Client
-            const faceClient = new oxford.Client(configFile['api-key'].faceAPI, configFile.azureApi.region);
-            const emotionClient = new oxford.Client(configFile['api-key'].emotionAPI, 'westus');
+            const faceClient = new oxford.Client(configFile['api-key'].faceAPI, configFile.azureApi.region.faceAPI);
+            const emotionClient = new oxford.Client(configFile['api-key'].emotionAPI, configFile.azureApi.region.emotionAPI);
             // カメラを起動して複数枚写真を撮る。
             const camera = new Camera(this.imageNum, this.imagePath);
             await camera.take();
@@ -99,10 +99,7 @@ export default class Emotion {
                 const comparisonFaceId = emotionDetectGroup[0].detect.faceId;
                 const findSimilarList = await faceClient
                     .face.similar(comparisonFaceId, { candidateFaces: modelFaceIds })
-                    .catch(err => {
-                        reject(err)
-                        console.log(err);
-                    });
+                    .catch(err => reject(err));
                 const most = await Camera.mostFindSimilar(findSimilarList);
 
                 Async.each(emotionDetectGroup, async (emotionDetect) => {

@@ -20,7 +20,7 @@ export default class createFamilyPreparation {
     start() {
         return new Promise(async (resolve, reject) => {
             // MicroSoft Azure API Client
-            const faceClient = new oxford.Client(configFile['api-key'].faceAPI, configFile.azureApi.region);
+            const faceClient = new oxford.Client(configFile['api-key'].faceAPI, configFile.azureApi.region.faceAPI);
             // カメラ起動して複数枚写真をとる。
             const camera = new Camera(this.imageNum, this.imagePath);
             await camera.take();
