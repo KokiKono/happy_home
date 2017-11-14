@@ -7,3 +7,4 @@ log4js.configure('log4js.json');
 
 export const eventLogger = log4js.getLogger('event');
 export const motionLogger = log4js.getLogger('motion');
+export const consoleLogger = log4js.getLogger('console');
