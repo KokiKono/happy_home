@@ -19,6 +19,11 @@ const ioEvent = function (io) {
             io.emit('graph update', rand);
         }, 5000);
 
+        setInterval(() => {
+            const url = [ "http://localhost:8080/sub", "http://localhost:8080/animation/sample/sample_animation/project.html" ];
+            io.emit('url', url[ Math.floor( Math.random() * url.length ) ]);
+        }, 10000);
+        
     });
 
 
