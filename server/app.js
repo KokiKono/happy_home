@@ -1,7 +1,7 @@
 import express from 'express';
 import morgan from 'morgan';
 
-import { eventLogger, motionLogger} from './log';
+import { eventLogger, motionLogger, consoleLogger } from './log';
 import configFile from '../config.json';
 import apiRouter from './routers/api';
 import managementRouter from './routers/management';
@@ -26,11 +26,6 @@ app.use(morgan({ format: 'dev', immediate: true }));
 app.use('/main', express.static('views/main'));
 app.use('/sub', express.static('views/sub'));
 app.use('/animation', express.static('animation'));
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    next();
-});
 
 app.get('/', (req, res) => {
     res.send('Hello World hoge');
@@ -43,5 +38,6 @@ app.use('/management', managementRouter);
 Socket.server.listen(config.server.port, () => {
     console.log(`happy home app mode is ${process.env.NODE_ENV} listening on ${config.server.port}`);
 });
+
 // うざいので、
 // presentation(app);
