@@ -96,4 +96,26 @@ export default class FamilyDao extends Dao {
             });
         });
     }
+
+    getFamilyList() {
+        return new Promise(async (resolve, reject) => {
+            const latestFamily = await this.latestFamily();
+            this.connection.query(
+                `SELECT
+                 fs.id as id,
+                 f.id as family_id,
+                 fs.name as name,
+                 fs.type as family_type
+                  FROM m_family f
+                  INNER JOIN t_family_structure fs
+                  ON f.id = fs.family_id
+                  WHERE f.id = ?`,
+                [latestFamily[0].id],
+                (queryErr, results) => {
+                    if (queryErr) reject(queryErr);
+                    resolve(results);
+                },
+            );
+        });
+    }
 }

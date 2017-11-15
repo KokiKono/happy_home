@@ -46,7 +46,7 @@ router.get('/sample', (req, res, next) => {
 
 router.get('/family_list', (req, res, next) => {
     const familyModel = new FamilyModel();
-    familyModel.latestFamily()
+    familyModel.getFamilyList()
         .then((result) => {
             res.json(result);
         })
