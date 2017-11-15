@@ -306,6 +306,13 @@ paths:
       - "scene"
       security: []
       summary: シーン登録
+      description: "0=家族シーン,1=留守シーン"
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/PostScene"
       responses:
         "200":
           description: Success
@@ -493,6 +500,9 @@ definitions:
         type: integer
   PostFamily:
     properties:
+      family_id:
+        type: string
+        example: "7f887bfd-160d-4d3c-bb83-04ce06454414"
       type:
         type: string
         example: "父"
@@ -512,4 +522,8 @@ definitions:
       content:
         type: string
         example: "open"
-      
+  PostScene:
+    properties:
+      type:
+        type: integer
+        example: 1
