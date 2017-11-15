@@ -6,6 +6,16 @@ import selfRouter from './self_api';
 import mockRouter from './mock';
 
 const router = express.Router();
+
+router.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    if (req.headers['access-control-request-method']) {
+        res.header('Access-Control-Allow-Methods', req.headers['access-control-request-method']);
+    }
+    next();
+});
+
 router.use(logger());
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
