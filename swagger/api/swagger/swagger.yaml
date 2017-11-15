@@ -48,6 +48,8 @@ tags:
   description: "イベント取り分系"
 - name: "suggestion_task"
   description: "提案タスク系"
+- name: "Award"
+  description: "ランキング"
 paths:
   /sample:
     x-swagger-router-controller: sample
@@ -411,6 +413,8 @@ paths:
             $ref: "#/definitions/ErrorResponse"
   /awards:
     get:
+      tags:
+      - "Award"
       summary: 幸せ稼ぎランキング
       responses:
         200:
