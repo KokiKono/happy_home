@@ -21,8 +21,8 @@ export default class FamilyDao extends Dao {
             let result = false;
             structreList.some((item) => {
                 this.connection.query(
-                    'INSERT INTO t_family_structure(family_id, name, type) VALUES(?, ?, ?)',
-                    [familyId, item.name, item.type],
+                    'INSERT INTO t_family_structure(family_id, name, type, face_id) VALUES(?, ?, ?, ?)',
+                    [familyId, item.name, item.type, item.family_id],
                     (error) => {
                         if (error) {
                             result = error;
