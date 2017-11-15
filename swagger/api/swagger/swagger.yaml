@@ -46,6 +46,8 @@ tags:
   description: "iOT関連"
 - name: "event"
   description: "イベント取り分系"
+- name: "suggestion_task"
+  description: "提案タスク系"
 paths:
   /sample:
     x-swagger-router-controller: sample
@@ -260,6 +262,27 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /points/{id}:
+    post:
+      tags:
+      - "points"
+      security:
+      - Bearer: []
+      summary: 幸せ稼ぎの承認（この稼ぎをする）
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "通知ID"
+        required: true
+        type: integer
+        format: base64
+      responses:
+        "204":
+          description: Success
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /family_list:
     get:
       tags:
@@ -356,6 +379,44 @@ paths:
       responses:
         "200":
           description: Success
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /tasks/{id}:
+    put:
+      tags:
+      - "suggestion_task"
+      security:
+      - Bearer: []
+      summary: 提案タスクを更新する。完了、未完了
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "通知ID"
+        required: true
+        type: integer
+        format: base64
+      - name: "body"
+        in: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/PutTask"
+      responses:
+        "204":
+          description: Success
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /awards:
+    get:
+      summary: 幸せ稼ぎランキング
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: "#/definitions/AwardList"
         default:
           description: Error
           schema:
@@ -492,6 +553,9 @@ definitions:
       is_validity:
         type: boolean
         description: このtokenの有効性、家族シーンが終了した時にはfalse。
+      icon_url:
+        type: string
+        description: ログインしたユーザーのicon_url
   LoginParameter:
     properties:
       family_id:
@@ -500,7 +564,7 @@ definitions:
         type: integer
   PostFamily:
     properties:
-      family_id:
+      face_id:
         type: string
         example: "7f887bfd-160d-4d3c-bb83-04ce06454414"
       type:
@@ -527,3 +591,18 @@ definitions:
       type:
         type: integer
         example: 1
+  PutTask:
+    properties:
+      is_done:
+        type: boolean
+        example: true
+  AwardList:
+    properties:
+      id:
+        type: integer
+      user_name:
+        type: string
+      point:
+        type: integer
+      icon_url:
+        type: string
