@@ -6,6 +6,7 @@ import NoticeNewModel from '../../models/notice_list_new';
 import SuggestionModel from '../../models/suggestion';
 import NoticeOldModel from '../../models/notice_list_old';
 import PointsModel from '../../models/points';
+import SceneModel from '../../models/scene';
 
 const router = express.Router();
 
@@ -214,6 +215,21 @@ router.get('/points', (req, res, next) => {
         })
         .catch((err) => {
             next(err);
+        });
+});
+
+router.post('/event/scenes', async (req, res) => {
+    const familyModel = new FamilyModel();
+    const latestFamily = await familyModel.latestFamily();
+    const sceneModel = new SceneModel();
+    sceneModel.insertScene(latestFamily[0].id, req.body.type)
+        .then(() => {
+            res.status(204);
+            res.send();
+        })
+        .catch((err) => {
+            res.status(500);
+            res.json(err);
         });
 });
 
