@@ -145,6 +145,11 @@ router.get('/points', (req, res) => {
     res.json(resObj);
 });
 
+router.post('/points/:id', (req, res) => {
+    res.statusCode = 204;
+    res.send();
+});
+
 router.get('/family_list', (req, res) => {
     let resObj = [];
     for (let i = 1; i < 20; i += 1) {
@@ -152,7 +157,7 @@ router.get('/family_list', (req, res) => {
             ...resObj,
             {
                 id: parseInt((Math.random() * 10), 10),
-                family_id: parseInt((Math.random() * 10), 10),
+                family_id: 1,
                 name: '家族名前',
                 type: 'おとうさん',
             },
@@ -174,6 +179,27 @@ router.post('/event/scenes', (req, res) => {
     res.send();
 });
 router.post('/event/animations', (req, res) => {
+    res.statusCode = 204;
+    res.send();
+});
+
+router.get('/awards', (req, res) => {
+    let resObj = [];
+    for (let i = 1; i < 20; i += 1) {
+        resObj = [
+            ...resObj,
+            {
+                id: parseInt((Math.random() * 10), 10),
+                user_name: `ユーザー名${i}`,
+                point: parseInt((Math.random() * 10), 100),
+                icon_url: 'localhost:8080/public/user_icon.jpg',
+            },
+        ];
+    }
+    res.json(resObj);
+});
+
+router.put('/tasks/:id', (req, res) => {
     res.statusCode = 204;
     res.send();
 });
