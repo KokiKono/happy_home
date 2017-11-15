@@ -1,5 +1,5 @@
 <!-- あくまでテンプレートなので必ずしもすべての項目を埋めなくてよい -->
-
+[issueとの連携方法](https://help.github.com/articles/closing-issues-using-keywords/)
 # 概要
 <!-- 変更の目的 もしくは 関連する Issue 番号 -->
 
