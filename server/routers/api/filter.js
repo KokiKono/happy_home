@@ -24,7 +24,7 @@ const noSecurityPathList = [
 // filtering
 filter.all('/*', (req, res, next) => {
     if (req.method === 'OPTIONS') {
-        next();
+        res.send();
         return;
     }
     // no secure check

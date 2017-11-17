@@ -50,6 +50,27 @@ router.get('/notice_list/new', (req, res) => {
    res.json(resObj);
 });
 
+const noticeList = express.Router();
+noticeList.get('/new/:id', (req, res) => {
+    const resObj = {
+        id: req.param('id'),
+        family_structure_id: req.user.family_structure_id,
+        title: 'タイトル',
+        notice_contents: '通知内容',
+        suggestion_list: [
+            {
+                id: 1,
+                title: 'タスクのタイトル',
+            },
+            {
+                id: 1,
+                title: 'タスクのタイトル',
+            },
+        ],
+    };
+    res.json(resObj);
+});
+// router.use('/notice_list', noticeList);
 router.get('/notice_list/new/:id', (req, res) => {
     const resObj = {
         id: req.param('id'),
@@ -68,6 +89,11 @@ router.get('/notice_list/new/:id', (req, res) => {
         ],
     };
     res.json(resObj);
+});
+
+router.put('/notice_list/new/:id/:suggestionID/:suggestionDetailId', (req, res) => {
+    res.statusCode = 204;
+    res.send();
 });
 
 router.get('/notice_list/old', (req, res) => {
@@ -160,6 +186,7 @@ router.get('/family_list', (req, res) => {
                 family_id: 1,
                 name: '家族名前',
                 type: 'おとうさん',
+                face_icon: 'http://localhost:8080/public/images/haru.jpg',
             },
         ];
     }

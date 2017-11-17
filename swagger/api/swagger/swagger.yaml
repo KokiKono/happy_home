@@ -122,6 +122,48 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /notice_list/new/{id}/{suggestion_id}/{suggestion_detail_id}:
+    put:
+      tags:
+        - "notice_list/new"
+      security:
+        - Bearer: []
+      summary: 提案タスクを更新する。完了、未完了
+      parameters:
+      - name: "suggestion_id"
+        in: "path"
+        description: "提案ID"
+        required: true
+        type: integer
+        format: base64
+      - name: "suggestion_detail_id"
+        in: "path"
+        description: "提案詳細ID"
+        required: true
+        type: integer
+        format: base64
+      - name: "id"
+        in: "path"
+        description: "通知ID"
+        required: true
+        type: integer
+        format: base64
+      - name: "body"
+        in: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/PutTask"
+      responses:
+        "204":
+          description: Success
+        "404":
+          description: Not Found
+        "409":
+          description: その提案を受け入れていない
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /notice_list/old:
     x-swagger-router-controller: old_notice_list
     get:
@@ -380,32 +422,6 @@ paths:
           $ref: "#/definitions/PostIOT"
       responses:
         "200":
-          description: Success
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-  /tasks/{id}:
-    put:
-      tags:
-      - "suggestion_task"
-      security:
-      - Bearer: []
-      summary: 提案タスクを更新する。完了、未完了
-      parameters:
-      - name: "id"
-        in: "path"
-        description: "通知ID"
-        required: true
-        type: integer
-        format: base64
-      - name: "body"
-        in: "body"
-        required: true
-        schema:
-          $ref: "#/definitions/PutTask"
-      responses:
-        "204":
           description: Success
         default:
           description: Error
