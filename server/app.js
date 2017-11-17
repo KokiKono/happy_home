@@ -26,6 +26,7 @@ app.use(morgan({ format: 'dev', immediate: true }));
 app.use('/main', express.static('views/main'));
 app.use('/sub', express.static('views/sub'));
 app.use('/animation', express.static('animation'));
+app.use('/public', express.static('views/public'));
 
 app.get('/', (req, res) => {
     res.send('Hello World hoge');
