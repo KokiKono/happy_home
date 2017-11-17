@@ -168,6 +168,36 @@ router.get('/notice_list/new/:id', (req, res, next) => {
     });
 });
 
+router.put('/notice_list/new/:id/:suggestionId/:suggestionDetailId', async (req, res) => {
+    const noticeId = req.param('id');
+    const suggestionId = req.param('suggestionId');
+    const suggestionDetailId = req.param('suggestionDetailId');
+
+    const noticeNewModel = new NoticeNewModel();
+    const noticeNew = await noticeNewModel.selectAtId(noticeId);
+    if (noticeNew.results.length === 0) {
+        res.sendStatus(404)
+        return;
+    }
+    const suggestionModel = new SuggestionModel();
+    const isReceiving = await suggestionModel.isReciving(noticeId, suggestionId);
+    if (!isReceiving) {
+        res.sendStatus(409);
+        return;
+    }
+    const suggestionDetail = await suggestionModel.selectSuggestionDetail(suggestionDetailId);
+    if (suggestionDetail.results.length === 0) {
+        res.sendStatus(404);
+        return;
+    }
+    suggestionModel.toggleSuggestionTask(suggestionDetailId, noticeId)
+        .then(() => res.sendStatus(204))
+        .catch((err) => {
+            res.status(500);
+            res.json(err);
+        });
+});
+
 router.get('/notice_list/old', (req, res, next) => {
     const noticeOldModel = new NoticeOldModel();
     noticeOldModel.select()
@@ -245,6 +275,6 @@ router.post('/event/animations', async (req, res) => {
             res.status(500);
             res.json(err);
         });
-})
+});
 
 export default router;
