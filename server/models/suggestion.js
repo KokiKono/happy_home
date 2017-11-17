@@ -6,7 +6,7 @@ import Dao from './dao';
 export default class SuggestionModel extends Dao {
 
     selectSuggestion(suggestion_id) {
-        return super.query('select id, title, point from m_suggestion where id = ?',[suggestion_id])
+        return super.query('select id, title, point, type from m_suggestion where id = ?',[suggestion_id])
             .then((success) => {
                 return success;
             })

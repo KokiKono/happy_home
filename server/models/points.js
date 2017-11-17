@@ -2,6 +2,7 @@
  * Created by takai on 2017/11/09.
  */
 import Dao from './dao';
+import SuggestionDao from './suggestion';
 
 export default class PointsModel extends Dao {
     select() {
@@ -12,7 +13,62 @@ export default class PointsModel extends Dao {
             .catch((error) => {
                 console.log(error);
                 return error;
-            })
+            });
     }
 
+    receivingPoint(familyStructureId, suggestionId) {
+        if (this.isEnd) super.createConnection();
+        return new Promise((resolve, reject) => {
+            this.connection.beginTransaction(async (transactionError) => {
+                if (transactionError) {
+                    return reject(transactionError);
+                }
+                const suggestionDao = new SuggestionDao();
+                const suggestion = await suggestionDao.selectSuggestion(suggestionId);
+                if (suggestion.results.length === 0) {
+                    const err = new Error('suggestion not found');
+                    err.status = 404;
+                    return reject(err);
+                }
+                const suggestionResult = suggestion.results[0];
+                this.connection.query(
+                    'INSERT INTO t_notice(' +
+                    'family_structure_id,' +
+                    'title,' +
+                    'notice_contents' +
+                    ') VALUES(?, ?, ?)',
+                    [familyStructureId, 'ポイント稼ぎを受け付けました。', `${suggestionResult.title}をして${suggestionResult.type}を幸せにしましょう。`],
+                    (queryErr, results) => {
+                        if (queryErr) {
+                            this.connection.rollback();
+                            reject(queryErr);
+                        } else {
+                            this.connection.query(
+                                'INSERT INTO t_notice_suggestion(' +
+                                'notice_id,' +
+                                'suggestion_id,' +
+                                'receiving' +
+                                ') VALUES(' +
+                                '?, ?, ?)',
+                                [results.insertId, suggestionId, true],
+                                (queryErr2) => {
+                                    if (queryErr2) {
+                                        this.connection.rollback();
+                                        reject(queryErr2);
+                                    } else {
+                                        this.connection.commit();
+                                        super.end();
+                                        resolve({
+                                            suggestion_id: suggestionId,
+                                            notice_id: results.insertId,
+                                        });
+                                    }
+                                },
+                            );
+                        }
+                    },
+                );
+            });
+        });
+    }
 }

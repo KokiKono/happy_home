@@ -249,6 +249,18 @@ router.get('/points', (req, res, next) => {
         });
 });
 
+router.post('/points/:id', (req, res, next) => {
+    console.log(req.param('id'));
+    const pointsModel = new PointsModel();
+    pointsModel.receivingPoint(req.user.family_structure_id, Number(req.param('id')))
+        .then((result) => {
+            res.json(result);
+        })
+        .catch((err) => {
+            next(err);
+        });
+});
+
 router.post('/event/scenes', async (req, res) => {
     const familyModel = new FamilyModel();
     const latestFamily = await familyModel.latestFamily();
