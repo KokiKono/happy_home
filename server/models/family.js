@@ -20,9 +20,10 @@ export default class FamilyDao extends Dao {
         return new Promise((resolve, reject) => {
             let result = false;
             structreList.some((item) => {
+                const url = `http://localhost:8080/public/images/${item.face_id}.jpeg`;
                 this.connection.query(
-                    'INSERT INTO t_family_structure(family_id, name, type, face_id) VALUES(?, ?, ?, ?)',
-                    [familyId, item.name, item.type, item.family_id],
+                    'INSERT INTO t_family_structure(family_id, name, type, face_id, family_icon) VALUES(?, ?, ?, ?, ?)',
+                    [familyId, item.name, item.type, item.face_id, url],
                     (error) => {
                         if (error) {
                             result = error;
