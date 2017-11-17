@@ -21,7 +21,7 @@ $(() => {
 			}
 			else {
 				console.log('playing!');
-				postStatus('begin');
+				postStatus('start');
 			}
 		}
 		// 一時停止時
