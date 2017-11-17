@@ -3,6 +3,7 @@
     const button = '#add';
     const event = '#events';
     const motion = '#logs';
+    const family = ['息子', '娘'];
     const socket = io.connect('http://localhost:8080');
     // var socket = io.connect('http://localhost');
     const chart = new Chart(ctx, {
@@ -74,18 +75,30 @@
             speechSynthesis.speak(new SpeechSynthesisUtterance(text));
         });
 
-        socket.on('graph update', (data) => {
+        socket.on('graph update', (datas) => {
             chart.data.labels.splice(0, 1);
             // chart.data.datasets[0].data.splice(0, 1);
             $.graph.delete();
+            console.log(datas);
+            datas.forEach((data, index) => {
+                if (chart.data.datasets[index] == undifinde) {
+                    chart.data.datasets[index].push({ backgroundColor: $.graph.randCode(), label: family[Math.floor(Math.random() * 1)], data: [] });
+                    const length = chart.data.labels.length();
+                    console.log(length);
+                    chart.data.datasets[index].data[length] = data;
+                } else {
+                    chart.data.datasets[index].data.push(data);
+                }
+            });
+
             chart.data.labels.push('新しいの');
             $.graph.add();
-            // chart.data.datasets[0].data.push(data);
+            chart.data.datasets[0].data.push(data);
             chart.update();
+            console.log(chart.data.datasets);
         });
     });
 
-    //todo グラフ削除部分検証中
     $.graph = {
         add: () => {
             chart.data.datasets.forEach((dataset, index) => {
@@ -96,6 +109,10 @@
             chart.data.datasets.forEach((dataset, index) => {
                 dataset.data.shift();
             });
+        },
+        randCode: () => `rgb(${Math.random() * 101},${Math.random() * 101},${Math.random() * 101})`,
+        addDataset: () => {
+            const length = chart.data.labels.length();
         },
     };
 
