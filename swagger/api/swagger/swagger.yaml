@@ -323,6 +323,10 @@ paths:
       responses:
         "204":
           description: Success
+          schema:
+            $ref: "#/definitions/PostPointsResponse"
+        "404":
+          description: NotFound
         default:
           description: Error
           schema:
@@ -626,3 +630,9 @@ definitions:
         type: integer
       icon_url:
         type: string
+  PostPointsResponse:
+    properties:
+      suggestion_id:
+        type: integer
+      notice_id:
+        type: integer
