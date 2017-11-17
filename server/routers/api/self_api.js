@@ -6,6 +6,8 @@ import NoticeNewModel from '../../models/notice_list_new';
 import SuggestionModel from '../../models/suggestion';
 import NoticeOldModel from '../../models/notice_list_old';
 import PointsModel from '../../models/points';
+import SceneModel from '../../models/scene';
+import AnimationModel from '../../models/animations';
 
 const router = express.Router();
 
@@ -45,7 +47,7 @@ router.get('/sample', (req, res, next) => {
 
 router.get('/family_list', (req, res, next) => {
     const familyModel = new FamilyModel();
-    familyModel.latestFamily()
+    familyModel.getFamilyList()
         .then((result) => {
             res.json(result);
         })
@@ -216,5 +218,33 @@ router.get('/points', (req, res, next) => {
             next(err);
         });
 });
+
+router.post('/event/scenes', async (req, res) => {
+    const familyModel = new FamilyModel();
+    const latestFamily = await familyModel.latestFamily();
+    const sceneModel = new SceneModel();
+    sceneModel.insertScene(latestFamily[0].id, req.body.type)
+        .then(() => {
+            res.status(204);
+            res.send();
+        })
+        .catch((err) => {
+            res.status(500);
+            res.json(err);
+        });
+});
+
+router.post('/event/animations', async (req, res) => {
+    const animationModel = new AnimationModel();
+    animationModel.updateAnimation(req.body.type)
+        .then(() => {
+            res.status(204);
+            res.send();
+        })
+        .catch((err) => {
+            res.status(500);
+            res.json(err);
+        });
+})
 
 export default router;

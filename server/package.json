@@ -11,7 +11,8 @@
     "mock": "NODE_ENV=mock $(npm bin)/nodemon app.js --exec babel-node",
     "real": "NODE_ENV=development $(npm bin)/nodemon app.js --exec babel-node",
     "mock-run": "$(npm bin)/concurrently \"npm run mock\" \"cd ../swagger && npm run mock\"",
-    "real-run": "$(npm bin)/concurrently \"npm run real\" \"cd ../swagger && npm run real\""
+    "real-run": "$(npm bin)/concurrently \"npm run real\" \"cd ../swagger && npm run real\"",
+    "debug-mock-run": "DEBUG=express:* $(npm bin)/concurrently \"npm run mock\" \"cd ../swagger && npm run mock\""
   },
   "author": "k.kono",
   "license": "MIT",
@@ -24,6 +25,7 @@
     "ejs": "2.5.7",
     "express": "4.16.2",
     "jsonwebtoken": "8.1.0",
+    "log4js": "2.3.12",
     "moment": "2.19.1",
     "moment-timezone": "0.5.14",
     "morgan": "1.9.0",

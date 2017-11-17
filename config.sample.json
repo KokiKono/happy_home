@@ -9,7 +9,7 @@
       "host": "localhost",
       "user": "root",
       "password": "",
-      "database": "wp"
+      "database": "happy_home"
     }
   },
   "production": {
@@ -41,6 +41,16 @@
   "api-key": {
     "faceAPI": "",
     "emotionAPI": ""
+  },
+  "azureApi": {
+    "baseUrl": {
+      "faceAPI": "https://eastasia.api.cognitive.microsoft.com/face/v1.0",
+      "emotionAPI": "https://westus.api.cognitive.microsoft.com/emotion/v1.0"
+    },
+    "region": {
+      "faceAPI": "eastasia",
+      "emotionAPI": "westus"
+    }
   },
   "led": {
     "ip_address": "192.168.0.255"

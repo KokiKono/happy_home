@@ -2,15 +2,14 @@
  * 感情読み取りを行うファイル
  * Created by kokikono on 2017/11/12.
  */
-import momentTimezone from 'moment-timezone';
-import moment from 'moment';
-import * as fs from 'fs';
 import Async from 'async';
 
-import * as microsoftAzure from '../../ai/microsoftAzure';
-// import * as microsoftAzure from '../mock/microsoftAzure';
+import oxford from 'project-oxford';
+// import oxford from '../mock/project-oxford';
+import configFile from '../../../config.json';
 import Camera from '../../ai/camera';
 import FamilyDao from '../models/family';
+
 
 export default class Emotion {
     /**
@@ -52,13 +51,16 @@ export default class Emotion {
     }
     start() {
         return new Promise(async (resolve, reject) => {
+            // MicroSoft Azure API Client
+            const faceClient = new oxford.Client(configFile['api-key'].faceAPI, configFile.azureApi.region.faceAPI);
+            const emotionClient = new oxford.Client(configFile['api-key'].emotionAPI, configFile.azureApi.region.emotionAPI);
             // カメラを起動して複数枚写真を撮る。
             const camera = new Camera(this.imageNum, this.imagePath);
             await camera.take();
             // 撮った写真の取得
             const files = await camera.readCarefullySelectedImageFiles();
             // 撮った写真をfaceAPIに投げる。
-            const detects = await camera.postFaceAPIDetects(microsoftAzure, files)
+            const detects = await camera.postFaceAPIDetects(faceClient.face.detect, files)
                 .catch(err => console.log(err));
             // faceLIstからfaceIdを抽出する
             const faceIds = [];
@@ -68,11 +70,11 @@ export default class Emotion {
                 });
             });
             // faceIdsをグルーピング
-            const { groups } = await microsoftAzure.postFaceGroup(faceIds).catch((err) => {
+            const { groups } = await faceClient.face.grouping(faceIds).catch((err) => {
                 console.log(err);
             });
             // filesをemptionAPIに投げる。
-            const emotions = await camera.postEmotionAPI(microsoftAzure, files)
+            const emotions = await camera.postEmotionAPI(emotionClient.emotion.analyzeEmotion, files)
                 .catch((err) => { reject(err); });
             // emotionをDBにインサート
             const emotionList = await this.insertEmotions(emotions);
@@ -95,10 +97,11 @@ export default class Emotion {
             const modelFaceIds = await familyDao.getModelFamily(this.familyId);
             Async.each(emotionDetectGroupList, async (emotionDetectGroup) => {
                 const comparisonFaceId = emotionDetectGroup[0].detect.faceId;
-                const findSimilarList = await microsoftAzure
-                    .postFindSimilars(comparisonFaceId, modelFaceIds)
+                const findSimilarList = await faceClient
+                    .face.similar(comparisonFaceId, { candidateFaces: modelFaceIds })
                     .catch(err => reject(err));
                 const most = await Camera.mostFindSimilar(findSimilarList);
+
                 Async.each(emotionDetectGroup, async (emotionDetect) => {
                     const familyDao2 = new FamilyDao();
                     await familyDao2.insertindividual(

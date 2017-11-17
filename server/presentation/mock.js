@@ -16,7 +16,8 @@ import homeAnimationChoice from './mock/homeAnimationChoice';
 import suggesion from './mock/suggestion';
 import presentationBranch from './mock/presentationBranch';
 
-const run = async () => {
+const run = async (app) => {
+    // console.log(app.socket.io);
     let result = null;
     console.log('present start');
 
@@ -94,4 +95,4 @@ const run = async () => {
     }
 };
 
-run();
+export default run;
