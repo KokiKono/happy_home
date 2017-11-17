@@ -42,4 +42,61 @@ export default class SuggestionModel extends Dao {
             });
         });
     }
+
+    isReciving(noticeId, suggestionId) {
+        return super.query('SELECT' +
+            ' receiving' +
+            ' FROM t_notice_suggestion' +
+            ' WHERE' +
+            ' notice_id = ?' +
+            ' AND' +
+            ' suggestion_id = ?',
+            [noticeId, suggestionId],
+        )
+            .then((success) => {
+                if (success.results.length === 0) return false;
+                if (success.results[0].receiving) {
+                    return true;
+                }
+                return false;
+            })
+            .catch((err) => {
+                return err;
+            });
+    }
+
+    selectSuggestionDetail(suggestionDetailId) {
+        return this.query(
+            'SELECT id, suggestion_id, task_contents' +
+            ' FROM m_suggestion_detail' +
+            ' WHERE id = ?',
+            [suggestionDetailId],
+            )
+            .then(success => success)
+            .catch(err => err);
+    }
+    toggleSuggestionTask(suggestionDetailId, noticeId) {
+        if (this.isEnd) super.createConnection();
+        return new Promise((resolve, reject) => {
+            this.connection.beginTransaction(async (transactionError) => {
+                if (transactionError) {
+                    return reject(transactionError);
+                }
+                this.connection.query(
+                    'UPDATE t_suggestion_task SET done = !done' +
+                    ' WHERE suggestion_detail_id = ? AND notice_id = ?',
+                    [suggestionDetailId, noticeId],
+                    (queryErr) => {
+                        if (queryErr) {
+                            this.connection.rollback();
+                            reject(queryErr);
+                        } else {
+                            this.connection.commit();
+                            resolve('success');
+                        }
+                    },
+                );
+            });
+        });
+    }
 }
