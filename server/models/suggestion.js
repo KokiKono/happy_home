@@ -75,7 +75,7 @@ export default class SuggestionModel extends Dao {
             .then(success => success)
             .catch(err => err);
     }
-    toggleSuggestionTask(suggestionDetailId, noticeId) {
+    toggleSuggestionTask(suggestionDetailId, noticeId, isDone) {
         if (this.isEnd) super.createConnection();
         return new Promise((resolve, reject) => {
             this.connection.beginTransaction(async (transactionError) => {
@@ -83,9 +83,11 @@ export default class SuggestionModel extends Dao {
                     return reject(transactionError);
                 }
                 this.connection.query(
-                    'UPDATE t_suggestion_task SET done = !done' +
-                    ' WHERE suggestion_detail_id = ? AND notice_id = ?',
-                    [suggestionDetailId, noticeId],
+                    'INSERT INTO' +
+                    ' t_suggestion_task(suggestion_detail_id, notice_id, done)' +
+                    ' VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE' +
+                    ' done = ?',
+                    [suggestionDetailId, noticeId, isDone, isDone],
                     (queryErr) => {
                         if (queryErr) {
                             this.connection.rollback();
