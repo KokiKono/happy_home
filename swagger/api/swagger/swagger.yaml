@@ -23,19 +23,21 @@ tags:
 - name: "sample"
   description: "サンプルAPI"
 - name: "notice_list/new"
-  description: "最新通知リスト関連（高井）"
+  description: "最新通知リスト関連"
 - name: "notice_list/old"
-  description: "過去通知リスト関連（高井）"
+  description: "過去通知リスト関連"
+- name: "notice_list"
+  description: "通知関連"
 - name: "suggestion"
-  description: "提案関連（浅川）"
+  description: "提案関連"
 - name: "emotions"
-  description: "感情関連（浅川）"
+  description: "感情関連"
 - name: "login"
-  description: "端末識別用のログイン（河野）"
+  description: "端末識別用のログイン"
 - name: "points"
-  description: "幸せ稼ぎリスト（高井）"
+  description: "幸せ稼ぎリスト"
 - name: "family_list"
-  description: "サーバー側で管理している現在の家族情報リスト（河野）"
+  description: "サーバー側で管理している現在の家族情報リスト"
 - name: "scene"
   description: "家族シーン、留守シーンのどちらか。"
 - name: "family"
@@ -122,48 +124,6 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /notice_list/new/{id}/{suggestion_id}/{suggestion_detail_id}:
-    put:
-      tags:
-        - "notice_list/new"
-      security:
-        - Bearer: []
-      summary: 提案タスクを更新する。完了、未完了
-      parameters:
-      - name: "suggestion_id"
-        in: "path"
-        description: "提案ID"
-        required: true
-        type: integer
-        format: base64
-      - name: "suggestion_detail_id"
-        in: "path"
-        description: "提案詳細ID"
-        required: true
-        type: integer
-        format: base64
-      - name: "id"
-        in: "path"
-        description: "通知ID"
-        required: true
-        type: integer
-        format: base64
-      - name: "body"
-        in: "body"
-        required: true
-        schema:
-          $ref: "#/definitions/PutTask"
-      responses:
-        "204":
-          description: Success
-        "404":
-          description: Not Found
-        "409":
-          description: その提案を受け入れていない
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
   /notice_list/old:
     x-swagger-router-controller: old_notice_list
     get:
@@ -209,6 +169,48 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /notice_list/{id}/{suggestion_id}/{suggestion_detail_id}:
+    put:
+      tags:
+        - "notice_list"
+      security:
+        - Bearer: []
+      summary: 提案タスクを更新する。完了、未完了
+      parameters:
+      - name: "suggestion_id"
+        in: "path"
+        description: "提案ID"
+        required: true
+        type: integer
+        format: base64
+      - name: "suggestion_detail_id"
+        in: "path"
+        description: "提案詳細ID"
+        required: true
+        type: integer
+        format: base64
+      - name: "id"
+        in: "path"
+        description: "通知ID"
+        required: true
+        type: integer
+        format: base64
+      - name: "body"
+        in: "body"
+        required: true
+        schema:
+          $ref: "#/definitions/PutTask"
+      responses:
+        "204":
+          description: Success
+        "404":
+          description: Not Found
+        "409":
+          description: その提案を受け入れていない
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /suggestion/{id}:
     x-swagger-router-controller: suggestion
     get:
@@ -235,6 +237,55 @@ paths:
           description: Success
           schema:
             $ref: "#/definitions/SuggestionDetail"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      tags:
+      - "suggestion"
+      security:
+      - Bearer: []
+      summary: 提案受け入れ可否
+      parameters:
+      - name: "id"
+        in: "path"
+        description: 提案ID
+        required: true
+        type: integer
+        format: base64
+      - name: "notice_id"
+        in: "query"
+        description: 通知ID
+        required: true
+        type: integer
+      - name: "post_suggestion"
+        in: "body"
+        description: 提案受け入れ可否
+        required: true
+        schema:
+          $ref: "#/definitions/PostSuggestion"
+      responses:
+        "204":
+          description: Success
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /suggestion/now:
+    get:
+      tags:
+      - "suggestion"
+      security:
+      - Bearer: []
+      summary: 進行中タスク
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Suggestion"
         default:
           description: Error
           schema:
@@ -618,6 +669,11 @@ definitions:
   PutTask:
     properties:
       is_done:
+        type: boolean
+        example: true
+  PostSuggestion:
+    properties:
+      is_receiving:
         type: boolean
         example: true
   AwardList:
