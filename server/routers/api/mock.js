@@ -70,7 +70,7 @@ router.get('/notice_list/new/:id', (req, res) => {
     res.json(resObj);
 });
 
-router.put('/notice_list/new/:id/:suggestionID/:suggestionDetailId', (req, res) => {
+router.put('/notice_list/:id/:suggestionID/:suggestionDetailId', (req, res) => {
     res.statusCode = 204;
     res.send();
 });
@@ -131,6 +131,26 @@ router.get('/suggestion/:id', (req, res) => {
         task_list: createTaskList(),
     };
    res.json(resObj);
+});
+
+router.post('/suggestion/:id', (req, res) => {
+    res.sendStatus(204);
+});
+
+router.get('/suggestion/now', (req, res) => {
+    const resObj = {
+        id: req.param('id'),
+        title: 'タイトル',
+        point: parseInt(((Math.random() * 10) * (Math.random() * 10)), 10),
+        family_structure: {
+            id: parseInt((Math.random() * 10), 10),
+            family_id: req.user.family_id,
+            name: '家族名前',
+            type: 'おとうさん',
+        },
+        task_list: createTaskList(),
+    };
+    res.json(resObj);
 });
 
 router.get('/points', (req, res) => {
