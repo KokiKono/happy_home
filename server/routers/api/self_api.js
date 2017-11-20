@@ -185,12 +185,7 @@ router.put('/notice_list/new/:id/:suggestionId/:suggestionDetailId', async (req,
         res.sendStatus(409);
         return;
     }
-    const suggestionDetail = await suggestionModel.selectSuggestionDetail(suggestionDetailId);
-    if (suggestionDetail.results.length === 0) {
-        res.sendStatus(404);
-        return;
-    }
-    suggestionModel.toggleSuggestionTask(suggestionDetailId, noticeId)
+    suggestionModel.toggleSuggestionTask(suggestionDetailId, noticeId, req.body.is_done)
         .then(() => res.sendStatus(204))
         .catch((err) => {
             res.status(500);
