@@ -159,6 +159,13 @@ router.post('/suggestion/:id', async (req, res, next) => {
         .catch(err => next(err));
 });
 
+router.get('/suggestion_now', (req, res, next) => {
+    const suggestionModel = new SuggestionModel();
+    suggestionModel.nowSuggestions(req.user.family_structure_id)
+        .then(success => res.json(success.results))
+        .catch(err => next(err));
+});
+
 router.get('/notice_list/new/:id', (req, res, next) => {
     const noticeNewModel = new NoticeNewModel();
     noticeNewModel.selectAtId(req.param('id'))
