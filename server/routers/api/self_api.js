@@ -127,9 +127,10 @@ router.get('/suggestion/:id', (req, res, next) => {
             id: result.results[0].id,
             title: result.results[0].title,
             point: result.results[0].point,
-
-            family_structure: await getFamilyStructure(req.user.family_structure_id, req.user.family_id),
-
+            family_structure: await getFamilyStructure(
+                req.user.family_structure_id,
+                req.user.family_id,
+            ),
             task_list: await createTaskList(req.param('id'), req.param('notice_id')),
         };
        res.json(resObj);
@@ -137,6 +138,25 @@ router.get('/suggestion/:id', (req, res, next) => {
    .catch((err) => {
        next(err);
    });
+});
+
+router.post('/suggestion/:id', async (req, res, next) => {
+    const suggestionModel = new SuggestionModel();
+    const noticeSuggestion = await suggestionModel.selectNoticeSuggestion(
+        req.param('notice_id'),
+        req.param('id'),
+    ).catch(err => next(err));
+    if (noticeSuggestion.length === 0) {
+        const notFound = new Error('not found notice_suggestion');
+        notFound.status = 404;
+        next(notFound);
+        return;
+    }
+    suggestionModel.updateReceiving(noticeSuggestion[0].id, req.body.is_receiving)
+        .then(() => {
+            res.sendStatus(204);
+        })
+        .catch(err => next(err));
 });
 
 router.get('/notice_list/new/:id', (req, res, next) => {
@@ -180,7 +200,7 @@ router.put('/notice_list/:id/:suggestionId/:suggestionDetailId', async (req, res
         return;
     }
     const suggestionModel = new SuggestionModel();
-    const isReceiving = await suggestionModel.isReciving(noticeId, suggestionId);
+    const isReceiving = await suggestionModel.isReceiving(noticeId, suggestionId);
     if (!isReceiving) {
         res.sendStatus(409);
         return;
