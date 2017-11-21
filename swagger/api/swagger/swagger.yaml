@@ -272,7 +272,7 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /suggestion/now:
+  /suggestion_now:
     get:
       tags:
       - "suggestion"
