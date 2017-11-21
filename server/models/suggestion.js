@@ -115,6 +115,29 @@ export default class SuggestionModel extends Dao {
             .then(success => success)
             .catch(err => err);
     }
+
+    /**
+     * 現在進行中の提案通知
+     * @param familyStructureId
+     */
+    nowSuggestions(familyStructureId) {
+        return this.query(
+            'SELECT s.id AS id, s.title AS title, n.id AS notice_id' +
+            ' FROM t_notice n' +
+            ' INNER JOIN t_notice_suggestion ns' +
+            ' ON n.id = ns.notice_id' +
+            ' INNER JOIN m_suggestion s' +
+            ' ON s.id = ns.suggestion_id' +
+            ' WHERE ns.receiving = true' +
+            ' AND n.is_old = false' +
+            ' AND n.is_skip = false' +
+            ' AND n.family_structure_id = ?',
+            [familyStructureId],
+        )
+            .then(success => success)
+            .catch(err => err);
+    }
+
     toggleSuggestionTask(suggestionDetailId, noticeId, isDone) {
         if (this.isEnd) super.createConnection();
         return new Promise((resolve, reject) => {
@@ -142,3 +165,4 @@ export default class SuggestionModel extends Dao {
         });
     }
 }
+
