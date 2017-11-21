@@ -43,7 +43,7 @@ export default class SuggestionModel extends Dao {
         });
     }
 
-    isReciving(noticeId, suggestionId) {
+    isReceiving(noticeId, suggestionId) {
         return super.query('SELECT' +
             ' receiving' +
             ' FROM t_notice_suggestion' +
@@ -63,6 +63,46 @@ export default class SuggestionModel extends Dao {
             .catch((err) => {
                 return err;
             });
+    }
+
+    selectNoticeSuggestion(noticeId, suggestionId) {
+        if (this.isEnd) super.createConnection();
+        return new Promise((resolve, reject) => {
+            this.connection.query(
+                'SELECT * FROM t_notice_suggestion' +
+                ' WHERE notice_id = ?' +
+                ' AND suggestion_id = ?',
+                [noticeId, suggestionId],
+                (queryErr, results) => {
+                    if (queryErr) reject(queryErr);
+                    resolve(results);
+                },
+            );
+        });
+    }
+
+    updateReceiving(noticeSuggestionId, receiving) {
+        if (this.isEnd) super.createConnection();
+        return new Promise(async (resolve, reject) => {
+            this.connection.beginTransaction(async (transactionError) => {
+                if (transactionError) {
+                    return reject(transactionError);
+                }
+                this.connection.query(
+                    'UPDATE t_notice_suggestion SET receiving = ? WHERE id = ?',
+                    [receiving, noticeSuggestionId],
+                    (queryErr) => {
+                        if (queryErr) {
+                            this.connection.rollback();
+                            reject(queryErr);
+                        } else {
+                            this.connection.commit();
+                            resolve(true);
+                        }
+                    },
+                );
+            });
+        });
     }
 
     selectSuggestionDetail(suggestionDetailId) {
