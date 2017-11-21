@@ -137,7 +137,7 @@ router.post('/suggestion/:id', (req, res) => {
     res.sendStatus(204);
 });
 
-router.get('/suggestion/now', (req, res) => {
+router.get('/suggestion_now', (req, res) => {
     const resObj = {
         id: req.param('id'),
         title: 'タイトル',
