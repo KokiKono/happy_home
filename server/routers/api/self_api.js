@@ -168,7 +168,7 @@ router.get('/notice_list/new/:id', (req, res, next) => {
     });
 });
 
-router.put('/notice_list/new/:id/:suggestionId/:suggestionDetailId', async (req, res) => {
+router.put('/notice_list/:id/:suggestionId/:suggestionDetailId', async (req, res) => {
     const noticeId = req.param('id');
     const suggestionId = req.param('suggestionId');
     const suggestionDetailId = req.param('suggestionDetailId');
