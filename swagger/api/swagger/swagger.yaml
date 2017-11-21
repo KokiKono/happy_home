@@ -285,7 +285,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/Suggestion"
+              $ref: "#/definitions/SuggestionNow"
         default:
           description: Error
           schema:
@@ -546,6 +546,14 @@ definitions:
   Suggestion:
     properties:
       id:
+        type: integer
+      title:
+        type: string
+  SuggestionNow:
+    properties:
+      id:
+        type: integer
+      notice_id:
         type: integer
       title:
         type: string
