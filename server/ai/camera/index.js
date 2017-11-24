@@ -5,7 +5,6 @@ import Async from 'async';
 import momentTimezone from 'moment-timezone';
 import moment from 'moment';
 import deepEqual from 'deep-equal';
-import oxford from 'project-oxford';
 
 export default class Camera {
     constructor(imageNum, imagePath) {
@@ -68,12 +67,17 @@ export default class Camera {
         });
     }
 
-    postFaceAPIDetects(microsoftAzure, filePaths) { // eslint-disable-line
+    postFaceAPIDetects(postDetect, filePaths) { // eslint-disable-line
         return new Promise((resolve, reject) => {
             let process = 1;
             const responseBody = [];
             Async.each(filePaths, (filePath) => {
-                microsoftAzure.postFaceDetect(fs.createReadStream(filePath))
+                postDetect({
+                    path: filePath,
+                    analyzesAge: true,
+                    analyzesGender: true,
+                    returnFaceId: true,
+                })
                     .then((result) => {
                         process += 1;
                         if (result.length > 0) {
@@ -83,7 +87,7 @@ export default class Camera {
                             resolve(responseBody);
                         }
                     }).catch((postErr) => {
-                    console.log(postErr);
+                    console.log('postErr', postErr);
                     process += 1;
                     if (process === filePaths.length) {
                         resolve(responseBody);
@@ -109,13 +113,12 @@ export default class Camera {
         return detect;
     }
 
-    postEmotionAPI(microsoftAzure, filePaths) {
+    postEmotionAPI(analyzeEmotion, filePaths) {
         return new Promise((resolve, reject) => {
             let process = 1;
             const responseBody = [];
-            const client = new oxford.Client('');
             Async.each(filePaths, (filePath) => {
-                client.emotion.analyzeEmotion({ path: filePath })
+                analyzeEmotion({ path: filePath })
                     .then((result) => {
                         process += 1;
                         if (result.length > 0) {

@@ -3,6 +3,7 @@
     const button = '#add';
     const event = '#events';
     const motion = '#logs';
+    const family = ['息子', '娘'];
     const socket = io.connect('http://localhost:8080');
     // var socket = io.connect('http://localhost');
     const chart = new Chart(ctx, {
@@ -46,11 +47,12 @@
 
     $(() => {
         $(button).on('click', () => {
-            chart.data.labels.splice(0, 1);
-            chart.data.datasets[0].data.splice(0, 1);
-            chart.data.labels.push('新しいの');
-            chart.data.datasets[0].data.push(100);
-            chart.update();
+            // chart.data.labels.splice(0, 1);
+            // chart.data.datasets[0].data.splice(0, 1);
+            // chart.data.labels.push('新しいの');
+            // chart.data.datasets[0].data.push(100);
+            // chart.update();
+            console.log(chart.data);
         });
 
         socket.on('add date', (date) => {
@@ -74,18 +76,50 @@
             speechSynthesis.speak(new SpeechSynthesisUtterance(text));
         });
 
-        socket.on('graph update', (data) => {
-            chart.data.labels.splice(0, 1);
-            // chart.data.datasets[0].data.splice(0, 1);
-            $.graph.delete();
-            chart.data.labels.push('新しいの');
-            $.graph.add();
+        socket.on('graph update', (datas) => {
+            // 一番古いデータ削除
+
+            if(chart.data.labels.length >= 10){
+                chart.data.labels.splice(0, 1);
+                $.graph.delete();
+            }
+
+            console.log(chart.data.datasets);
+            datas.forEach((data, index) => {
+                // datasetsの中身か存在しなかった時の処理
+                if (chart.data.datasets[index] === undefined) {
+                    const newDatasets = {
+                        backgroundColor: $.graph.randCode(),
+                        label: family[(index + 1) % 2],
+                        data: [],
+                    };
+                    // const length = chart.data.labels.length;
+                    // console.log(length);
+                    for (let i = 0; i <= chart.data.labels.length - 1; i++) {
+                        newDatasets.data.push(0);
+                    }
+                    newDatasets.data.push(data);
+                    chart.data.datasets.push(newDatasets);
+                } else {
+                    chart.data.datasets[index].data.push(data);
+                }
+            });
+
+            if (datas.length < chart.data.datasets.length) {
+                for (let len = datas.length; len < chart.data.datasets.length; len++) {
+                    chart.data.datasets[len].data.push(0);
+                }
+            }
+            const time = new Date();
+
+            chart.data.labels.push(`${time.getHours()}:${time.getMinutes()}`);
+            // $.graph.add();
             // chart.data.datasets[0].data.push(data);
             chart.update();
+            // console.log(chart.data.datasets);
         });
     });
 
-    //todo グラフ削除部分検証中
     $.graph = {
         add: () => {
             chart.data.datasets.forEach((dataset, index) => {
@@ -96,6 +130,10 @@
             chart.data.datasets.forEach((dataset, index) => {
                 dataset.data.shift();
             });
+        },
+        randCode: () => `rgb(${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)})`,
+        addDataset: () => {
+            const length = chart.data.labels.length();
         },
     };
 

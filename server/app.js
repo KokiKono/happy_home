@@ -8,6 +8,7 @@ import managementRouter from './routers/management';
 import socket from './socket/index';
 import Watch from './watch/index';
 import presentation from './presentation/mock';
+import familyList from './contorller/views/family_list';
 
 eventLogger.debug('boot');
 motionLogger.debug('boot');
@@ -35,6 +36,8 @@ app.get('/', (req, res) => {
 app.use('/api', apiRouter);
 
 app.use('/management', managementRouter);
+
+app.use('/family_list', familyList);
 
 Socket.server.listen(config.server.port, () => {
     console.log(`happy home app mode is ${process.env.NODE_ENV} listening on ${config.server.port}`);

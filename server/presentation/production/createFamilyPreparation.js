@@ -4,6 +4,8 @@
  */
 import * as fs from 'fs';
 import Async from 'async';
+import sharp from 'sharp';
+import * as path from 'path';
 import oxford from 'project-oxford';
 // import oxford from '../mock/project-oxford';
 
@@ -50,17 +52,26 @@ export default class createFamilyPreparation {
                 // 代表faceIdのdetect情報
                 const detect = Camera.findDetects(modelFaceId, detects);
                 const { result, filePath } = detect;
+                const faceImagePath = path.join(__dirname, `../../views/public/images/${modelFaceId}.jpeg`);
+                console.log(faceImagePath);
+                // 顔ファイルを作成
+                sharp(filePath)
+                    .extract(result.faceRectangle)
+                    .toFile(faceImagePath, (err) => {
+                        if (err) console.log('顔ファイル作成失敗', err);
+                    });
                 // 保存しておく画像パスをpush
                 saveImageFile.push(filePath);
                 // faceGroup情報をDBにインサート
                 const tmpFaceDao = new TmpFaceDao();
-                await tmpFaceDao.insertRelation(modelFaceId, filePath, JSON.stringify(result))
+                await tmpFaceDao.insertRelation(modelFaceId, faceImagePath, JSON.stringify(result))
                     .then((results) => {
                         Async.each(group, async (item) => {
                             const tmpFaceDao2 = new TmpFaceDao();
                             await tmpFaceDao2.insertGroup(results.insertId, item);
                         });
                     }).catch((err) => {
+                    console.log(err);
                         reject(err);
                     });
             });

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <style type="text/css">
+        .breadcrumb {
+    background-color: rgb(255, 255, 255);
+        }
+        .breadcrumb > li + li:before {
+            content: "> ";
+        }
+        .breadcrumb_box {
+            margin:5px;
+            padding:10px, 5px, 5px, 5px;
+            border:10px solid rgb(244, 244, 244);
+        }
+        .breadcrumb .active {
+            color: rgb(214,56,99);
+        }
+        .position {
+            color: rgb(116,116,116);
+            font-size: 48px;
+            font-weight: normal;
+            vertical-align: top;
+            padding-top: 10px;
+        }
+        .face{
+            text-align: center;
+        }
+        .face_img{
+            margin: 20px 25px 10px;
+        }
+        .send{
+            background-color: rgb(214,56,99);
+            color: rgb(255, 255, 255);
+        }
+    </style>
+
+</head>
+<body>
+
+    <!-- top navigation -->
+    <nav class="navbar navbar-dark" style="background-color:rgb(214,56,99)">
+        <!-- Image and text -->
+        <nav class="navbar navbar-dark" style="background-color:rgb(214,56,99)">
+            <a class="navbar-brand" href="#">
+                ハッピーホーム　ー プレゼン準備...家族構成
+            </a>
+        </nav>
+    </nav>
+    <!-- main -->
+    <main>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <ol class="breadcrumb breadcrumb_box">
+                        <li class="active">家族構成</li>
+                        <li>シーン選択</a></li>
+                        <li>プレゼン開始</a></li>
+                    </ol>
+                </div>
+            </div>
+            <form action="http://localhost:8080/family_list" method="post">
+                <% 
+                    var i = 0;
+                    main.forEach((value, key) => { 
+                %>
+                    <% if (i % 2 == 0) { %>
+                        <div class="row">
+                    <% } %>
+
+                    <div class="col-md-6">
+                        <input type="hidden" name="face_id" value="<%= value.face_id %>">
+                        <table>
+                            <tr>
+                                <th rowspan="2" class="face"><img src="../../public/images/<%= value.face_id %>.jpeg" alt="" class="face_img" width="150" height="150"></th>
+                                <td>
+                                    <select name="type" class="form-control">
+                                        <option value="">-----</option>
+                                        <option value="父">おとうさん</option>
+                                        <option value="母">おかあさん</option>
+                                        <option value="娘">むすめ</option>
+                                        <option value="息子">むすこ</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    なまえ<br>
+                                    <input type="text" name="name" class="form-control">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <% if (i % 2 == 1) { %>
+                        </div>
+                    <% } %>
+                    
+                <%
+                        i++;
+                    }); 
+                %>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <input type="submit" class="btn send" value="送信">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+</body>
+</html>

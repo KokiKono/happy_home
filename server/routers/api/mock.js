@@ -70,7 +70,7 @@ router.get('/notice_list/new/:id', (req, res) => {
     res.json(resObj);
 });
 
-router.put('/notice_list/new/:id/:suggestionID/:suggestionDetailId', (req, res) => {
+router.put('/notice_list/:id/:suggestionID/:suggestionDetailId', (req, res) => {
     res.statusCode = 204;
     res.send();
 });
@@ -109,6 +109,7 @@ const createTaskList = () => {
             ...resObj,
             {
                 id: i,
+                title: 'タスクタイトル',
                 contents: 'タスク内容',
                 is_done: i % 2 === 0,
             },
@@ -133,6 +134,26 @@ router.get('/suggestion/:id', (req, res) => {
    res.json(resObj);
 });
 
+router.post('/suggestion/:id', (req, res) => {
+    res.sendStatus(204);
+});
+
+router.get('/suggestion_now', (req, res) => {
+    const resObj = {
+        id: req.param('id'),
+        title: 'タイトル',
+        point: parseInt(((Math.random() * 10) * (Math.random() * 10)), 10),
+        family_structure: {
+            id: parseInt((Math.random() * 10), 10),
+            family_id: req.user.family_id,
+            name: '家族名前',
+            type: 'おとうさん',
+        },
+        task_list: createTaskList(),
+    };
+    res.json(resObj);
+});
+
 router.get('/points', (req, res) => {
     let resObj = [];
     for (let i = 1; i < 20; i += 1) {
@@ -144,6 +165,7 @@ router.get('/points', (req, res) => {
                 contents: 'ポイント稼ぎ内容',
                 point: parseInt((Math.random() * 100), 10),
                 family_icon: 'https://png.icons8.com/search',
+                task_list: createTaskList(),
             },
         ];
     }

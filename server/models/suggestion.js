@@ -6,7 +6,7 @@ import Dao from './dao';
 export default class SuggestionModel extends Dao {
 
     selectSuggestion(suggestion_id) {
-        return super.query('select id, title, point from m_suggestion where id = ?',[suggestion_id])
+        return super.query('select id, title, point, type from m_suggestion where id = ?',[suggestion_id])
             .then((success) => {
                 return success;
             })
@@ -42,4 +42,127 @@ export default class SuggestionModel extends Dao {
             });
         });
     }
+
+    isReceiving(noticeId, suggestionId) {
+        return super.query('SELECT' +
+            ' receiving' +
+            ' FROM t_notice_suggestion' +
+            ' WHERE' +
+            ' notice_id = ?' +
+            ' AND' +
+            ' suggestion_id = ?',
+            [noticeId, suggestionId],
+        )
+            .then((success) => {
+                if (success.results.length === 0) return false;
+                if (success.results[0].receiving) {
+                    return true;
+                }
+                return false;
+            })
+            .catch((err) => {
+                return err;
+            });
+    }
+
+    selectNoticeSuggestion(noticeId, suggestionId) {
+        if (this.isEnd) super.createConnection();
+        return new Promise((resolve, reject) => {
+            this.connection.query(
+                'SELECT * FROM t_notice_suggestion' +
+                ' WHERE notice_id = ?' +
+                ' AND suggestion_id = ?',
+                [noticeId, suggestionId],
+                (queryErr, results) => {
+                    if (queryErr) reject(queryErr);
+                    resolve(results);
+                },
+            );
+        });
+    }
+
+    updateReceiving(noticeSuggestionId, receiving) {
+        if (this.isEnd) super.createConnection();
+        return new Promise(async (resolve, reject) => {
+            this.connection.beginTransaction(async (transactionError) => {
+                if (transactionError) {
+                    return reject(transactionError);
+                }
+                this.connection.query(
+                    'UPDATE t_notice_suggestion SET receiving = ? WHERE id = ?',
+                    [receiving, noticeSuggestionId],
+                    (queryErr) => {
+                        if (queryErr) {
+                            this.connection.rollback();
+                            reject(queryErr);
+                        } else {
+                            this.connection.commit();
+                            resolve(true);
+                        }
+                    },
+                );
+            });
+        });
+    }
+
+    selectSuggestionDetail(suggestionDetailId) {
+        return this.query(
+            'SELECT id, suggestion_id, task_contents' +
+            ' FROM m_suggestion_detail' +
+            ' WHERE id = ?',
+            [suggestionDetailId],
+            )
+            .then(success => success)
+            .catch(err => err);
+    }
+
+    /**
+     * 現在進行中の提案通知
+     * @param familyStructureId
+     */
+    nowSuggestions(familyStructureId) {
+        return this.query(
+            'SELECT s.id AS id, s.title AS title, n.id AS notice_id' +
+            ' FROM t_notice n' +
+            ' INNER JOIN t_notice_suggestion ns' +
+            ' ON n.id = ns.notice_id' +
+            ' INNER JOIN m_suggestion s' +
+            ' ON s.id = ns.suggestion_id' +
+            ' WHERE ns.receiving = true' +
+            ' AND n.is_old = false' +
+            ' AND n.is_skip = false' +
+            ' AND n.family_structure_id = ?',
+            [familyStructureId],
+        )
+            .then(success => success)
+            .catch(err => err);
+    }
+
+    toggleSuggestionTask(suggestionDetailId, noticeId, isDone) {
+        if (this.isEnd) super.createConnection();
+        return new Promise((resolve, reject) => {
+            this.connection.beginTransaction(async (transactionError) => {
+                if (transactionError) {
+                    return reject(transactionError);
+                }
+                this.connection.query(
+                    'INSERT INTO' +
+                    ' t_suggestion_task(suggestion_detail_id, notice_id, done)' +
+                    ' VALUES(?, ?, ?) ON DUPLICATE KEY UPDATE' +
+                    ' done = ?',
+                    [suggestionDetailId, noticeId, isDone, isDone],
+                    (queryErr) => {
+                        if (queryErr) {
+                            this.connection.rollback();
+                            reject(queryErr);
+                        } else {
+                            this.connection.commit();
+                            resolve('success');
+                        }
+                    },
+                );
+            });
+        });
+    }
 }
+
