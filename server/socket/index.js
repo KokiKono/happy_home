@@ -15,15 +15,20 @@ const ioEvent = function (io) {
         });
 
         setInterval(() => {
-            const rand = Math.floor(Math.random() * 101);
-            io.emit('graph update', rand);
-        }, 5000);
+            const rand = Math.floor(Math.random() * (9 + 2 - 2)) + 2;
+            const array = [];
+            for (let i = 0; i < rand; i++) {
+                array.push(Math.floor(Math.random() * 101));
+            }
+            console.log(array);
+            io.emit('graph update', array);
+        }, 10000);
 
         setInterval(() => {
-            const url = [ "http://localhost:8080/sub", "http://localhost:8080/animation/sample/sample_animation/project.html" ];
-            io.emit('url', url[ Math.floor( Math.random() * url.length ) ]);
+            const url = ['http://localhost:8080/sub', 'http://localhost:8080/animation/sample/sample_animation/project.html'];
+            io.emit('url', url[Math.floor(Math.random() * url.length)]);
         }, 10000);
-        
+
     });
 
 
