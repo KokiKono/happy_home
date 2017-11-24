@@ -1,0 +1,27 @@
+.breadcrumb {
+    background-color: rgb(255, 255, 255);
+}
+.breadcrumb > li + li:before {
+    content: "> ";
+}
+.breadcrumb_box {
+    margin:5px;
+    padding:10px, 5px, 5px, 5px;
+    border:10px solid rgb(244, 244, 244);
+}
+.breadcrumb .active {
+    color: rgb(214,56,99);
+}
+.position {
+    color: rgb(116,116,116);
+    font-size: 48px;
+    font-weight: normal;
+    vertical-align: top;
+    padding-top: 10px;
+}
+.face{
+    text-align: center;
+}
+.face_img{
+    margin: 20px 25px 10px;
+}
