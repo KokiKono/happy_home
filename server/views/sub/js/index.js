@@ -12,6 +12,7 @@
         data: {
             labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
             datasets: [{
+                label: '幸せ指数',
                 backgroundColor: 'rgba(0,0,0,0)',
                 borderColor: 'rgb(255, 0, 0)',
                 data: [100, 120, 130, 100, 150, 100, 120],
@@ -110,9 +111,11 @@
                     chart.data.datasets[len].data.push(0);
                 }
             }
-            const time = new Date();
+            const time = moment();
+            const outputTime = time.format('HH : mm');
+            console.log(time);
 
-            chart.data.labels.push(`${time.getHours()}:${time.getMinutes()}`);
+            chart.data.labels.push(`${outputTime}`);
             // $.graph.add();
             // chart.data.datasets[0].data.push(data);
             chart.update();
