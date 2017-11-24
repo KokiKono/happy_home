@@ -109,6 +109,7 @@ const createTaskList = () => {
             ...resObj,
             {
                 id: i,
+                title: 'タスクタイトル',
                 contents: 'タスク内容',
                 is_done: i % 2 === 0,
             },
@@ -164,6 +165,7 @@ router.get('/points', (req, res) => {
                 contents: 'ポイント稼ぎ内容',
                 point: parseInt((Math.random() * 100), 10),
                 family_icon: 'https://png.icons8.com/search',
+                task_list: createTaskList(),
             },
         ];
     }
