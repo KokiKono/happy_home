@@ -524,6 +524,9 @@ definitions:
       id:
         type: integer
         description: タスクID
+      title:
+        type: string
+        description: タイトル
       contents:
         type: string
         description: タスク内容
@@ -629,6 +632,10 @@ definitions:
       family_icon:
         type: string
         description: 右アイコンURL
+      task_list:
+        type: array
+        items:
+          $ref: "#/definitions/SuggestionTask"
   LoginSuccess:
     properties:
       token:
