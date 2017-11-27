@@ -1,0 +1,27 @@
+<% include ../partial/header %>
+<main role="main" class="container-fluid">
+    <h1>判断する提案を選択してください</h1>
+    <div>
+        <table class="table table-bordered table-striped table-hover">
+            <tr>
+                <th>ID</th>
+                <th>タイトル</th>
+                <th>ポイント</th>
+                <th>ノート</th>
+                <th>タイプ</th>
+                <th>tagアイコン</th>
+            </tr>
+            <% suggestion_list.forEach((item) => { %>
+            <tr onclick="window.location.href = './judgment?suggestion_id=<%= item.id %>';">
+                <td><%= item.id %></td>
+                <td><%= item.title %></td>
+                <td><%= item.point %></td>
+                <td><%= item.note %></td>
+                <td><%= item.type %></td>
+                <td><%= item.tag_icon %></td>
+            <% }) %>
+            </tr>
+        </table>
+    </div>
+</main>
+<% include ../partial/footer %>

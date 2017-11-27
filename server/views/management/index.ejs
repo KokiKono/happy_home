@@ -1,5 +1,11 @@
 <% include ./partial/header %>
 <main role="main">
-    <%-main %>
+    <div>
+        <ul>
+            <% links.forEach((value) => { %>
+                <li><a href="<%=value.href%>"><%=value.label%></a></li>
+            <%}); %>
+        </ul>
+    </div>
 </main>
 <% include ./partial/footer %>

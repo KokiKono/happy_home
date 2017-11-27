@@ -1,28 +1,11 @@
 import express from 'express';
-import ejs from 'ejs';
-import * as path from 'path';
+import indexController from '../../contorller/management/index';
+
+import suggestionRouter from '../../routers/management/suggestion';
 
 const router = express.Router();
-router.get('/', (req, res) => {
-    res.render('management/index', {
-        title: 'タイトルです',
-        content: 'ほげ',
-        main: '<h1>hoge</h1>',
-    });
-});
+router.get('/', indexController.index);
 
-router.get('/hoge', (req, res) => {
-    ejs.renderFile(path.join(__dirname, '../../views/management/hoge.ejs'), { hoge: 'aho' }, null, (err, str) => {
-        res.render('management/index', {
-            title: 'タイトルです',
-            content: 'ほげ',
-            main: str,
-        });
-    });
-})
-
-router.get('/template', (req, res) => {
-    res.render('management/index/')
-})
+router.use('/suggestion', suggestionRouter);
 
 export default router;
