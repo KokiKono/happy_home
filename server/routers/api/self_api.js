@@ -1,5 +1,6 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
+import Async from 'async';
 import SampleModel from '../../models/sample';
 import FamilyModel from '../../models/family';
 import NoticeNewModel from '../../models/notice_list_new';
@@ -261,15 +262,18 @@ router.get('/notice_list/old/:id', (req, res, next) => {
     });
 });
 
-router.get('/points', (req, res, next) => {
+router.get('/points', async (req, res, next) => {
     const pointsModel = new PointsModel();
-    pointsModel.select()
-        .then((result) => {
-            res.json(result.results);
-        })
-        .catch((err) => {
-            next(err);
-        });
+    const { results } = await pointsModel.select().catch(err => next(err));
+    const pointList = [];
+    const suggestionModel = new SuggestionModel();
+    await Async.each(results, async (point, callback) => {
+        const taskList = await suggestionModel.selectSuggestionDetails(point.id);
+        pointList.push(Object.assign(point, { task_list: taskList.results }));
+        callback();
+    }, () => {
+        res.json(pointList);
+    });
 });
 
 router.post('/points/:id', (req, res, next) => {
