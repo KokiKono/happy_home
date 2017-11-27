@@ -1,5 +1,6 @@
 import express from 'express';
 import morgan from 'morgan';
+import * as bodyParser from 'body-parser';
 
 import { eventLogger, motionLogger, consoleLogger } from './log';
 import configFile from '../config.json';
@@ -9,7 +10,6 @@ import socket from './socket/index';
 import Watch from './watch/index';
 import presentation from './presentation/mock';
 import familyList from './contorller/views/family_list';
-
 eventLogger.debug('boot');
 motionLogger.debug('boot');
 
@@ -22,7 +22,10 @@ const watch = Watch(Socket.io);
 app.socket = Socket;
 
 app.set('view engine', 'ejs');
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
+// in latest body-parser use like below.
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan({ format: 'dev', immediate: true }));
 app.use('/main', express.static('views/main'));
 app.use('/sub', express.static('views/sub'));
