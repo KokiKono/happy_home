@@ -42,7 +42,7 @@ export default class createFamilyPreparation {
             // faceIdsをグルーピング
             const { groups } = await faceClient.face.grouping(faceIds)
                 .catch((err) => {
-                    console.log('グルーピング失敗', err);
+                    reject(err);
                 });
             // グルーピングしたものから適当な代表faceIdを決定しDBにインサート
             const saveImageFile = [];
@@ -52,7 +52,8 @@ export default class createFamilyPreparation {
                 // 代表faceIdのdetect情報
                 const detect = Camera.findDetects(modelFaceId, detects);
                 const { result, filePath } = detect;
-                const faceImagePath = path.join(__dirname, `../../views/public/images/${modelFaceId}.jpeg`);
+                const faceImagePath = path.join(__dirname, `../../views/public/images/${modelFaceId}.jpg`);
+                console.log(`http://localhost:8080/public/images/${modelFaceId}.jpg`);
                 console.log(faceImagePath);
                 // 顔ファイルを作成
                 sharp(filePath)
