@@ -90,6 +90,7 @@ function createTaskList(id, notice_id) {
                     {
                         id: result[i].id,
                         contents: result[i].task_contents,
+                        title: result[i].title,
                         is_done: result[i].done % 2 === 1,
                     },
                 ];
