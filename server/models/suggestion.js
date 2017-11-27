@@ -27,11 +27,13 @@ export default class SuggestionModel extends Dao {
 
     selectSuggestionTask(suggestion_id, notice_id) {
         return new Promise((resolve, reject) => {
-            this.connection.query('select m_sd.id as id, m_sd.task_contents as task_contents, m_sd.title as title, '
-            +'(select COALESCE(done, 0) from m_suggestion_detail sub_sd left outer join t_suggestion_task sub_st on sub_sd.id = sub_st.suggestion_detail_id '
-            +'where sub_sd.suggestion_id = ?  AND sub_st.notice_id = ?) as done from m_suggestion_detail m_sd '
-            +'left outer join t_suggestion_task t_st on m_sd.id = t_st.suggestion_detail_id  where m_sd.suggestion_id = ?',
-            [suggestion_id, notice_id, suggestion_id], (error, results) => {
+            this.connection.query('select m_sd.id as id, m_sd.task_contents as task_contents, m_sd.title as title, COALESCE(done, 0) as done ' +
+            'from t_suggestion_task t_st ' +
+            'inner join t_notice t_n on t_st.notice_id = t_n.id ' +
+            'inner join m_suggestion_detail m_sd on t_st.suggestion_detail_id = m_sd.id ' +
+            'inner join m_suggestion m_s on m_sd.suggestion_id = m_s.id ' +
+            'where m_s.id = ? and t_n.id = ?',
+            [suggestion_id, notice_id], (error, results) => {
                 if (error) {
                     return reject(error);
                 }
