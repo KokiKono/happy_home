@@ -1,0 +1,60 @@
+<% include ../partial/header %>
+<main role="main" class="container-fluid">
+ <h1>判断一覧</h1>
+ <div>
+  <table class="table table-bordered table-striped table-hover">
+   <tr>
+    <th>ID</th>
+    <th>提案ID</th>
+    <th>key</th>
+    <th>val</th>
+   </tr>
+      <% judgment_list.forEach((item) => { %>
+      <tr>
+       <td><%= item.id %></td>
+       <td><%= item.suggestion_id %></td>
+       <td><%= item.key_name %></td>
+       <td><%= item.val %></td>
+      </tr>
+       <% }) %>
+  </table>
+ </div>
+ <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_judgment">
+  判断追加
+ </button>
+ <!-- Modal -->
+ <div class="modal fade" id="add_judgment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+      <form method="post" action="./judgment?suggestion_id=<%= suggestion_id %>">
+       <div class="modal-content">
+        <div class="modal-header">
+         <h5 class="modal-title" id="exampleModalLabel">提案判断追加</h5>
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+         </button>
+        </div>
+        <div class="modal-body">
+         <div class="input-group">
+          <span class="input-group-addon" id="basic-addon1">Key</span>
+          <select>
+            <% judgment_trans_list.forEach((item) => {%>
+             <option value="<%= item.val %>"><%= item.label %></option>
+           <% })%>
+          </select>
+         </div>
+         <br>
+         <div class="input-group">
+          <span class="input-group-addon" id="basic-addon1">val</span>
+          <input name="val" type="text" class="form-control" aria-describedby="basic-addon1">
+         </div>
+        </div>
+        <div class="modal-footer">
+         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+         <input type="submit" class="btn btn-primary" value="Save">
+        </div>
+       </div>
+      </form>
+  </div>
+ </div>
+</main>
+<% include ../partial/footer %>

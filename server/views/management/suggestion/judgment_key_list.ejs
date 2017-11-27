@@ -1,0 +1,17 @@
+<% include ../partial/header %>
+<main role="main" class="container-fluid">
+    <h1>感情キー未登録一覧（提案判断時に把握してないと思われるkey）</h1>
+    <div>
+        <table class="table table-bordered table-striped table-hover">
+            <tr>
+                <th>key</th>
+            </tr>
+            <% diffKey.forEach((item) => { %>
+            <tr>
+                <td><%= item %></td>
+                <% }) %>
+            </tr>
+        </table>
+    </div>
+</main>
+<% include ../partial/footer %>
