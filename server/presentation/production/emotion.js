@@ -73,7 +73,7 @@ export default class Emotion {
             const { groups } = await faceClient.face.grouping(faceIds).catch((err) => {
                 console.log(err);
             });
-            // filesをemptionAPIに投げる。
+            // filesをemotionAPIに投げる。
             const emotions = await camera.postEmotionAPI(emotionClient.emotion.analyzeEmotion, files)
                 .catch((err) => { reject(err); });
             // emotionをDBにインサート
@@ -82,10 +82,13 @@ export default class Emotion {
             const emotionDetectGroupList = [];
             Async.each(groups, (group) => {
                 const emotionDetectGroup = [];
-                Async.each(group, (faceId) => {
+                Async.each(group, (faceId, next) => {
                     const { result, filePath } = Camera.findDetects(faceId, detects);
                     const partsEmotion = Camera.findEmotion(emotionList, result.faceRectangle);
-                    if (partsEmotion === undefined) console.log('emotionとdetectの結合に失敗');
+                    if (partsEmotion === undefined) {
+                        console.log('emotionとdetectの結合に失敗');
+                        next();
+                    }
                     emotionDetectGroup.push({ detect: result, emotion: partsEmotion, filePath });
                 });
                 emotionDetectGroupList.push(emotionDetectGroup);
@@ -101,14 +104,15 @@ export default class Emotion {
                     .face.similar(comparisonFaceId, { candidateFaces: modelFaceIds })
                     .catch(err => reject(err));
                 const most = await Camera.mostFindSimilar(findSimilarList);
-
                 Async.each(emotionDetectGroup, async (emotionDetect) => {
                     const familyDao2 = new FamilyDao();
                     await familyDao2.insertindividual(
                         emotionDetect.emotion.emotionId,
                         JSON.stringify(emotionDetect.emotion),
                         most.faceId,
-                    );
+                    ).catch((err) => {
+                        console.log('個別感情テーブルインサートエラー', err);
+                    });
                 });
             });
         });
