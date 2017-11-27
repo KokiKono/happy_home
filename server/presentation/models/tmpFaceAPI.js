@@ -12,22 +12,32 @@ export default class TmpFaceAPI {
             database: 'happy_home',
         });
     }
-    // なぜか、autoIncrementがつけられないので、しゃーなしで。
-    getMaxID () {
+    delete() {
         return new Promise((resolve, reject) => {
             this.connection.connect((connectErr) => {
                 if (connectErr) reject(connectErr);
-                this.connection.query(
-                    'SELECT ifnull(MAX(id), 0) as max FROM tmp_faceAPI',
-                    null,
-                    (queryErr, results) => {
-                        if (queryErr) reject(queryErr);
-                        console.log(results);
-                    },
-                );
+                this.connection.beginTransaction((beginTransactionErr) => {
+                    if (beginTransactionErr) reject(beginTransactionErr);
+                    this.connection.query(
+                        'DELETE FROM tmp_faceAPI',
+                        (queryErr) => {
+                            if (queryErr) {
+                                this.connection.rollback(() => (reject(queryErr)));
+                            }
+                            this.connection.commit((commitErr) => {
+                                if (commitErr) {
+                                    this.connection.rollback(() => (reject(commitErr)));
+                                }
+                                this.connection.end();
+                                resolve();
+                            });
+                        },
+                    );
+                });
             });
         });
     }
+
     insert(imagePath, jsonData) {
         return new Promise((resolve, reject) => {
             this.connection.connect((connectErr) => {
@@ -35,8 +45,8 @@ export default class TmpFaceAPI {
                 this.connection.beginTransaction((beginTransactionErr) => {
                     if (beginTransactionErr) reject(beginTransactionErr);
                     this.connection.query(
-                        'INSERT INTO tmp_faceAPI(id, image_path, json_data) VALUES(?, ?, ?)',
-                        [this.getMaxID(), imagePath, jsonData],
+                        'INSERT INTO tmp_faceAPI(image_path, json_data) VALUES(?, ?)',
+                        [imagePath, jsonData],
                         (queryErr) => {
                             if (queryErr) {
                                 this.connection.rollback(() => (reject(queryErr)));
