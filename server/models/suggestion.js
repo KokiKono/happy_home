@@ -125,6 +125,12 @@ export default class SuggestionModel extends Dao {
             .catch(err => err);
     }
 
+    selectSuggestionDetails(suggestionId) {
+        return super.query(
+            'SELECT * FROM m_suggestion_detail WHERE suggestion_id = ?',
+            [suggestionId],
+        );
+    }
     /**
      * 現在進行中の提案通知
      * @param familyStructureId
