@@ -4,7 +4,16 @@
 import Dao from './dao';
 
 export default class SuggestionModel extends Dao {
-
+    selectAllSuggestion() {
+        return super.query('select id, title, point, type, tag_icon, note from m_suggestion')
+            .then((success) => {
+                return success;
+            })
+            .catch((error) => {
+                console.log(error);
+                return error;
+            });
+    }
     selectSuggestion(suggestion_id) {
         return super.query('select id, title, point, type from m_suggestion where id = ?',[suggestion_id])
             .then((success) => {
@@ -163,6 +172,82 @@ export default class SuggestionModel extends Dao {
                 );
             });
         });
+    }
+
+    selectJudgment(suggestionId) {
+        return super.query(
+            'SELECT * FROM t_suggestion_judgment WHERE suggestion_id = ?',
+            [suggestionId],
+        );
+    }
+
+    insertJudgment(suggestionId, keyName, val) {
+        if (this.isEnd) super.createConnection();
+        return new Promise((resolve, reject) => {
+            this.connection.beginTransaction((transactionErr) => {
+                if (transactionErr) reject(transactionErr);
+                this.connection.query(
+                    'INSERT INTO t_suggestion_judgment(' +
+                    'suggestion_id,' +
+                    'key_name,' +
+                    'val' +
+                    ') VALUES(' +
+                    '?,' +
+                    '?,' +
+                    '?' +
+                    ')',
+                    [suggestionId, keyName, val],
+                    (queryErr) => {
+                        if (queryErr) {
+                            this.connection.rollback();
+                            super.end();
+                            reject(queryErr);
+                        } else {
+                            this.connection.commit();
+                            super.end();
+                            resolve('success');
+                        }
+                    },
+                );
+            });
+        });
+    }
+    insertSuggestion(title, point, note, type, tagIcon) {
+        if (this.isEnd) super.createConnection();
+        return new Promise((resolve, reject) => {
+            this.connection.beginTransaction((transactionErr) => {
+                if (transactionErr) reject(transactionErr);
+                this.connection.query(
+                    'INSERT INTO m_suggestion(' +
+                    'title,' +
+                    'point,' +
+                    'note,' +
+                    'type,' +
+                    'tag_icon' +
+                    ') VALUES(' +
+                    '?,' +
+                    '?,' +
+                    '?,' +
+                    '?,' +
+                    '?' +
+                    ')',
+                    [title, point, note, type, tagIcon],
+                    (queryErr) => {
+                        if (queryErr) {
+                            this.connection.rollback();
+                            reject(queryErr);
+                        } else {
+                            this.connection.commit();
+                            resolve('success');
+                        }
+                    },
+                );
+            });
+        });
+    }
+
+    selectAllEmotion() {
+        return super.query('SELECT * FROM t_emotion');
     }
 }
 
