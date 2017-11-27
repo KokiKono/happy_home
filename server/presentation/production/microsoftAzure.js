@@ -4,7 +4,7 @@
  */
 import request from 'request';
 
-import configFile from '../../config.json';
+import configFile from '../../../config.json';
 
 const { baseUrl } = configFile.azureApi;
 
