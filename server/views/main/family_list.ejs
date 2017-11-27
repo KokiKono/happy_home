@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <style type="text/css">
         .breadcrumb {
-    background-color: rgb(255, 255, 255);
+            background-color: rgb(255, 255, 255);
         }
         .breadcrumb > li + li:before {
             content: "> ";
@@ -36,7 +36,7 @@
         .face_img{
             margin: 20px 25px 10px;
         }
-        .send{
+        #send{
             background-color: rgb(214,56,99);
             color: rgb(255, 255, 255);
         }
@@ -66,58 +66,89 @@
                     </ol>
                 </div>
             </div>
-            <form action="http://localhost:8080/family_list" method="post">
-                <% 
-                    var i = 0;
-                    main.forEach((value, key) => { 
-                %>
-                    <% if (i % 2 == 0) { %>
-                        <div class="row">
-                    <% } %>
-
-                    <div class="col-md-6">
-                        <input type="hidden" name="face_id" value="<%= value.face_id %>">
-                        <table>
-                            <tr>
-                                <th rowspan="2" class="face"><img src="../../public/images/<%= value.face_id %>.jpg" alt="" class="face_img" width="150" height="150"></th>
-                                <td>
-                                    <select name="type" class="form-control">
-                                        <option value="">-----</option>
-                                        <option value="父">おとうさん</option>
-                                        <option value="母">おかあさん</option>
-                                        <option value="娘">むすめ</option>
-                                        <option value="息子">むすこ</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    なまえ<br>
-                                    <input type="text" name="name" class="form-control">
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-
-                    <% if (i % 2 == 1) { %>
-                        </div>
-                    <% } %>
-                    
-                <%
-                        i++;
-                    }); 
-                %>
-                <div class="row">
-                    <div class="col-md-12 text-center">
-                        <input type="submit" class="btn send" value="送信">
-                    </div>
+            
+            <% 
+                var i = 0;
+                main.forEach((value, key) => { 
+            %>
+                <% if (i % 2 == 0) { %>
+                    <div class="row">
+                <% } %>
+                <div class="col-md-6">
+                    <input type="hidden" name="face_id" value="<%= value.face_id %>">
+                    <table>
+                        <tr>
+                            <th rowspan="2" class="face"><img src="../../public/images/<%= value.face_id %>.jpg" alt="" class="face_img" width="150" height="150"></th>
+                            <td>
+                                <select name="type" class="form-control">
+                                    <option value="">-----</option>
+                                    <option value="父">おとうさん</option>
+                                    <option value="母">おかあさん</option>
+                                    <option value="娘">むすめ</option>
+                                    <option value="息子">むすこ</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                なまえ<br>
+                                <input type="text" name="name" class="form-control">
+                            </td>
+                        </tr>
+                    </table>
                 </div>
-            </form>
+                <% if (i % 2 == 1) { %>
+                    </div>
+                <% } %>
+                    
+            <%
+                    i++;
+                }); 
+            %>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <input type='button' id="send" class="btn" value="送信">
+                </div>
+            </div>
         </div>
     </main>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    $(function() {
+        $('#send').click(function() {
+            var family_list = [];
+            var family = {
+                face_id : '',
+                type : '',
+                name : ''
+            }
+            for (var i = 0; i < $('[name=face_id]').length; i++){
+                var family = {
+                    face_id : $('[name=face_id]')[i].value,
+                    type : $('[name=type]')[i].value,
+                    name : $('[name=name]')[i].value
+                }
+                family_list.push(family);
+            }
+            console.log(JSON.stringify(family_list));
+            $.ajax({
+                contentType: 'application/json',
+                type:'POST',
+                url:'http://localhost:8080/api/family_list',
+                data: JSON.stringify(family_list),
+                dataType: 'json',
+            })
+            .done(function (response) {
+                console.log('成功');
+            })
+            .fail(function(){
+                console.log('失敗');
+            });
+        });
+    });
+</script>
 </body>
 </html>
