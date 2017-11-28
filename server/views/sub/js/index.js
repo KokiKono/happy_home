@@ -4,7 +4,7 @@
     const event = '#events';
     const motion = '#logs';
     const family = ['息子', '娘'];
-    const socket = io.connect('http://localhost:8080');
+    const socket = io.connect();
     // var socket = io.connect('http://localhost');
     const chart = new Chart(ctx, {
         // The type of chart we want to create
@@ -47,13 +47,16 @@
     });
 
     $(() => {
+
+
         $(button).on('click', () => {
             // chart.data.labels.splice(0, 1);
             // chart.data.datasets[0].data.splice(0, 1);
             // chart.data.labels.push('新しいの');
             // chart.data.datasets[0].data.push(100);
             // chart.update();
-            console.log(chart.data);
+            // console.log(chart.data);
+
         });
 
         socket.on('add date', (date) => {
@@ -61,6 +64,24 @@
             chart.data.datasets[0].data[max_size] = date;
             chart.update();
         });
+
+        // ブラウザ読み込み時にlogを読み込む処理
+        socket.emit('get event logs');
+        socket.on('read event logs', (text) => {
+            const events = text.split(/\r\n|\r|\n/);
+            events.forEach((dataset, index) => {
+                $(event).append(`<li>${dataset}</li>`);
+            });
+        });
+
+        socket.emit('get motion logs');
+        socket.on('read motion logs', (text) => {
+            const events = text.split(/\r\n|\r|\n/);
+            events.forEach((dataset, index) => {
+                $(motion).append(`<li>${dataset}</li>`);
+            });
+        });
+
 
         socket.on('change event logs', (data) => {
             console.log(`event: ${data}`);
@@ -70,7 +91,6 @@
         socket.on('change motion logs', (data) => {
             console.log(`motion: ${data}`);
             $(motion).append(`<li>${data}</li>`);
-            window.scrollTo(0, motion.scrollHeight);
         });
 
         socket.on('voice', (text) => {
@@ -80,12 +100,11 @@
         socket.on('graph update', (datas) => {
             // 一番古いデータ削除
 
-            if(chart.data.labels.length >= 10){
+            if (chart.data.labels.length >= 10) {
                 chart.data.labels.splice(0, 1);
                 $.graph.delete();
             }
 
-            console.log(chart.data.datasets);
             datas.forEach((data, index) => {
                 // datasetsの中身か存在しなかった時の処理
                 if (chart.data.datasets[index] === undefined) {
@@ -113,7 +132,6 @@
             }
             const time = moment();
             const outputTime = time.format('HH : mm');
-            console.log(time);
 
             chart.data.labels.push(`${outputTime}`);
             // $.graph.add();
@@ -137,6 +155,15 @@
         randCode: () => `rgb(${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)})`,
         addDataset: () => {
             const length = chart.data.labels.length();
+        },
+    };
+
+    $.log = {
+        eventAll: () => {
+
+        },
+        motionAll: () => {
+
         },
     };
 
