@@ -10,6 +10,8 @@
                 <th>ノート</th>
                 <th>タイプ</th>
                 <th>tagアイコン</th>
+                <th>対象家族タイプ</th>
+                <th>対象元家族タイプ</th>
             </tr>
             <% suggestion_list.forEach((item) => { %>
             <tr onclick="window.location.href = './judgment?suggestion_id=<%= item.id %>';">
@@ -19,6 +21,8 @@
                 <td><%= item.note %></td>
                 <td><%= item.type %></td>
                 <td><%= item.tag_icon %></td>
+                <td><%= item.to_type %></td>
+                <td><%= item.from_type %></td>
             <% }) %>
             </tr>
         </table>

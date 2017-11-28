@@ -36,7 +36,7 @@
         <div class="modal-body">
          <div class="input-group">
           <span class="input-group-addon" id="basic-addon1">Key</span>
-          <select>
+          <select name="key_name">
             <% judgment_trans_list.forEach((item) => {%>
              <option value="<%= item.val %>"><%= item.label %></option>
            <% })%>
