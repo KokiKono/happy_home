@@ -42,9 +42,7 @@ export default class utilAnimation {
      * @return {[type]}
      */
     main_screen_animation(app, animation_html){
-        app.socket.io.on('connection', function(socket) {
-           app.socket.io.emit('url', animation_html);
-        });
+        app.socket.io.emit('url', animation_html);
     }
 
     start(app){
