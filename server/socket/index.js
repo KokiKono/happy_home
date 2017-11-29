@@ -1,5 +1,6 @@
 import http from 'http';
 import socketIo from 'socket.io';
+import fs from 'fs';
 import Watch from '../watch/index';
 
 const ioEvent = function (io) {
@@ -12,6 +13,18 @@ const ioEvent = function (io) {
         socket.on('change event logs', (log) => {
             console.log('うごいた');
             io.emit('change log', log);
+        });
+
+        socket.on('get event logs', () => {
+            fs.readFile('./tmp/event.log', 'utf-8', (err, text) => {
+                io.emit('read event logs', text);
+            });
+        });
+
+        socket.on('get motion logs', () => {
+            fs.readFile('./tmp/motion.log', 'utf-8', (err, text) => {
+                io.emit('read motion logs', text);
+            });
         });
 
         setInterval(() => {

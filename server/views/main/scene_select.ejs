@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <style type="text/css">
+        .breadcrumb {
+            background-color: rgb(255, 255, 255);
+        }
+        .breadcrumb > li + li:before {
+            content: "> ";
+        }
+        .breadcrumb_box {
+            margin:5px;
+            padding:10px, 5px, 5px, 5px;
+            border:10px solid rgb(244, 244, 244);
+        }
+        .breadcrumb .active {
+            color: rgb(214,56,99);
+        }
+        #family {
+            width: 450px;
+            height: 150px;
+            margin: 150px 20px;
+            font-size: 24px;
+            background-color: rgb(234, 234, 234);
+            box-shadow: 2px 2px 2px rgb(172, 172, 172);
+        }
+        #absence {
+            width: 450px;
+            height: 150px;
+            margin: 150px 20px;
+            font-size: 24px;
+            background-color: rgb(234, 234, 234);
+            box-shadow: 2px 2px 2px rgb(172, 172, 172);
+        }
+        #family .gray{
+            font-size: 16px;
+            color: rgb(160, 160, 160);
+        }
+        #absence .gray{
+            font-size: 16px;
+            color: rgb(160, 160, 160);
+        }
+        
+    </style>
+
+</head>
+<body>
+
+    <!-- top navigation -->
+    <nav class="navbar navbar-dark" style="background-color:rgb(214,56,99)">
+        <!-- Image and text -->
+        <nav class="navbar navbar-dark" style="background-color:rgb(214,56,99)">
+            <a class="navbar-brand" href="#">
+                ハッピーホーム　ー プレゼン準備...家族構成
+            </a>
+        </nav>
+    </nav>
+    <!-- main -->
+    <main>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <ol class="breadcrumb breadcrumb_box">
+                        <li>家族構成</li>
+                        <li class="active">シーン選択</a></li>
+                        <li>プレゼン開始</a></li>
+                    </ol>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <button id="family" class="btn">家族シーン<br><span class="gray">家族全員が揃っている１週間</span></button>
+                    <button id="absence" class="btn">留守シーン<br><span class="gray">お父さん以外の家族が旅行に行っている１週間</span></button>
+                </div>
+            </div>
+        
+        </div>
+    </main>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    $(function() {
+        $('#family').click(function() {
+            $.ajax({
+                type:'POST',
+                url:'http://localhost:8080/api/event/scenes',
+                data: { "type" : 0 },
+                dataType: 'json',
+            })
+            .done(function (response) {
+                console.log('成功');
+            })
+            .fail(function(){
+                console.log('失敗');
+            });
+        });
+        $('#absence').click(function() {
+            $.ajax({
+                type:'POST',
+                url:'http://localhost:8080/api/event/scenes',
+                data: { "type" : 1 },
+                dataType: 'json',
+            })
+            .done(function (response) {
+                console.log('成功');
+            })
+            .fail(function(){
+                console.log('失敗');
+            });
+        });
+    });
+</script>
+</body>
+</html>

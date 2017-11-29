@@ -80,7 +80,7 @@
                         <tr>
                             <th rowspan="2" class="face"><img src="../../public/images/<%= value.face_id %>.jpg" alt="" class="face_img" width="150" height="150"></th>
                             <td>
-                                <select name="type" class="form-control">
+                                <select name="type" class="form-control" id="type<%= i %>">
                                     <option value="">-----</option>
                                     <option value="父">おとうさん</option>
                                     <option value="母">おかあさん</option>
@@ -92,7 +92,7 @@
                         <tr>
                             <td>
                                 なまえ<br>
-                                <input type="text" name="name" class="form-control">
+                                <input type="text" name="name" class="form-control" class="name" id="name<%= i %>">
                             </td>
                         </tr>
                     </table>
@@ -147,6 +147,12 @@
             .fail(function(){
                 console.log('失敗');
             });
+        });
+        $('[name=type]').change(function() {
+            var name_id = '#name' + $(this).attr("id").slice(-1);
+            if($(name_id).val() == '') {
+                $(name_id).val($(this).val());
+            }
         });
     });
 </script>

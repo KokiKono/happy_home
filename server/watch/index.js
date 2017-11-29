@@ -26,6 +26,7 @@ const watchEvent = function (watcher, io) {
                    case 'tmp/event.log':
                        sabun = jsdiff.diffChars(eventText, text);
                        if (sabun.length != 1) {
+                           console.log(sabun);
                            okikae = sabun[1].value.replace('/\r\n|\r|\n/g', '');
                        } else {
                            okikae = sabun[0].value;
