@@ -15,14 +15,31 @@
 </head>
 <body>
   <div class="left" >
-    <canvas id="canvas" height="257" ></canvas>
+    <canvas id="canvas" height="288" ></canvas>
   </div>
   <div class="right" >
-    <div class="video">
-
+    <div class="image">
+      <img height="231" width="416" src="./photo.png"/>
     </div>
     <div class="text">
-
+      <table>
+        <thead>
+          <tr>
+            <th>名前</th>
+            <th>笑顔</th>
+            <th>怒り</th>
+            <th>軽蔑</th>
+            <th>嫌悪感</th>
+            <th>恐怖</th>
+            <th>喜び</th>
+            <th>中立</th>
+            <th>悲しみ</th>
+            <th>驚き</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
     </div>
     <div class="events">
       <p>イベント一覧</p>
@@ -36,6 +53,7 @@
     </div>
   </div>
   <script src="js/index.js"></script>
-  <input type="file" id="add" accept="text/*">
+  <!--<input type="file" id="add" accept="text/*">-->
+  <button id="add"></button>
 </body>
 </html>
