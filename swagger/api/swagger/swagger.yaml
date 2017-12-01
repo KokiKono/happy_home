@@ -691,7 +691,7 @@ definitions:
       is_receiving:
         type: boolean
         example: true
-  AwardList:
+  AwardObject:
     properties:
       id:
         type: integer
@@ -699,8 +699,18 @@ definitions:
         type: string
       point:
         type: integer
+      ranking:
+        type: integer
       icon_url:
         type: string
+  AwardList:
+    properties:
+      login_user:
+        $ref: "#/definitions/AwardObject"
+      award_list:
+        type: array
+        items:
+          $ref: "#/definitions/AwardObject"
   PostPointsResponse:
     properties:
       suggestion_id:

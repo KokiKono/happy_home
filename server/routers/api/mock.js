@@ -219,12 +219,23 @@ router.get('/awards', (req, res) => {
             {
                 id: parseInt((Math.random() * 10), 10),
                 user_name: `ユーザー名${i}`,
-                point: parseInt((Math.random() * 10), 100),
+                point: parseInt((Math.random() * 100), 10),
                 icon_url: 'localhost:8080/public/user_icon.jpg',
+                ranking: parseInt((Math.random() * 10), 10),
             },
         ];
     }
-    res.json(resObj);
+
+    res.json({
+        login_user: {
+            id: parseInt((Math.random() * 10), 10),
+            user_name: `ログインユーザー`,
+            point: parseInt((Math.random() * 100), 10),
+            icon_url: 'http://localhost:8080/public/user_icon.jpg',
+            ranking: parseInt((Math.random() * 10), 10),
+        },
+        award_list: resObj,
+        });
 });
 
 router.put('/tasks/:id', (req, res) => {
