@@ -10,6 +10,7 @@ import socket from './socket/index';
 import Watch from './watch/index';
 import presentation from './presentation/mock';
 import familyList from './contorller/views/family_list';
+import mainRouter from './routers/main';
 eventLogger.debug('boot');
 motionLogger.debug('boot');
 
@@ -27,10 +28,10 @@ app.use(bodyParser.urlencoded());
 // in latest body-parser use like below.
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan({ format: 'dev', immediate: true }));
-app.use('/main', express.static('views/main'));
 app.use('/sub', express.static('views/sub'));
 app.use('/animation', express.static('animation'));
 app.use('/public', express.static('views/public'));
+app.use('/main', express.static('views/main'));
 
 app.get('/', (req, res) => {
     res.send('Hello World hoge');
@@ -40,7 +41,8 @@ app.use('/api', apiRouter);
 
 app.use('/management', managementRouter);
 
-app.use('/family_list', familyList);
+// app.use('/family_list', familyList);
+app.use('/main', mainRouter);
 
 Socket.server.listen(config.server.port, () => {
     console.log(`happy home app mode is ${process.env.NODE_ENV} listening on ${config.server.port}`);
