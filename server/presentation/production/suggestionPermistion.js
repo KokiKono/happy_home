@@ -134,10 +134,10 @@ const run = () => {
         const presentationModel = new PresentationModel();
         const latestScene = await presentationModel.getLatestScene(latestFamily[0].id);
         const latestPattern = await presentationModel.getLatestPattern(latestScene[0].id);
-        // await Promise.all(modelPermissions.map(async (item) => {
-        //     await suggestionPermission.insertPermistion(latestPattern[0].id, item.suggestion.id);
-        // }));
-        resolve()
+        await Promise.all(modelPermissions.map(async (item) => {
+            await suggestionPermission.insertPermistion(latestPattern[0].id, item.suggestion.id);
+        }));
+        resolve();
     });
 }
 
