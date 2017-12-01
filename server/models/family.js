@@ -98,6 +98,17 @@ export default class FamilyDao extends Dao {
         });
     }
 
+    /**
+     * 家族構成の取得
+     * @returns {Promise}
+     */
+    getFamilyStructure(familyId) {
+        return super.query(
+            'SELECT * FROM t_family_structure WHERE family_id',
+            [familyId],
+        );
+    }
+
     getFamilyList() {
         return new Promise(async (resolve, reject) => {
             const latestFamily = await this.latestFamily();
