@@ -3,8 +3,11 @@
     const button = '#add';
     const event = '#events';
     const motion = '#logs';
+    const frame = '.image';
+    const tbody = 'tbody';
     const family = ['息子', '娘'];
     const socket = io.connect();
+    const testdata = [['公の後期', 10, 20, 30, 40, 50, 60, 70, 80, 90], ['ueshima', 10, 20, 30, 40, 50, 60, 70, 80, 90], ['きんきらきん', 10, 20, 30, 40, 50, 60, 70, 80, 90]];
     // var socket = io.connect('http://localhost');
     const chart = new Chart(ctx, {
         // The type of chart we want to create
@@ -56,7 +59,7 @@
             // chart.data.datasets[0].data.push(100);
             // chart.update();
             // console.log(chart.data);
-
+            socket.emit('get image');
         });
 
         socket.on('add date', (date) => {
@@ -69,17 +72,21 @@
         socket.emit('get event logs');
         socket.on('read event logs', (text) => {
             const events = text.split(/\r\n|\r|\n/);
-            events.forEach((dataset, index) => {
-                $(event).append(`<li>${dataset}</li>`);
-            });
+            if (events.length > 1) {
+                events.forEach((dataset, index) => {
+                    $(event).append(`<li>${dataset}</li>`);
+                });
+            }
         });
 
         socket.emit('get motion logs');
         socket.on('read motion logs', (text) => {
-            const events = text.split(/\r\n|\r|\n/);
-            events.forEach((dataset, index) => {
-                $(motion).append(`<li>${dataset}</li>`);
-            });
+            const motions = text.split(/\r\n|\r|\n/);
+            if (motions.length > 1) {
+                motions.forEach((dataset, index) => {
+                    $(motion).append(`<li>${dataset}</li>`);
+                });
+            }
         });
 
 
@@ -95,6 +102,24 @@
 
         socket.on('voice', (text) => {
             speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+        });
+
+        // 画像置き換え処理
+        socket.on('image update', (path) => {
+            const image = new Image();
+            image.src = path;
+            // width 416, height 206
+            let percentage = 1;
+            if (image.width > 416 || image.height > 231) {
+                if (image.width >= image.height) {
+                    percentage = 416 / image.width;
+                } else {
+                    percentage = 206 / image.height;
+                }
+            }
+            $(frame).empty();
+            $(frame).append(`<img height="${image.width * percentage}" width="${image.height * percentage}" src="${path}"/>`);
+            $.text.change(testdata);
         });
 
         socket.on('graph update', (datas) => {
@@ -158,12 +183,19 @@
         },
     };
 
-    $.log = {
-        eventAll: () => {
-
-        },
-        motionAll: () => {
-
+    $.text = {
+        change: (list) => {
+            $(tbody).empty();
+            list.forEach((dataset, index) => {
+                // $(tbody).append('<tr></tr>');
+                let tr = '<tr>';
+                dataset.forEach((data, index) => {
+                    tr += `<td>${data}</td>`;
+                });
+                tr += '</tr>';
+                console.log(tr);
+                $(tbody).append(tr);
+            });
         },
     };
 
