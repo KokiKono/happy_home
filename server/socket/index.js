@@ -27,6 +27,10 @@ const ioEvent = function (io) {
             });
         });
 
+        socket.on('get image', () => {
+            io.emit('image update', 'http://localhost:8080/ai/images/test.jpeg');
+        });
+
         setInterval(() => {
             const rand = Math.floor(Math.random() * (9 + 2 - 2)) + 2;
             const array = [];
@@ -35,7 +39,7 @@ const ioEvent = function (io) {
             }
             console.log(array);
             io.emit('graph update', array);
-        }, 10000);
+        }, 1000);
 
         setInterval(() => {
             const url = ['http://localhost:8080/sub', 'http://localhost:8080/animation/sample/sample_animation/project.html'];
