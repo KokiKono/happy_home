@@ -4,7 +4,7 @@
 import deepEqual from 'deep-equal';
 import FamilyModel from '../models/family';
 require('waitjs');
-const pageUrl = 'http://localhost:8080/family_list';
+const pageUrl = 'http://localhost:8080/main/family_list';
 
 const createFamily = (app) => {
     return new Promise(async (resolve, reject) => {
