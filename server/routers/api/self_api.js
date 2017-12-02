@@ -9,6 +9,7 @@ import NoticeOldModel from '../../models/notice_list_old';
 import PointsModel from '../../models/points';
 import SceneModel from '../../models/scene';
 import AnimationModel from '../../models/animations';
+import LoveNumberModel from '../../models/loveNumber';
 
 const router = express.Router();
 
@@ -316,4 +317,40 @@ router.post('/event/animations', async (req, res) => {
         });
 });
 
+router.get('/awards', async (req, res, next) => {
+    const loveNumberModel = new LoveNumberModel();
+    const loveNumber = await loveNumberModel.getAwards()
+        .catch(err => next(err));
+    // loginユーザー情報取得
+    let loginUser = loveNumber.results
+        .find(element => element.id === req.user.family_structure_id);
+    if (loginUser === undefined) {
+        // ランキングに乗ってない場合
+        const familyModel = new FamilyModel();
+        const { results } = await familyModel.getFamilyStructure(
+            req.user.family_id,
+            req.user.family_structure_id,
+        ).catch(err => next(err));
+        loginUser = results;
+    }
+    // console.log(loginUser)
+    const resObj = {
+        login_user: {
+            id: loginUser[0].id,
+            user_name: loginUser[0].name,
+            point: loginUser[0].point ? loginUser[0].point : 0,
+            ranking: loginUser[0].award ? loginUser[0].award : 0,
+            icon_url: loginUser[0].family_icon,
+        },
+        award_list: [],
+    };
+
+    Promise.all(loveNumber.results.map((item, index) => {
+        if (item.id === loginUser.id) return null;
+        return resObj.award_list.push(Object.assign({ ranking: index + 1 }, item));
+    }));
+
+    res.json(resObj);
+
+})
 export default router;

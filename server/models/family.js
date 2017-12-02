@@ -102,10 +102,17 @@ export default class FamilyDao extends Dao {
      * 家族構成の取得
      * @returns {Promise}
      */
-    getFamilyStructure(familyId) {
+    getFamilyStructures(familyId) {
         return super.query(
-            'SELECT * FROM t_family_structure WHERE family_id',
+            'SELECT * FROM t_family_structure WHERE family_id = ?',
             [familyId],
+        );
+    }
+
+    getFamilyStructure(familyId, familyStructureId) {
+        return super.query(
+            'SELECT * FROM t_family_structure WHERE family_id = ? AND id = ?',
+            [familyId, familyStructureId],
         );
     }
 
