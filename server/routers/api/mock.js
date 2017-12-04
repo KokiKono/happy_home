@@ -139,18 +139,17 @@ router.post('/suggestion/:id', (req, res) => {
 });
 
 router.get('/suggestion_now', (req, res) => {
-    const resObj = {
-        id: req.param('id'),
-        title: 'タイトル',
-        point: parseInt(((Math.random() * 10) * (Math.random() * 10)), 10),
-        family_structure: {
-            id: parseInt((Math.random() * 10), 10),
-            family_id: req.user.family_id,
-            name: '家族名前',
-            type: 'おとうさん',
-        },
-        task_list: createTaskList(),
-    };
+    let resObj = [];
+    for (let i = 1; i < 20; i += 1) {
+        resObj = [
+            ...resObj,
+            {
+                id: parseInt((Math.random() * 10), 10),
+                notice_id: parseInt((Math.random() * 10), 10),
+                title: 'タイトル',
+            },
+        ];
+    }
     res.json(resObj);
 });
 
@@ -220,7 +219,7 @@ router.get('/awards', (req, res) => {
                 id: parseInt((Math.random() * 10), 10),
                 user_name: `ユーザー名${i}`,
                 point: parseInt((Math.random() * 100), 10),
-                icon_url: 'localhost:8080/public/user_icon.jpg',
+                icon_url: 'http://localhost:8080/public/user_icon.jpg',
                 ranking: parseInt((Math.random() * 10), 10),
             },
         ];
