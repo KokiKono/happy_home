@@ -25,4 +25,28 @@ export default class NoticeNewModel extends Dao {
             return error;
         });
     }
+
+    updateSkip(id, skip) {
+        return new Promise((resolve, reject) => {
+            this.connection.beginTransaction((transactionError) => {
+                if (transactionError) reject(transactionError);
+                this.connection.query(
+                    'UPDATE t_notice SET is_skip = ? WHERE id = ?',
+                    [skip, id],
+                    (queryErr) => {
+                        if (queryErr) {
+                            this.connection.rollback((rollbackErr) => {
+                                if (rollbackErr) reject(rollbackErr);
+                            });
+                            reject(queryErr);
+                        }
+                        this.connection.commit((commitErr) => {
+                            if (commitErr) reject(commitErr);
+                        });
+                        resolve();
+                    },
+                );
+            });
+        });
+    }
 }

@@ -197,6 +197,15 @@ router.get('/notice_list/new/:id', (req, res, next) => {
         next(err);
     });
 });
+router.put('/notice_list/new/:id', (req, res, next) => {
+    const noticeNewModel = new NoticeNewModel();
+    noticeNewModel.updateSkip(
+        req.param('id'),
+        req.body.is_skip,
+    )
+        .then(() => res.sendStatus(204))
+        .catch(err => next(err));
+});
 
 router.put('/notice_list/:id/:suggestionId/:suggestionDetailId', async (req, res) => {
     const noticeId = req.param('id');
