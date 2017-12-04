@@ -100,7 +100,6 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
   /notice_list/new/{id}:
-    x-swagger-router-controller: new_notice_list
     get:
       tags:
       - "notice_list/new"
@@ -120,6 +119,50 @@ paths:
           description: Success
           schema:
             $ref: "#/definitions/NewNoticeDetail"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      tags:
+      - "notice_list/new"
+      security:
+      - Bearer: []
+      summary: 最新通知の更新
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "通知ID"
+        required: true
+        type: integer
+        format: base64
+      - name: "body"
+        in: "body"
+        description: 提案受け入れ可否
+        required: true
+        schema:
+          $ref: "#/definitions/PutNewNoticeDetail"
+      responses:
+        "204":
+          description: Success
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /suggestion_now:
+    get:
+      tags:
+      - "suggestion"
+      security:
+      - Bearer: []
+      summary: 進行中タスク
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/SuggestionNow"
         default:
           description: Error
           schema:
@@ -268,24 +311,6 @@ paths:
       responses:
         "204":
           description: Success
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-  /suggestion_now:
-    get:
-      tags:
-      - "suggestion"
-      security:
-      - Bearer: []
-      summary: 進行中タスク
-      responses:
-        "200":
-          description: Success
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/SuggestionNow"
         default:
           description: Error
           schema:
@@ -717,3 +742,8 @@ definitions:
         type: integer
       notice_id:
         type: integer
+  PutNewNoticeDetail:
+    properties:
+      is_skip:
+        type: boolean
+        example: true
