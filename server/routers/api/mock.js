@@ -69,6 +69,9 @@ router.get('/notice_list/new/:id', (req, res) => {
     };
     res.json(resObj);
 });
+router.put('/notice_list/new/:id', (req, res) => {
+    res.sendStatus(204);
+});
 
 router.put('/notice_list/:id/:suggestionID/:suggestionDetailId', (req, res) => {
     res.statusCode = 204;
