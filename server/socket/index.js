@@ -32,14 +32,19 @@ const ioEvent = function (io) {
         });
 
         setInterval(() => {
-            const rand = Math.floor(Math.random() * (9 + 2 - 2)) + 2;
-            const array = [];
-            for (let i = 0; i < rand; i++) {
-                array.push(Math.floor(Math.random() * 101));
+            let obj = {
+                name: 10,
+                kaki: 20,
+                sasi: 30,
+                // "等や": 10,
+                "幸せ指数": 40,
+            };
+
+            for (const key in obj) {
+                obj[key] = Math.floor(Math.random() * 101);
             }
-            console.log(array);
-            io.emit('graph update', array);
-        }, 1000);
+            io.emit('graph update', obj);
+        }, 5000);
 
         setInterval(() => {
             const url = ['http://localhost:8080/sub', 'http://localhost:8080/animation/sample/sample_animation/project.html'];
