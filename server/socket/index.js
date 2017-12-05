@@ -35,14 +35,15 @@ const ioEvent = function (io) {
             let obj = {
                 name: 10,
                 kaki: 20,
-                sasi: 30,
-                // "等や": 10,
+                // sasi: 30,
+                "等や": 10,
                 "幸せ指数": 40,
             };
 
             for (const key in obj) {
                 obj[key] = Math.floor(Math.random() * 101);
             }
+            console.log(obj);
             io.emit('graph update', obj);
         }, 5000);
 
