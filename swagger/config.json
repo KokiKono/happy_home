@@ -2,7 +2,7 @@
   "mock": {
     "server": {
       "schema": "http://",
-      "url": "localhost:",
+      "url": "localhost",
       "port": "3500"
     },
     "api": {
