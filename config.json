@@ -2,7 +2,7 @@
   "development": {
     "server": {
       "schema": "http://",
-      "url": "localhost:",
+      "url": "localhost",
       "port": 8080
     },
     "mysql": {
