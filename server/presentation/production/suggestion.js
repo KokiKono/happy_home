@@ -27,7 +27,7 @@ export default class suggestion {
 
             const suggestionDao = new SuggestionDao;
             /* 提案許可されている提案ID取得 */
-            const suggestionIdList = await suggestionDao.getPermissionSuggestionId().catch(err => console.log(err));
+            const suggestionIdList = await suggestionDao.getPermissionSuggestionId().catch((err) => { reject(err); });
 
             /* 提案許可された提案があるか */
             if(suggestionIdList.length > 0){
@@ -40,12 +40,12 @@ export default class suggestion {
                             //モバイル通知
 
                             //family_structure_id取得
-                            const family_structure_id = await suggestionDao.getFamilyStructureId().catch(err => console.log(err));
+                            const family_structure_id = await suggestionDao.getFamilyStructureId().catch((err) => { reject(err); });
 
                             //タイトル作成
                             let title = '';
                             if(suggestionIdList[i]['to_type'] !== 'ALL'){
-                                const name = await suggestionDao.getFamilyStructureName(family_structure_id[0], suggestionIdList[i]['to_type']).catch(err => console.log(err));
+                                const name = await suggestionDao.getFamilyStructureName(family_structure_id[0], suggestionIdList[i]['to_type']).catch((err) => { reject(err); });
 
                                 title = name + 'の機嫌が悪いよ〜';
                             } else {
@@ -53,7 +53,7 @@ export default class suggestion {
                             }
 
                             //t_noticeにデータ挿入
-                            suggestionDao.insertNoticeData(family_structure_id, title, this.SAMPLE_NOTICE_CONTENTS).catch(err => console.log(err));
+                            suggestionDao.insertNoticeData(family_structure_id, title, this.SAMPLE_NOTICE_CONTENTS).catch((err) => { reject(err); });
                             break;
 
                         case this.TYPE_RIGHT:
