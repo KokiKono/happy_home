@@ -22,7 +22,8 @@ module.exports = function docsRouter(app) {
     app.get("/docs/swagger/", function(req, res){
         var config = require('./config.json')[process.env.NODE_ENV];
         var apiPort = config.api.port;
-        swaggerJson.host = 'localhost:' + apiPort;
+        var apiHost = config.api.url;
+        swaggerJson.host =  apiHost + apiPort;
         res.send(swaggerJson); //return swagger json
     });
     // serve the modified index.html for swagger ui

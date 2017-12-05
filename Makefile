@@ -21,6 +21,8 @@ mock-run:
 	cd server && npm run mock-run
 real-run:
 	cd server && npm run real-run
+production-run:
+	cd server && npm run production-run
 run-debug:
 	DEBUG=express:* nodemon app.js localhost 8080 --exec babel-node
 open-swagger:

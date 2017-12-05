@@ -14,12 +14,12 @@
   "real": {
     "server": {
       "schema": "http://",
-      "url": "localhost:",
+      "url": "172.20.10.2",
       "port": "3500"
     },
     "api": {
       "schema": "http://",
-      "url": "localhost:",
+      "url": "172.20.10.2:",
       "port": "8080"
     }
   }

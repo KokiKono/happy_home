@@ -155,7 +155,7 @@ router.post('/suggestion/:id', async (req, res, next) => {
         next(notFound);
         return;
     }
-    suggestionModel.updateReceiving(noticeSuggestion[0].id, req.body.is_receiving)
+    suggestionModel.updateReceiving(noticeSuggestion[0].id, req.body.post_suggestion.is_receiving)
         .then(() => {
             res.sendStatus(204);
         })
