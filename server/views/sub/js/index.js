@@ -157,6 +157,7 @@
                         flg = true;
                         chart.data.datasets[index].data.push(datas[key]);
                     }
+
                 });
 
                 if (flg === false) {
@@ -192,11 +193,11 @@
                 // }
             }
 
-            if (datas.length < chart.data.datasets.length) {
-                for (let len = datas.length; len < chart.data.datasets.length; len++) {
-                    chart.data.datasets[len].data.push(0);
-                }
-            }
+            // if (datas.length < chart.data.datasets.length) {
+            //     for (let len = datas.length; len < chart.data.datasets.length; len++) {
+            //         chart.data.datasets[len].data.push(0);
+            //     }
+            // }
 
             // chart.data.datasets.forEach((dataset, index) => {
             //     for (let len = chart.data.labels.length; ){}
@@ -208,7 +209,14 @@
             chart.data.labels.push(`${outputTime}`);
             // $.graph.add();
             // chart.data.datasets[0].data.push(data);
+            chart.data.datasets.forEach((dataset, index) => {
+                console.log(dataset.data.length);
+                if (chart.data.labels.length !== dataset.data.length) {
+                    chart.data.datasets[index].data.push(0);
+                }
+            });
             chart.update();
+            console.log(chart.data.datasets);
             // console.log(chart.data.datasets);
         });
     });
@@ -225,8 +233,7 @@
             });
         },
         randCode: () => {
-            console.log(colorArray);
-            const rand = Math.floor(Math.random() * colorArray.length-1);
+            const rand = Math.floor(Math.random() * colorArray.length - 1);
             const returnCode = colorArray[rand];
             colorArray.splice(rand, 1);
             return returnCode;
