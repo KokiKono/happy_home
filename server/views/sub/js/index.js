@@ -8,8 +8,22 @@
     const family = ['息子', '娘'];
     const socket = io.connect();
     const testdata = [['公の後期', 10, 20, 30, 40, 50, 60, 70, 80, 90], ['ueshima', 10, 20, 30, 40, 50, 60, 70, 80, 90], ['きんきらきん', 10, 20, 30, 40, 50, 60, 70, 80, 90]];
-    const colorArray = ['#c60019', '#fff001', '#1d4293', '#00984b', '#019fe6', '#c2007b', '#7d0f80', '#dc9610', '#dbdf19', '#d685b0', '#a0c238'];
-    // var socket = io.connect('http://localhost');
+    const colorArray = [
+        '#c60019',
+        '#fff001',
+        '#1d4293',
+        '#00984b',
+        '#019fe6',
+        '#c2007b',
+        '#dbdf19',
+        '#d685b0',
+        '#a0c238',
+        '#95ff2b',
+        '#ff55aa',
+        '#FFB6C1',
+        '#F4A460',
+        '#6699ff',
+    ];
     const chart = new Chart(ctx, {
         // The type of chart we want to create
         type: 'bar',
@@ -22,19 +36,6 @@
                 data: [],
                 type: 'line',
             },
-                // {
-            //     label: '父',
-            //     backgroundColor: 'rgb(255, 99, 132)',
-            //     data: [20, 10, 5, 2, 20, 30, 45],
-            // }, {
-            //     label: '母',
-            //     backgroundColor: 'rgb(255, 99, 0)',
-            //     data: [30, 10, 5, 2, 20, 30, 45],
-            // }, {
-            //     label: '娘',
-            //     backgroundColor: 'rgb(0, 99, 132)',
-            //     data: [40, 10, 5, 2, 20, 30, 45],
-            // },
             ],
         },
         options: {
@@ -140,24 +141,10 @@
                 let flg = false;
                 chart.data.datasets.forEach((dataset, index) => {
                 // for (const labels in chart.data.datasets.label) {
-                    if (dataset.label !== key) {
-                        // const newDatasets = {
-                        //     backgroundColor: $.graph.randCode(),
-                        //     label: key,
-                        //     data: [],
-                        // };
-                        // // const length = chart.data.labels.length;
-                        // // console.log(length);
-                        // for (let i = 0; i <= chart.data.labels.length - 1; i++) {
-                        //     newDatasets.data.push(0);
-                        // }
-                        // newDatasets.data.push(datas[key]);
-                        // chart.data.datasets.push(newDatasets);
-                    } else {
+                    if (dataset.label === key) {
                         flg = true;
                         chart.data.datasets[index].data.push(datas[key]);
                     }
-
                 });
 
                 if (flg === false) {
@@ -166,58 +153,24 @@
                         label: key,
                         data: [],
                     };
-                    // const length = chart.data.labels.length;
-                    // console.log(length);
                     for (let i = 0; i <= chart.data.labels.length - 1; i++) {
                         newDatasets.data.push(0);
                     }
                     newDatasets.data.push(datas[key]);
                     chart.data.datasets.push(newDatasets);
                 }
-
-                // if (chart.data.datasets[index] === undefined) {
-                //     const newDatasets = {
-                //         backgroundColor: $.graph.randCode(),
-                //         label: family[(index + 1) % 2],
-                //         data: [],
-                //     };
-                //     // const length = chart.data.labels.length;
-                //     // console.log(length);
-                //     for (let i = 0; i <= chart.data.labels.length - 1; i++) {
-                //         newDatasets.data.push(0);
-                //     }
-                //     newDatasets.data.push(data);
-                //     chart.data.datasets.push(newDatasets);
-                // } else {
-                //     chart.data.datasets[index].data.push(data);
-                // }
             }
-
-            // if (datas.length < chart.data.datasets.length) {
-            //     for (let len = datas.length; len < chart.data.datasets.length; len++) {
-            //         chart.data.datasets[len].data.push(0);
-            //     }
-            // }
-
-            // chart.data.datasets.forEach((dataset, index) => {
-            //     for (let len = chart.data.labels.length; ){}
-            // })
-
             const time = moment();
             const outputTime = time.format('HH : mm');
 
             chart.data.labels.push(`${outputTime}`);
-            // $.graph.add();
-            // chart.data.datasets[0].data.push(data);
             chart.data.datasets.forEach((dataset, index) => {
-                console.log(dataset.data.length);
                 if (chart.data.labels.length !== dataset.data.length) {
                     chart.data.datasets[index].data.push(0);
                 }
             });
             chart.update();
             console.log(chart.data.datasets);
-            // console.log(chart.data.datasets);
         });
     });
 
@@ -233,7 +186,8 @@
             });
         },
         randCode: () => {
-            const rand = Math.floor(Math.random() * colorArray.length - 1);
+            const rand = Math.floor(Math.random() * (colorArray.length - 1));
+            console.log(rand);
             const returnCode = colorArray[rand];
             colorArray.splice(rand, 1);
             return returnCode;
