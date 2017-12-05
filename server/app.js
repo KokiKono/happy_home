@@ -41,11 +41,10 @@ app.use('/api', apiRouter);
 
 app.use('/management', managementRouter);
 
-// app.use('/family_list', familyList);
 app.use('/main', mainRouter);
 
-Socket.server.listen(config.server.port, () => {
-    console.log(`happy home app mode is ${process.env.NODE_ENV} listening on ${config.server.port}`);
+Socket.server.listen(config.server.port, config.server.url, () => {
+    console.log(`happy home app mode is ${process.env.NODE_ENV} listening on http://${config.server.url}:${config.server.port}`);
 });
 
 // うざいので、
