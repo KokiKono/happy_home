@@ -66,10 +66,11 @@ const run = () => {
                 });
             });
         }));
-        // console.log(tmpEmotions);
+
         // faceIdごとに合算する
         tmpEmotions.forEach((tmpEmotion) => {
             const modelJsonData = {};
+            const modelJsonDataKeysLength = {};
             tmpEmotion.jsonDataList.forEach((strJson) => {
                 const jsonData = JSON.parse(strJson);
                 const jsonEmotion = jsonData.emotion.scores;
@@ -82,19 +83,27 @@ const run = () => {
                         // modelJsonData = Object.assign(modelJsonData, jsonEmotion[key]);
                         // console.log(key)
                         modelJsonData[key] = jsonEmotion[key];
+                        modelJsonDataKeysLength[key] = 1;
                     } else {
                         // console.log(modelJSONDataKeys.indexOf(key));
                         modelJsonData[key] += jsonEmotion[key];
+                        modelJsonDataKeysLength[key] += 1;
                     }
                     // console.log('modelJsonData',modelJsonData)
                 });
             });
+            // avg 処理
+            Object.keys(modelJsonData)
+                .forEach((element) => {
+                    modelJsonData[element] /= modelJsonDataKeysLength[element];
+                    return true;
+                });
             modelEmotions.push({
                 face_id: tmpEmotion.face_id,
                 emotion: modelJsonData,
+                modelJsonDataKeysLength,
             });
         });
-        // console.log(modelEmotions);
         // 提案許可処理
         // 提案許可リスト
         const modelPermissions = [];
@@ -110,14 +119,16 @@ const run = () => {
                 console.log('fromFamilyStructure取得失敗');
                 return;
             }
-            const modelEmotion = modelEmotions.find(element => element.face_id === fromFamilyStructure.face_id);
+            const modelEmotion = modelEmotions
+                .find(element => element.face_id === fromFamilyStructure.face_id);
             if (modelEmotion === undefined) {
                 console.log('modelEmotion取得失敗');
                 return;
             }
             // 現在感情と提案判断の比較
             item.judgments.forEach((judgment) => {
-                const emotionKeyIndex = Object.keys(modelEmotion.emotion).indexOf(judgment.key_name);
+                const emotionKeyIndex = Object.keys(modelEmotion.emotion)
+                    .indexOf(judgment.key_name);
                 if (emotionKeyIndex === -1) return;
                 // 差分比較
                 const diffEmotion = modelEmotion.emotion[judgment.key_name] - judgment.val;
