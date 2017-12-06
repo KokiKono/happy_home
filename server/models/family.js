@@ -124,8 +124,8 @@ export default class FamilyDao extends Dao {
                  fs.id as id,
                  f.id as family_id,
                  fs.name as name,
-                 fs.type as family_type,
-                 fs.family_icon as family_icon
+                 fs.type as type,
+                 fs.family_icon as face_icon 
                   FROM m_family f
                   INNER JOIN t_family_structure fs
                   ON f.id = fs.family_id
