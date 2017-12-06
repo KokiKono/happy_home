@@ -110,7 +110,7 @@
         });
 
         // 画像置き換え処理
-        socket.on('image update', (path) => {
+        socket.on('image update', (path, data) => {
             const image = new Image();
             image.src = path;
             // width 416, height 206
@@ -123,8 +123,8 @@
                 }
             }
             $(frame).empty();
-            $(frame).append(`<img height="${image.width * percentage}" width="${image.height * percentage}" src="${path}"/>`);
-            $.text.change(testdata);
+            $(frame).append(`<img height="${image.height * percentage}" width="${image.width * percentage}" src="${path}"/>`);
+            $.text.change(data);
         });
 
         socket.on('graph update', (datas) => {
