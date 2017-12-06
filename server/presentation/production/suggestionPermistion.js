@@ -137,8 +137,7 @@ const run = () => {
         await Promise.all(modelPermissions.map(async (item) => {
             await suggestionPermission.insertPermistion(latestPattern[0].id, item.suggestion.id);
         }));
-        resolve();
+        resolve('success');
     });
 }
-
 run();
