@@ -16,8 +16,7 @@ export default class Emotion {
      * 複数枚の写真を撮りそれぞれのemotion情報を取得する。
      * @param imageNum
      */
-    constructor(familyId, imageNum, imagePath) {
-        this.familyId = familyId;
+    constructor(imageNum, imagePath) {
         this.imageNum = imageNum;
         this.imagePath = imagePath;
     }
@@ -27,14 +26,13 @@ export default class Emotion {
      * @param emotions
      * @returns {Promise}
      */
-    insertEmotions(emotions) {
+    insertEmotions(familyDao, familyId, emotions) {
         return new Promise((resolve) => {
             let process = 1;
             const responseBody = [];
             emotions.forEach(async (emotion) => {
-                const familyDao = new FamilyDao();
                 const emotionId = await familyDao
-                    .insertEmotion(this.familyId, JSON.stringify(emotion.result), emotion.filePath)
+                    .insertEmotion(familyId, JSON.stringify(emotion.result), emotion.filePath)
                     .catch(err => console.log(err));
                 process += 1;
                 const emotionDetailList = [];
@@ -45,12 +43,18 @@ export default class Emotion {
                     });
                 });
                 responseBody.push(emotionDetailList);
-                if (process === emotions.length) resolve(responseBody);
+                if (process === emotions.length) {
+                    resolve(responseBody);
+                }
             });
         });
     }
     start() {
         return new Promise(async (resolve, reject) => {
+            const familyDao = new FamilyDao();
+            const latestFamily = await familyDao.latestFamily().catch(err => reject(err));
+            const familyId = latestFamily[0].id;
+            console.log(`emotion start family id is ${familyId}`);
             // MicroSoft Azure API Client
             const faceClient = new oxford.Client(configFile['api-key'].faceAPI, configFile.azureApi.region.faceAPI);
             const emotionClient = new oxford.Client(configFile['api-key'].emotionAPI, configFile.azureApi.region.emotionAPI);
@@ -71,13 +75,15 @@ export default class Emotion {
             });
             // faceIdsをグルーピング
             const { groups } = await faceClient.face.grouping(faceIds).catch((err) => {
-                console.log(err);
+                console.log(`emotion情報のfaceIds ${err}`);
+                console.log(faceIds)
+                reject(err);
             });
             // filesをemotionAPIに投げる。
             const emotions = await camera.postEmotionAPI(emotionClient.emotion.analyzeEmotion, files)
                 .catch((err) => { reject(err); });
             // emotionをDBにインサート
-            const emotionList = await this.insertEmotions(emotions);
+            const emotionList = await this.insertEmotions(familyDao, familyId, emotions);
             // groupsを元にdetectとemotionを結合
             const emotionDetectGroupList = [];
             Async.each(groups, (group) => {
@@ -96,8 +102,7 @@ export default class Emotion {
             // DBに保存されている代表faceIdと同一人物性を比較し、一番近いものを代表faceIdとする。
 
             // DBに保存している代表faceIdsを取得
-            const familyDao = new FamilyDao();
-            const modelFaceIds = await familyDao.getModelFamily(this.familyId);
+            const modelFaceIds = await familyDao.getModelFamily(familyId);
             Async.each(emotionDetectGroupList, async (emotionDetectGroup) => {
                 const comparisonFaceId = emotionDetectGroup[0].detect.faceId;
                 const findSimilarList = await faceClient
@@ -105,8 +110,8 @@ export default class Emotion {
                     .catch(err => reject(err));
                 const most = await Camera.mostFindSimilar(findSimilarList);
                 Async.each(emotionDetectGroup, async (emotionDetect) => {
-                    const familyDao2 = new FamilyDao();
-                    await familyDao2.insertindividual(
+                    // const familyDao2 = new FamilyDao();
+                    await familyDao.insertindividual(
                         emotionDetect.emotion.emotionId,
                         JSON.stringify(emotionDetect.emotion),
                         most.faceId,

@@ -3,9 +3,18 @@
  */
 import mysql from 'mysql';
 import Async from 'async';
+import configFile from '../../../config.json';
+
+const config = configFile[process.env.NODE_ENV];
 
 export default class Family {
     constructor() {
+        this.connection = null;
+        this.isEnd = false;
+        this.createConnection();
+    }
+    createConnection() {
+        this.isEnd = false;
         this.connection = mysql.createConnection({
             host: 'localhost',
             user: 'root',
@@ -14,10 +23,13 @@ export default class Family {
         });
     }
 
+    end() {
+        this.isEnd = true;
+        this.connection.end();
+    }
+
     getModelFamily(familyId) {
         return new Promise((resolve, reject) => {
-            this.connection.connect((connectErr) => {
-                if (connectErr) reject(connectErr);
                 this.connection.query(
                     'SELECT face_id FROM t_family_structure' +
                     ' INNER JOIN m_family' +
@@ -26,7 +38,6 @@ export default class Family {
                     [familyId],
                     (queryErr, results) => {
                         if (queryErr) reject(queryErr);
-                        this.connection.end();
                         const response = [];
                         Async.each(results, (result) => {
                             response.push(result.face_id);
@@ -35,13 +46,10 @@ export default class Family {
                     },
                 );
             });
-        });
     }
 
     insertEmotion(familyId, jsonData, imagePath) {
         return new Promise((resolve, reject) => {
-            this.connection.connect((connectErr) => {
-                if (connectErr) reject(connectErr);
                 this.connection.beginTransaction((beginTransactionErr) => {
                     if (beginTransactionErr) reject(beginTransactionErr);
                     this.connection.query(
@@ -55,20 +63,16 @@ export default class Family {
                                 if (commitErr) {
                                     this.connection.rollback(() => (reject(commitErr)));
                                 }
-                                this.connection.end();
                                 resolve(results.insertId);
                             });
                         },
                     );
                 });
-            });
         });
     }
 
     insertindividual(emotionId, jsonData, faceId) {
         return new Promise((resolve, reject) => {
-            this.connection.connect((connectErr) => {
-                if (connectErr) reject(connectErr);
                 this.connection.beginTransaction((beginTransactionErr) => {
                     if (beginTransactionErr) reject(beginTransactionErr);
                     this.connection.query(
@@ -82,13 +86,11 @@ export default class Family {
                                 if (commitErr) {
                                     this.connection.rollback(() => (reject(commitErr)));
                                 }
-                                this.connection.end();
                                 resolve();
                             });
                         },
                     );
                 });
-            });
         });
     }
 
