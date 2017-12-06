@@ -10,7 +10,6 @@ import configFile from '../../../config.json';
 import Camera from '../../ai/camera';
 import FamilyDao from '../models/family';
 
-
 export default class Emotion {
     /**
      * 複数枚の写真を撮りそれぞれのemotion情報を取得する。
@@ -120,6 +119,7 @@ export default class Emotion {
                     });
                 });
             });
+            resolve('success');
         });
     }
 };

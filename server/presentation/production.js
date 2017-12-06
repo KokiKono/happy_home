@@ -17,6 +17,7 @@ import Emotion from './production/emotion';
 import homeAnimationChoice from './mock/homeAnimationChoice';
 import Suggestion from './production/suggestion';
 import suggestionPermission from './production/suggestionPermistion';
+import emotionSocket from './production/emotionSocket';
 
 const run = async (app) => {
 
@@ -49,6 +50,7 @@ const run = async (app) => {
     console.log('感情読み取り開始');
     const emotion = new Emotion(10, path.join(__dirname, '../views/public/images/'))
     result = await emotion.start().catch((err) => { throw err; });
+    emotionSocket(app);
     console.log(`感情読み取り終了 ${result}`);
 
     console.log('家内アニメーション選択処理開始');
@@ -74,6 +76,7 @@ const run = async (app) => {
 
     console.log('感情読み取り開始');
     result = await emotion.start().catch((err) => { throw err; });
+    emotionSocket(app);
     console.log(`感情読み取り終了 ${result}`);
 
     console.log('ご飯アニメーション開始');
@@ -91,6 +94,7 @@ const run = async (app) => {
 
     console.log('感情読み取り開始');
     result = await emotion.start().catch((err) => { throw err; });
+    emotionSocket(app);
     console.log(`感情読み取り終了 ${result}`);
 
     console.log('提案結果アニメーション開始');
