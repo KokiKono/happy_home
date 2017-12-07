@@ -39,3 +39,76 @@ export default class Emotion {
         });
     }
 }
+    getLatestEmotionsWidthFaceId(familyId) {
+        return new Promise(async (resolve, reject) => {
+            const modelEmotions = [];
+            const latestEmotions = await this.getLatestEmotions(familyId)
+                .catch(err => reject(err));
+            await Promise.all(latestEmotions.map(async (latestEmotion) => {
+                const emotions = await this.getEmotionIndividuals(latestEmotion.id)
+                    .catch(err => reject(err));
+                emotions.forEach((emotion) => {
+                    // すでにmodelEmotionsにfaceIdが入っているかを検索
+                    const findEmotion = modelEmotions
+                        .find(element => element.face_id === emotion.face_id);
+                    // すでに入っている場合はjsonDataListにpush
+                    if (findEmotion) {
+                        modelEmotions[modelEmotions.indexOf(findEmotion)]
+                            .jsonDataList.push(JSON.parse(emotion.json_data));
+                        return;
+                    }
+                    modelEmotions.push({
+                        face_id: emotion.face_id,
+                        jsonDataList: [JSON.parse(emotion.json_data)],
+                    });
+                });
+            }));
+            resolve(modelEmotions);
+        });
+    }
+
+    getLatestEmotionsSumTotalWidthFaceId(familyId) {
+        return new Promise(async (resolve, reject) => {
+            const result = {};
+            const latestEmotionsWidthFaceIds = await this.getLatestEmotionsWidthFaceId(familyId)
+                .catch(err => reject(err));
+            latestEmotionsWidthFaceIds.forEach((latestEmotionsWidthFaceId) => {
+                const jsonDataKeyLength = {};
+                const resultJsonData = {};
+                latestEmotionsWidthFaceId.jsonDataList.forEach((jsonData) => {
+                    const { scores } = jsonData.emotion;
+                    const jsonDataKeys = Object.keys(jsonDataKeyLength);
+                    Object.keys(scores).forEach((scoreKey) => {
+                        if (jsonDataKeys.indexOf(scoreKey) > 0) {
+                            resultJsonData[scoreKey] += scores[scoreKey];
+                            jsonDataKeyLength[scoreKey] += 1;
+                            return true;
+                        }
+                        resultJsonData[scoreKey] = scores[scoreKey];
+                        jsonDataKeyLength[scoreKey] = 1;
+                    });
+                });
+                result[latestEmotionsWidthFaceId.face_id] = {
+                    jsonData: resultJsonData,
+                    jsonDataKeyLength,
+                };
+            });
+            resolve(result);
+        });
+    }
+
+    getLatestEmotionAVGWidthFaceId(familyId) {
+        return new Promise(async (resolve, reject) => {
+            const LESTwidthFaceIds =
+                await this.getLatestEmotionsSumTotalWidthFaceId(familyId)
+                .catch(err => reject(err));
+            Object.keys(LESTwidthFaceIds).forEach((faceId) => {
+                Object.keys(LESTwidthFaceIds[faceId].jsonData).forEach((dataKey) => {
+                    LESTwidthFaceIds[faceId].jsonData[dataKey]
+                        /= LESTwidthFaceIds[faceId].jsonDataKeyLength[dataKey];
+                });
+            });
+            resolve(LESTwidthFaceIds);
+        });
+    }
+}
