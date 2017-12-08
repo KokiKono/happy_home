@@ -15,41 +15,34 @@ export default class SuggestionPermision {
 
     insertPermistion(patternId, suggestionId) {
         return new Promise((resolve, reject) => {
-            this.connection.connect((connectErr) => {
-                if (connectErr) reject(connectErr);
-                this.connection.query(
-                    'INSERT INTO t_suggestion_permission(pattern_id, suggestion_id)' +
-                    ' VALUES(?, ?)',
-                    [patternId, suggestionId],
-                    (queryErr, results) => {
-                        if (queryErr) {
-                            this.connection.rollback(() => reject(queryErr));
+            this.connection.query(
+                'INSERT INTO t_suggestion_permission(pattern_id, suggestion_id)' +
+                ' VALUES(?, ?)',
+                [patternId, suggestionId],
+                (queryErr, results) => {
+                    if (queryErr) {
+                        this.connection.rollback(() => reject(queryErr));
+                    }
+                    this.connection.commit((commitErr) => {
+                        if (commitErr) {
+                            this.connection.rollback(() => reject(commitErr));
                         }
-                        this.connection.commit((commitErr) => {
-                            if (commitErr) {
-                                this.connection.rollback(() => reject(commitErr));
-                            }
-                            this.connection.end();
-                            reject(results.insertId);
-                        });
-                    },
-                );
-            });
+                        resolve(results.insertId);
+                    });
+                },
+            );
         });
     }
 
     getSuggestionAll() {
         return new Promise((resolve, reject) => {
-            this.connection.connect((connectErr) => {
-                if (connectErr) reject(connectErr);
-                this.connection.query(
-                    'SELECT * FROM m_suggestion',
-                    (queryErr, results) => {
-                        if (queryErr) reject(queryErr);
-                        resolve(results);
-                    },
-                );
-            });
+            this.connection.query(
+                'SELECT * FROM m_suggestion',
+                (queryErr, results) => {
+                    if (queryErr) reject(queryErr);
+                    resolve(results);
+                },
+            );
         });
     }
 
