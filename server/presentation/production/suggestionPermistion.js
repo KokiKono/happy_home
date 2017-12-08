@@ -10,10 +10,10 @@ const run = () => {
     return new Promise(async (resolve, reject) => {
         const familyModel = new FamilyModel();
         const latestFamily = await familyModel.latestFamily();
-        const familyStructure = await familyModel.getFamilyStructre(latestFamily[0].id);
+        const familyStructures = await familyModel.getFamilyStructre(latestFamily[0].id);
         // 現在家族のタイプをすべて取得
         const familyTypes = [];
-        familyStructure.forEach(item => familyTypes.push(item.type));
+        familyStructures.forEach(item => familyTypes.push(item.type));
         console.log(familyTypes)
         // 現在家族タイプにあったfrom_typeの提案を取得
         const suggestionPermission = new SuggestionPermission();
@@ -50,10 +50,40 @@ const run = () => {
         // 提案判断と感情総和とのギャップ
         const ejFar = 0;
         suggestionJudgments.forEach((item) => {
+            console.log(`提案id=${item.suggestion.id}、type=${item.suggestion.type}を提案許可できるか判断します。`);
             const fromType = item.suggestion.from_type;
-            if (fromType === 'ALL') return;
+            if (fromType === 'ALL') {
+                console.log('提案対象元タイプはALLなので、家族感情全員を見ます。');
+                let isOKNum = 0;
+                familyStructures.forEach((familyStructure) => {
+                    // 感情取得
+                    const modelEmotion = modelEmotions
+                        .find(element => element.face === familyStructure.face_id);
+                    // 感情取得失敗
+                    if (!modelEmotion) return;
+                    // 感情と提案判断の比較
+                    item.judgments.forEach((judgment) => {
+                        const findScoreIndex = Object.keys(modelEmotion)
+                            .indexOf(judgment.key_name);
+                        if (findScoreIndex === -1) return;
+                        const diffEmotion =
+                           Math.abs(modelEmotion.emotion[judgment.key_name] - judgment.val);
+
+                        console.log(`${judgment.key_name}を比較します。`);
+                        console.log(`感情平均:${modelEmotion.emotion[judgment.key_name]} - 判断:${judgment.val} = ${diffEmotion}`);
+                        console.log(`${familyStructure.type}において提案は${diffEmotion} >= ${ejFar} で${diffEmotion >= ejFar ? '許可' : '却下'}されました。`);
+                        if (diffEmotion >= ejFar) {
+                            isOKNum += 1;
+                        }
+                    });
+                });
+                const isOK = isOKNum === familyStructures.length;
+                console.log(`${familyStructures.length}人家族では最終的に${isOK ? '許可' : '却下'}されました。`);
+                modelPermissions.push(item);
+                return;
+            }
             // face_idとfrom_typeの結合
-            const fromFamilyStructure = familyStructure.find(element => fromType === element.type);
+            const fromFamilyStructure = familyStructures.find(element => fromType === element.type);
             if (fromFamilyStructure === undefined) {
                 console.log('fromFamilyStructure取得失敗');
                 return;
@@ -64,6 +94,7 @@ const run = () => {
                 console.log('modelEmotion取得失敗');
                 return;
             }
+
             // 現在感情と提案判断の比較
             item.judgments.forEach((judgment) => {
                 const emotionKeyIndex = Object.keys(modelEmotion.emotion)
@@ -73,7 +104,7 @@ const run = () => {
                 const diffEmotion = modelEmotion.emotion[judgment.key_name] - judgment.val;
                 console.log(`-------比較スタート--------${item.suggestion.id}`);
                 console.log(`${judgment.key_name}を比較します。`);
-                console.log(`感情総和:${modelEmotion.emotion[judgment.key_name]} - 判断:${judgment.val} = ${diffEmotion}`);
+                console.log(`感情平均:${modelEmotion.emotion[judgment.key_name]} - 判断:${judgment.val} = ${diffEmotion}`);
                 console.log(`提案は${diffEmotion} >= ${ejFar} で${diffEmotion >= ejFar ? '許可' : '却下'}されました。`);
                 if (diffEmotion >= ejFar) {
                     modelPermissions.push(item);
@@ -90,4 +121,3 @@ const run = () => {
         resolve('success');
     });
 }
-run();
