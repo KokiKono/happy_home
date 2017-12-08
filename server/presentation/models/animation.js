@@ -25,6 +25,7 @@ export default class Animation {
                     + 'inner join t_pattern t_p on t_s.id = t_p.scene_id '
                     + 'where t_s.timestamp = (select max(timestamp) from t_scene) AND t_p.timestamp = (select max(timestamp) from t_pattern)',
                     (queryErr, results) =>{
+                        if (queryErr) reject(queryErr);
                         resolve(results);
                     },
                 );
