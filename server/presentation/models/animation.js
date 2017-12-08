@@ -17,8 +17,8 @@ export default class Animation {
 
     getScenePattern(){
         return new Promise((resolve, reject) => {
-            this.connection.connect((connectErr) => {
-                if (connectErr) reject(connectErr);
+            // this.connection.connect((connectErr) => {
+            //     if (connectErr) reject(connectErr);
                 this.connection.query(
                     // 'select scene from t_scene where timestamp = (select max(timestamp) from t_scene)',
                     'select t_s.scene, t_p.pattern from t_scene t_s '
@@ -28,7 +28,7 @@ export default class Animation {
                         resolve(results);
                     },
                 );
-            });
+            // });
         });
     }
 
