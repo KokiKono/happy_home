@@ -9,111 +9,150 @@ export default class utilAnimation {
 
     constructor() {
 
-        /** シーン定数 **/
-         this.ANIMATION_RETURN_HOME = 1;
-         this.ANIMATION_RETURN_HOME_JOY = 2;
-         this.ANIMATION_RETURN_HOME_ANGRY = 3;
-         this.ANIMATION_COMMONNESS = 4;
-         this.ANIMATION_RONELY = 5;
-         this.ANIMATION_TRIED = 6;
-         this.ANIMATION_HAPPINESS = 7;
-         this.ANIMATION_HEARTHSTONE = 8;
-         this.ANIMATION_SILENCE = 9;
+        /* シーン定数 */
+        this.SCENE_FAMILY = 0;
+        this.SCENE_ABSENCE = 1;
 
-         /** アニメーション名テスト用 **/
-         this.ANIMATION_RETURN_HOME_NAME = '帰宅中アニメーション';
-         this.ANIMATION_RETURN_HOME_JOY_NAME = '帰宅中（母喜）アニメーション';
-         this.ANIMATION_RETURN_HOME_ANGRY_NAME = '帰宅中（母怒）アニメーション';
-         this.ANIMATION_COMMONNESS_NAME = '家に入る直前アニメーション';
-         this.ANIMATION_RONELY_NAME = '寂しい状態アニメーション';
-         this.ANIMATION_TRIED_NAME = '疲れ状態アニメーション';
-         this.ANIMATION_HAPPINESS_NAME = '幸せ状態アニメ−ション';
-         this.ANIMATION_HEARTHSTONE_NAME = '団欒状態アニメーション';
-         this.ANIMATION_SILENCE_NAME = '無言状態アニメーション';
+        /* シーン定数 */
+        //家族
+        this.SCENE_FAMILY_RETURN_HOME_JOY = 1;
+        this.SCENE_FAMILY_RETURN_HOME_ANGRY = 2;
+        this.SCENE_FAMILY_HEARTHSTONE = 3;
+        this.SCENE_FAMILY_SILENCE = 4;
+        //留守
+        this.SCENE_ABSENCE_RETURN_HOME = 1;
+        this.SCENE_ABSENCE_RONELY = 2;
+        this.SCENE_ABSENCE_TRIED = 3;
+        this.SCENE_ABSENCE_HAPPINESS = 4;
+        //単体
+        this.ANIMATION_COMMON = 99;
+        this.PHOTO_EMOTION_READING = 111;
+        this.PHOTO_TEIAN_KUN = 222;
 
-         /* サンプルアニメーションhtml */
-         this.sample_animation_html = '../../animation/sample_animation/project.html';
-    }
+        /* アニメーション名テスト用 */
+        this.ANIMATION_RETURN_HOME_NAME = '帰宅中アニメーション';
+        this.ANIMATION_RETURN_HOME_JOY_NAME = '帰宅中（母喜）アニメーション';
+        this.ANIMATION_RETURN_HOME_ANGRY_NAME = '帰宅中（母怒）アニメーション';
+        this.ANIMATION_COMMONNESS_NAME = '家に入る直前アニメーション';
+        this.ANIMATION_RONELY_NAME = '寂しい状態アニメーション';
+        this.ANIMATION_TRIED_NAME = '疲れ状態アニメーション';
+        this.ANIMATION_HAPPINESS_NAME = '幸せ状態アニメ−ション';
+        this.ANIMATION_HEARTHSTONE_NAME = '団欒状態アニメーション';
+        this.ANIMATION_SILENCE_NAME = '無言状態アニメーション';
+        /* 画像用 */
+        this.PHOTO_EMOTION_READING_NAME = '感情読み取り中画像';
+        this.PHOTO_TEIAN_KUN_NAME = '提案くん画像';
 
-    /**
-     * アニメーションをソケットで送信する
-     * @param  {[type]} app
-     * @param  {[type]} animation_html アニメーションのhtml
-     * @return {[type]}
-     */
-    main_screen_animation(app, animation_html){
-        app.socket.io.emit('url', animation_html);
+        /* サンプルアニメーションhtml */
+        this.sample_animation_html = '../../animation/sample_animation/project.html';
     }
 
     start(app){
         return new Promise(async (resolve, reject) => {
 
+            // process.on('unhandledRejection', console.dir);
+
             const animationDao = new AnimationDao;
             /* シーンID取得 */
-            const sceneId = await animationDao.getScene().catch(err => console.log(err));
+            const scene_pattern_list = await animationDao.getScenePattern().catch((err) => { reject(err); });
 
-            /* シーンごとにアニメーション割り振り */
             let management_id = 0;
-            switch (sceneId[0]) {
-                case this.ANIMATION_RETURN_HOME:
-                    management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_RETURN_HOME_NAME).catch(err => console.log(err));
-                    this.main_screen_animation(app, this.sample_animation_html);
-                    break;
 
-                case this.ANIMATION_RETURN_HOME_JOY:
-                    management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_RETURN_HOME_JOY).catch(err => console.log(err));
-                    break;
+            /* シーン・パターンごとにアニメーション割り振り */
+            if(String(scene_pattern_list[0]['pattern']).length > 1){
 
-                case this.ANIMATION_RETURN_HOME_ANGRY:
-                    management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_RETURN_HOME_ANGRY_NAME).catch(err => console.log(err));
-                    break;
+                //パターンIDが二桁以上の処理
+                switch (scene_pattern_list[0]['pattern']) {
+                    case this.ANIMATION_COMMON:
+                        management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_COMMONNESS_NAME).catch((err) => { reject(err); });
+                        break;
 
-                case this.ANIMATION_COMMONNESS:
-                    management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_COMMONNESS_NAME).catch(err => console.log(err));
-                    break;
+                    case this.PHOTO_EMOTION_READING:
+                        //感情読み取り画像
+                        break;
 
-                case this.ANIMATION_RONELY:
-                    management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_RONELY_NAME).catch(err => console.log(err));
-                    break;
+                    case this.PHOTO_TEIAN_KUN:
+                        //提案君画像
+                        break;
+                }
 
-                case this.ANIMATION_TRIED:
-                    management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_TRIED_NAME).catch(err => console.log(err));
-                    break;
+            } else {
 
-                case this.ANIMATION_HAPPINESS:
-                    management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_HAPPINESS_NAME).catch(err => console.log(err));
-                    break;
+                //パターンIDが1桁（シーンIDがある）の処理
+                switch (scene_pattern_list[0]['scene']) {
 
-                case this.ANIMATION_HEARTHSTONE:
-                    management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_HEARTHSTONE_NAME).catch(err => console.log(err));
-                    break;
+                    case this.SCENE_FAMILY://家族
 
-                case this.ANIMATION_SILENCE:
-                    management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_SILENCE_NAME).catch(err => console.log(err));
-                    break;
+                        switch (scene_pattern_list[0]['pattern']) {
+                            case this.SCENE_FAMILY_RETURN_HOME_JOY://帰宅喜
+                                management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_RETURN_HOME_JOY_NAME).catch((err) => { reject(err); });
+                                app.socket.io.emit('url', this.sample_animation_html);
+                                break;
+                            case this.SCENE_FAMILY_RETURN_HOME_ANGRY://帰宅怒
+                                management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_RETURN_HOME_ANGRY_NAME).catch((err) => { reject(err); });
+                                app.socket.io.emit('url', this.sample_animation_html);
+                                break;
+                            case this.SCENE_FAMILY_HEARTHSTONE://団欒
+                                management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_HEARTHSTONE_NAME).catch((err) => { reject(err); });
+                                app.socket.io.emit('url', this.sample_animation_html);
+                                break;
+                            case this.SCENE_FAMILY_SILENCE://無言
+                                management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_SILENCE_NAME).catch((err) => { reject(err); });
+                                app.socket.io.emit('url', this.sample_animation_html);
+                                break;
+                        }
+
+                        break;
+
+                    case this.SCENE_ABSENCE://留守
+
+                        switch (scene_pattern_list[0]['pattern']) {
+                            case this.SCENE_ABSENCE_RETURN_HOME://帰宅
+                                management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_RETURN_HOME_NAME).catch((err) => { reject(err); });
+                                app.socket.io.emit('url', this.sample_animation_html);
+                                break;
+                            case this.SCENE_ABSENCE_RONELY://寂しい
+                                management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_RONELY_NAME).catch((err) => { reject(err); });
+                                app.socket.io.emit('url', this.sample_animation_html);
+                                break;
+                            case this.SCENE_ABSENCE_TRIED://疲れ
+                                management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_TRIED_NAME).catch((err) => { reject(err); });
+                                app.socket.io.emit('url', this.sample_animation_html);
+                                break;
+                            case this.SCENE_ABSENCE_HAPPINESS://幸せ
+                                management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_HAPPINESS_NAME).catch((err) => { reject(err); });
+                                app.socket.io.emit('url', this.sample_animation_html);
+                                break;
+                        }
+
+                        break;
+                }
             }
 
-            /* アニメーション監視部分 */
-            let type = '';
-            let successFlg = false;
-            let i = 0;
+            if(String(scene_pattern_list[0]['pattern']).length < 3) {
 
-            var io = setInterval(async function() {
+                /* アニメーション監視部分 */
+                let type = '';
+                let successFlg = false;
+                let i = 0;
 
-                //監視するアニメーションのタイプを取得
-                type = await animationDao.selectMonitoringAnimetionType(management_id).catch(err => console.log(err));
+                var io = setInterval(async function() {
 
-                //アニメーションのタイプがendの場合監視を終了し処理を終了させる
-                if(type[0] === 'end'){
-                    successFlg = true;
-                }
+                    //監視するアニメーションのタイプを取得
+                    type = await animationDao.selectMonitoringAnimetionType(management_id).catch((err) => { reject(err); });
 
-                if(successFlg === true){
-                    clearInterval(io);
-                    resolve('success');
-                }
+                    //アニメーションのタイプがendの場合監視を終了し処理を終了させる
+                    if(type[0] === 'end'){
+                        successFlg = true;
+                    }
 
-            }, 3000);//3秒loop
+                    if(successFlg === true){
+                        clearInterval(io);
+                        resolve('success');
+                    }
+
+                }, 5000);//5秒loop
+            }
         });
     }
 }

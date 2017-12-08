@@ -15,20 +15,17 @@ export default class Animation {
         });
     }
 
-    getScene(){
+    getScenePattern(){
         return new Promise((resolve, reject) => {
             this.connection.connect((connectErr) => {
                 if (connectErr) reject(connectErr);
                 this.connection.query(
-                    'select scene from t_scene where timestamp = (select max(timestamp) from t_scene)',
+                    // 'select scene from t_scene where timestamp = (select max(timestamp) from t_scene)',
+                    'select t_s.scene, t_p.pattern from t_scene t_s '
+                    + 'inner join t_pattern t_p on t_s.id = t_p.scene_id '
+                    + 'where t_s.timestamp = (select max(timestamp) from t_scene) AND t_p.timestamp = (select max(timestamp) from t_pattern)',
                     (queryErr, results) =>{
-                            if (queryErr) reject(queryErr);
-                            //this.connection.end();
-                            const response = [];
-                            Async.each(results, (result) => {
-                                response.push(result.scene);
-                            });
-                            resolve(response);
+                        resolve(results);
                     },
                 );
             });
@@ -50,7 +47,6 @@ export default class Animation {
                             if (commitErr) {
                                 this.connection.rollback(() => (reject(commitErr)));
                             }
-                            //this.connection.end();
                             resolve(results.insertId);
                         });
                     },
@@ -66,7 +62,6 @@ export default class Animation {
                 [id],
                 (queryErr, results) =>{
                     if (queryErr) reject(queryErr);
-                        //this.connection.end();
                         const response = [];
                         Async.each(results, (result) => {
                         response.push(result.type);
