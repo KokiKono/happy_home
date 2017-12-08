@@ -38,4 +38,27 @@ export default class Presentation {
             );
         });
     }
+
+    insertPattern(sceneId, pattern) {
+        return new Promise((resolve, reject) => {
+            this.connection.beginTransaction((beginTransactionErr) => {
+                if (beginTransactionErr) reject(beginTransactionErr);
+                this.connection.query(
+                    'INSERT INTO t_pattern(scene_id, pattern) VALUES(? ,?)',
+                    [sceneId, pattern],
+                    (queryErr) => {
+                        if (queryErr) {
+                            this.connection.rollback(() => (reject(queryErr)));
+                        }
+                        this.connection.commit((commitErr) => {
+                            if (commitErr) {
+                                this.connection.rollback(() => (reject(commitErr)));
+                            }
+                            resolve();
+                        });
+                    },
+                );
+            });
+        })
+    }
 }
