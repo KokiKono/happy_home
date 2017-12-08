@@ -2,34 +2,14 @@
  * アニメーションをシーンごとに選択する。
  * Created by I.Asakawa on 2017/11/21.
  */
-
+import * as ScenePatternConst from '../../ScenePatternConstant'
 import AnimationDao from '../models/animation';
 
 export default class utilAnimation {
 
     constructor() {
 
-        /* シーン定数 */
-        this.SCENE_FAMILY = 0;
-        this.SCENE_ABSENCE = 1;
-
-        /* シーン定数 */
-        //家族
-        this.SCENE_FAMILY_RETURN_HOME_JOY = 1;
-        this.SCENE_FAMILY_RETURN_HOME_ANGRY = 2;
-        this.SCENE_FAMILY_HEARTHSTONE = 3;
-        this.SCENE_FAMILY_SILENCE = 4;
-        //留守
-        this.SCENE_ABSENCE_RETURN_HOME = 1;
-        this.SCENE_ABSENCE_RONELY = 2;
-        this.SCENE_ABSENCE_TRIED = 3;
-        this.SCENE_ABSENCE_HAPPINESS = 4;
-        //単体
-        this.ANIMATION_COMMON = 99;
-        this.PHOTO_EMOTION_READING = 111;
-        this.PHOTO_TEIAN_KUN = 222;
-
-        /* アニメーション名テスト用 */
+        /* アニメーション名 */
         this.ANIMATION_RETURN_HOME_NAME = '帰宅中アニメーション';
         this.ANIMATION_RETURN_HOME_JOY_NAME = '帰宅中（母喜）アニメーション';
         this.ANIMATION_RETURN_HOME_ANGRY_NAME = '帰宅中（母怒）アニメーション';
@@ -42,9 +22,23 @@ export default class utilAnimation {
         /* 画像用 */
         this.PHOTO_EMOTION_READING_NAME = '感情読み取り中画像';
         this.PHOTO_TEIAN_KUN_NAME = '提案くん画像';
+        this.PHOTO_SMART_PHONE_CONFIRM_NAME = 'スマホ確認中画像';
 
-        /* サンプルアニメーションhtml */
-        this.sample_animation_html = '../../animation/sample_animation/project.html';
+        /* アニメーション用html定数 */
+        //家族用
+        this.ANIMATION_RETURN_HOME_JOY_HTML = '../../animation/sample_animation/project.html';
+        this.ANIMTION_RETURN_HOME_ANGRY_HTML = '../../animation/sample_animation/project.html';
+        this.ANIMATION_HEARTHSTONE_HTML = '../../animation/sample_animation/project.html';
+        this.ANIMATION_SILENCE_HTML = '../../animation/sample_animation/project.html';
+
+        //留守用
+        this.ANIMATION_RETURN_HOME_HTML = '../../animation/sample_animation/project.html';
+        this.ANIMTION_RONELY_HTML = '../../animation/sample_animation/project.html';
+        this.ANIMATION_TRIDE_HTML = '../../animation/sample_animation/project.html';
+        this.ANIMATION_HAPPINESS_HTML = '../../animation/sample_animation/project.html';
+
+        //単体
+        this.ANIMATION_COMMON_HTML = '../../animation/sample_animation/project.html';
     }
 
     start(app){
@@ -63,16 +57,21 @@ export default class utilAnimation {
 
                 //パターンIDが二桁以上の処理
                 switch (scene_pattern_list[0]['pattern']) {
-                    case this.ANIMATION_COMMON:
+                    case ScenePatternConst.ANIMATION_COMMON:
                         management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_COMMONNESS_NAME).catch((err) => { reject(err); });
+                        app.socket.io.emit('url', this.ANIMATION_COMMON_HTML);
                         break;
 
-                    case this.PHOTO_EMOTION_READING:
+                    case ScenePatternConst.PHOTO_EMOTION_READING:
                         //感情読み取り画像
                         break;
 
-                    case this.PHOTO_TEIAN_KUN:
+                    case ScenePatternConst.PHOTO_TEIAN_KUN:
                         //提案君画像
+                        break;
+
+                    case ScenePatternConst.PHOTO_SMART_PHONE_CONFIRM:
+                        //スマホ確認画像
                         break;
                 }
 
@@ -81,47 +80,47 @@ export default class utilAnimation {
                 //パターンIDが1桁（シーンIDがある）の処理
                 switch (scene_pattern_list[0]['scene']) {
 
-                    case this.SCENE_FAMILY://家族
+                    case ScenePatternConst.SCENE_FAMILY://家族
 
                         switch (scene_pattern_list[0]['pattern']) {
-                            case this.SCENE_FAMILY_RETURN_HOME_JOY://帰宅喜
+                            case ScenePatternConst.SCENE_FAMILY_RETURN_HOME_JOY://帰宅喜
                                 management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_RETURN_HOME_JOY_NAME).catch((err) => { reject(err); });
-                                app.socket.io.emit('url', this.sample_animation_html);
+                                app.socket.io.emit('url', this.ANIMATION_RETURN_HOME_JOY_HTML);
                                 break;
-                            case this.SCENE_FAMILY_RETURN_HOME_ANGRY://帰宅怒
+                            case ScenePatternConst.SCENE_FAMILY_RETURN_HOME_ANGRY://帰宅怒
                                 management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_RETURN_HOME_ANGRY_NAME).catch((err) => { reject(err); });
-                                app.socket.io.emit('url', this.sample_animation_html);
+                                app.socket.io.emit('url', this.ANIMTION_RETURN_HOME_ANGRY_HTML);
                                 break;
-                            case this.SCENE_FAMILY_HEARTHSTONE://団欒
+                            case ScenePatternConst.SCENE_FAMILY_HEARTHSTONE://団欒
                                 management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_HEARTHSTONE_NAME).catch((err) => { reject(err); });
-                                app.socket.io.emit('url', this.sample_animation_html);
+                                app.socket.io.emit('url', this.ANIMATION_HEARTHSTONE_HTML);
                                 break;
-                            case this.SCENE_FAMILY_SILENCE://無言
+                            case ScenePatternConst.SCENE_FAMILY_SILENCE://無言
                                 management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_SILENCE_NAME).catch((err) => { reject(err); });
-                                app.socket.io.emit('url', this.sample_animation_html);
+                                app.socket.io.emit('url', this.ANIMATION_SILENCE_HTML);
                                 break;
                         }
 
                         break;
 
-                    case this.SCENE_ABSENCE://留守
+                    case ScenePatternConst.SCENE_ABSENCE://留守
 
                         switch (scene_pattern_list[0]['pattern']) {
-                            case this.SCENE_ABSENCE_RETURN_HOME://帰宅
+                            case ScenePatternConst.SCENE_ABSENCE_RETURN_HOME://帰宅
                                 management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_RETURN_HOME_NAME).catch((err) => { reject(err); });
-                                app.socket.io.emit('url', this.sample_animation_html);
+                                app.socket.io.emit('url', this.ANIMATION_RETURN_HOME_HTML);
                                 break;
-                            case this.SCENE_ABSENCE_RONELY://寂しい
+                            case ScenePatternConst.SCENE_ABSENCE_RONELY://寂しい
                                 management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_RONELY_NAME).catch((err) => { reject(err); });
-                                app.socket.io.emit('url', this.sample_animation_html);
+                                app.socket.io.emit('url', this.ANIMTION_RONELY_HTML);
                                 break;
-                            case this.SCENE_ABSENCE_TRIED://疲れ
+                            case ScenePatternConst.SCENE_ABSENCE_TRIED://疲れ
                                 management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_TRIED_NAME).catch((err) => { reject(err); });
-                                app.socket.io.emit('url', this.sample_animation_html);
+                                app.socket.io.emit('url', this.ANIMATION_TRIDE_HTML);
                                 break;
-                            case this.SCENE_ABSENCE_HAPPINESS://幸せ
+                            case ScenePatternConst.SCENE_ABSENCE_HAPPINESS://幸せ
                                 management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_HAPPINESS_NAME).catch((err) => { reject(err); });
-                                app.socket.io.emit('url', this.sample_animation_html);
+                                app.socket.io.emit('url', this.ANIMATION_HAPPINESS_HTML);
                                 break;
                         }
 
