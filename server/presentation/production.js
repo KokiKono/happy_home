@@ -14,7 +14,7 @@ import scene from './production/scene';
 import utilAnimation from './production/utilAnimation';
 import TmpFace from './models/tmpFace';
 import Emotion from './production/emotion';
-import homeAnimationChoice from './mock/homeAnimationChoice';
+import homeAnimationChoice from './production/homeAnimationChoice';
 import Suggestion from './production/suggestion';
 import suggestionPermission from './production/suggestionPermistion';
 import emotionSocket from './production/emotionSocket';
