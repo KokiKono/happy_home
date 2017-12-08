@@ -38,7 +38,7 @@ export default class Emotion {
             );
         });
     }
-}
+
     getLatestEmotionsWidthFaceId(familyId) {
         return new Promise(async (resolve, reject) => {
             const modelEmotions = [];
@@ -69,7 +69,7 @@ export default class Emotion {
 
     getLatestEmotionsSumTotalWidthFaceId(familyId) {
         return new Promise(async (resolve, reject) => {
-            const result = {};
+            const result = [];
             const latestEmotionsWidthFaceIds = await this.getLatestEmotionsWidthFaceId(familyId)
                 .catch(err => reject(err));
             latestEmotionsWidthFaceIds.forEach((latestEmotionsWidthFaceId) => {
@@ -88,10 +88,11 @@ export default class Emotion {
                         jsonDataKeyLength[scoreKey] = 1;
                     });
                 });
-                result[latestEmotionsWidthFaceId.face_id] = {
-                    jsonData: resultJsonData,
+                result.push({
+                    face_id: latestEmotionsWidthFaceId.face_id,
+                    emotion: resultJsonData,
                     jsonDataKeyLength,
-                };
+                });
             });
             resolve(result);
         });
@@ -102,13 +103,23 @@ export default class Emotion {
             const LESTwidthFaceIds =
                 await this.getLatestEmotionsSumTotalWidthFaceId(familyId)
                 .catch(err => reject(err));
-            Object.keys(LESTwidthFaceIds).forEach((faceId) => {
-                Object.keys(LESTwidthFaceIds[faceId].jsonData).forEach((dataKey) => {
-                    LESTwidthFaceIds[faceId].jsonData[dataKey]
-                        /= LESTwidthFaceIds[faceId].jsonDataKeyLength[dataKey];
-                });
+            const result = [];
+            LESTwidthFaceIds.forEach((LESTwidthFaceId) => {
+                const resultItem = {
+                    face_id: LESTwidthFaceId.face_id,
+                    emotion: {},
+                };
+                const { emotion, jsonDataKeyLength } = LESTwidthFaceId;
+                Object.keys(LESTwidthFaceId.emotion)
+                    .forEach((emotionKey) => {
+                        resultItem.emotion[emotionKey] =
+                            emotion[emotionKey] / jsonDataKeyLength[emotionKey];
+                        return true;
+                    });
+                result.push(resultItem);
             });
-            resolve(LESTwidthFaceIds);
+            resolve(result);
         });
     }
 }
+
