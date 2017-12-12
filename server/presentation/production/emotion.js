@@ -97,30 +97,29 @@ export default class Emotion {
                         if (partsEmotion === undefined) {
                             console.log('emotionとdetectの結合に失敗');
                             next();
+                        } else {
+                            emotionDetectGroup
+                                .push({detect: result, emotion: partsEmotion, filePath});
                         }
-                        emotionDetectGroup
-                            .push({ detect: result, emotion: partsEmotion, filePath });
                     });
                     emotionDetectGroupList.push(emotionDetectGroup);
                 });
                 // DBに保存されている代表faceIdと同一人物性を比較し、一番近いものを代表faceIdとする。
-
                 // DBに保存している代表faceIdsを取得
                 const modelFaceIds = await familyDao.getModelFamily(familyId);
-                Async.each(emotionDetectGroupList, async (emotionDetectGroup) => {
+                await Promise.all(emotionDetectGroupList.map(async (emotionDetectGroup) => {
                     const comparisonFaceId = emotionDetectGroup[0].detect.faceId;
-                    const findSimilarList = await faceClient
-                        .face.similar(comparisonFaceId, { candidateFaces: modelFaceIds });
-                    const most = await Camera.mostFindSimilar(findSimilarList);
-                    Async.each(emotionDetectGroup, async (emotionDetect) => {
-                        // const familyDao2 = new FamilyDao();
-                        await familyDao.insertindividual(
-                            emotionDetect.emotion.emotionId,
-                            JSON.stringify(emotionDetect.emotion),
-                            most.faceId,
-                        );
-                    });
-                });
+                        const findSimilarList = await faceClient
+                            .face.similar(comparisonFaceId, { candidateFaces: modelFaceIds });
+                        const most = await Camera.mostFindSimilar(findSimilarList);
+                        await Promise.all(emotionDetectGroup.map(async (emotionDetect) => {
+                            await familyDao.insertindividual(
+                                emotionDetect.emotion.emotionId,
+                                JSON.stringify(emotionDetect.emotion),
+                                most.faceId,
+                            );
+                        }));
+                }));
                 return resolve('success');
             } catch (err) {
                 return reject(err);
