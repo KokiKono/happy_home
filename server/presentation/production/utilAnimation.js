@@ -64,14 +64,20 @@ export default class utilAnimation {
 
                     case ScenePatternConst.PHOTO_EMOTION_READING:
                         //感情読み取り画像
+                        management_id = await animationDao.insertAnimationFirstData(this.PHOTO_EMOTION_READING_NAME).catch((err) => { reject(err); });
+                        app.socket.io.emit('url', this.ANIMATION_COMMON_HTML);
                         break;
 
                     case ScenePatternConst.PHOTO_TEIAN_KUN:
                         //提案君画像
+                        management_id = await animationDao.insertAnimationFirstData(this.PHOTO_TEIAN_KUN_NAME).catch((err) => { reject(err); });
+                        app.socket.io.emit('url', this.ANIMATION_COMMON_HTML);
                         break;
 
                     case ScenePatternConst.PHOTO_SMART_PHONE_CONFIRM:
                         //スマホ確認画像
+                        management_id = await animationDao.insertAnimationFirstData(this.PHOTO_SMART_PHONE_CONFIRM_NAME).catch((err) => { reject(err); });
+                        app.socket.io.emit('url', this.ANIMATION_COMMON_HTML);
                         break;
                 }
 

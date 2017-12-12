@@ -202,7 +202,7 @@
             $.ajax({
                 contentType: 'application/json',
                 type:'POST',
-                url:'http://localhost:8080/api/family_list',
+                url: '<%=  api_url %>',
                 data: JSON.stringify(family_list),
                 dataType: 'json',
             })

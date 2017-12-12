@@ -1,6 +1,6 @@
 'use strict';
 
-const apiUrl = 'http://localhost:8080/api/event/animations';
+const apiUrl = 'http://'+ location.hostname +':8080/api/event/animations';
 let isPaused = false;
 
 $(() => {

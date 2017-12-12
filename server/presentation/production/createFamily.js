@@ -3,8 +3,11 @@
  */
 import deepEqual from 'deep-equal';
 import FamilyModel from '../models/family';
+import configFile from '../../../config.json';
 require('waitjs');
-const pageUrl = 'http://localhost:8080/main/family_list';
+const config = configFile[process.env.NODE_ENV];
+
+const pageUrl = `http://${config.server.url}:${config.server.port}/main/family_list`;
 
 const createFamily = (app) => {
     return new Promise(async (resolve, reject) => {

@@ -151,7 +151,7 @@
             loading();
             $.ajax({
                 type:'POST',
-                url:'http://localhost:8080/api/event/scenes',
+                url:'<%= api_url %>',
                 data: { "type" : 0 },
                 dataType: 'json',
             })
@@ -165,7 +165,7 @@
         $('#absence').click(function() {
             $.ajax({
                 type:'POST',
-                url:'http://localhost:8080/api/event/scenes',
+                url:'<%= api_url %>',
                 data: { "type" : 1 },
                 dataType: 'json',
             })

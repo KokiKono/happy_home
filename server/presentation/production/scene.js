@@ -4,8 +4,12 @@
 import deepEqual from 'deep-equal';
 import PresentationModel from '../models/presentation';
 import FamilyModel from '../models/family';
+import configFile from '../../../config.json';
 
-const pageUrl = 'http://localhost:8080/main/select_scene';
+const config = configFile[process.env.NODE_ENV];
+
+const pageUrl = `http://${config.server.url}:${config.server.port}/main/select_scene`;
+
 
 const run = app => (
     new Promise(async (resolve, reject) => {
