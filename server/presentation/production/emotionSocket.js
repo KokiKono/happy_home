@@ -2,9 +2,8 @@
  * Created by kokikono on 2017/12/01.
  */
 import FamilyModel from '../models/family';
-import SuggestionPermission from '../models/suggestionPermision';
 import EmotionModel from '../models/emotion';
-import PresentationModel from '../models/presentation';
+import * as path from 'path';
 
 const run = async (app) => {
     try {
@@ -95,8 +94,12 @@ const run = async (app) => {
         }));
         socketGrafData['幸せ指数'] = 10;// 仮
 
+        // setInterval(() => {
+        //     app.socket.io.emit('graph update', socketGrafData);
+        //     app.socket.io.emit('image update', `../public/images/${path.basename(latestEmotions[0].image_path)}`, socketImagedata);
+        // }, 5000)
         app.socket.io.emit('graph update', socketGrafData);
-        app.socket.io.emit('image update', latestEmotions[0].image_path, socketImagedata);
+        app.socket.io.emit('image update', `../public/images/${path.basename(latestEmotions[0].image_path)}`,, socketImagedata);
         return 'emotion socket success';
     } catch (err) {
         return err;
