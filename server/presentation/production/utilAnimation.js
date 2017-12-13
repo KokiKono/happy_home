@@ -134,7 +134,7 @@ export default class utilAnimation {
                 }
             }
 
-            if(String(scene_pattern_list[0]['pattern']).length < 3) {
+            if(String(scene_pattern_list[0]['pattern']).length <= 3) {
 
                 /* アニメーション監視部分 */
                 let type = '';
