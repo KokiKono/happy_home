@@ -99,7 +99,7 @@ export default class Emotion {
                             next();
                         } else {
                             emotionDetectGroup
-                                .push({detect: result, emotion: partsEmotion, filePath});
+                                .push({ detect: result, emotion: partsEmotion, filePath });
                         }
                     });
                     emotionDetectGroupList.push(emotionDetectGroup);
@@ -112,6 +112,8 @@ export default class Emotion {
                         const findSimilarList = await faceClient
                             .face.similar(comparisonFaceId, { candidateFaces: modelFaceIds });
                         const most = await Camera.mostFindSimilar(findSimilarList);
+                        if (most === undefined) return null;
+                        if (most.faceId === undefined) return null;
                         await Promise.all(emotionDetectGroup.map(async (emotionDetect) => {
                             await familyDao.insertindividual(
                                 emotionDetect.emotion.emotionId,
@@ -119,6 +121,7 @@ export default class Emotion {
                                 most.faceId,
                             );
                         }));
+                        return true;
                 }));
                 return resolve('success');
             } catch (err) {
