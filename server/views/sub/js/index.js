@@ -41,6 +41,24 @@
         options: {
 
             responsive: true,
+            plugins: {
+              datalabels: {
+                  color: 'white',
+                  display() {
+                      return 1; // display labels with an odd index
+                  },
+                  font: {
+                      wight: 'bold',
+                  },
+                  // formatter: Math.round,
+                  formatter(value, context) {
+                      if (context.dataset.label !== '幸せ指数') {
+                          return `${context.dataset.label}: ${Math.round(value)}`;
+                      }
+                          return null;
+                  },
+              },
+            },
             scales: {
                 xAxes: [{
                     stacked: true,
@@ -152,6 +170,8 @@
                         backgroundColor: $.graph.randCode(),
                         label: key,
                         data: [],
+                        borderColor: 'rgba(0, 0, 0, 0.1)',
+                        borderWidth: 5,
                     };
                     for (let i = 0; i <= chart.data.labels.length - 1; i++) {
                         newDatasets.data.push(0);
