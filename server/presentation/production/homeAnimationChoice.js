@@ -47,8 +47,9 @@ const animation = () => (
             // 母の感情データの取得
             const motherEmotion = latestEmotionAVG
                 .find(element => element.face_id === motherInfo.face_id);
-            // 母の怒り感情の比較
-            if (motherEmotion.emotion.anger > 0.5) {
+            // 母の怒り感情の比較 怒っているシーンにし易いように、怒り + 軽蔑を判断する。
+            if ((motherEmotion.emotion.anger + motherEmotion.emotion.contempt) > 0.5) {
+                console.log('母が怒っています。');
                 // 母おこなので、パターン2をいれて終了。
                 await presentationModel
                     .insertPattern(
@@ -58,6 +59,7 @@ const animation = () => (
                 return resolve('success');
             }
             // 母喜びなので、パターン1をいれて終了。
+            console.log('母は怒っていません。');
             await presentationModel
                 .insertPattern(latestScene[0].id, ScenePatternContant.SCENE_FAMILY_RETURN_HOME_JOY);
             return resolve('success');
