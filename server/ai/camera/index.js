@@ -51,11 +51,11 @@ export default class Camera {
                 Async.each(files, async (file) => {
                     // 画像ファイルのみ
                     if (!/.*\.jpg$/.test(file)) { return; }
-                    const status = await this.fileStatus(`${this.imagePath}/${file}`).catch((err2) => { reject(err2); });
+                    const status = await this.fileStatus(`${this.imagePath}${file}`).catch((err2) => { reject(err2); });
                     const atime = moment(status.atime);
                     const diffSec = atime.diff(this.now.format(), 'milliseconds');
                     if (diffSec > 0) {
-                        fileList.push(`${this.imagePath}/${file}`);
+                        fileList.push(`${this.imagePath}${file}`);
                     }
                     // デバッグ用
                     // fileList.push(`${this.imagePath}/${file}`);
@@ -135,6 +135,7 @@ export default class Camera {
                     }
                 });
             }, (err) => {
+                console.log(`post Emotion err ${err}`);
                 if (err) reject(err);
                 resolve(responseBody);
             });
