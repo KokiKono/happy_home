@@ -36,9 +36,25 @@ const ioEvent = function (io) {
                 // name: 10,
                 // kaki: 20,
                 // // sasi: 30,
-                "等や": {
+                "お父さん": {
                     num: 10,
-                    color: '#1d4293',
+                    color: '#77D0F9',
+                    // color: '#77D0F9',
+                },
+                "お母さん": {
+                    num: 10,
+                    color: '#ef5285',
+                    // color: '#FF66AD',
+                },
+                "息子": {
+                    num: 10,
+                    color: '#60c5ba',
+                    // color: '#B7F4CF',
+                },
+                "娘": {
+                    num: 10,
+                    color: '#ffc952',
+                    // color: '#FCF28A',
                 },
                 "幸せ指数": {
                     num: 40,

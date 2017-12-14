@@ -50,10 +50,14 @@
                   font: {
                       wight: 'bold',
                   },
+                  textAlign: 'center',
                   // formatter: Math.round,
                   formatter(value, context) {
                       if (context.dataset.label !== '幸せ指数') {
-                          return `${context.dataset.label}: ${Math.round(value)}`;
+                          if (Math.round(value) > 15) {
+                              return `${context.dataset.label}\n${Math.round(value)}`;
+                          }
+                          return null;
                       }
                           return null;
                   },
