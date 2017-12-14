@@ -21,9 +21,9 @@ export default class Animation {
             //     if (connectErr) reject(connectErr);
                 this.connection.query(
                     // 'select scene from t_scene where timestamp = (select max(timestamp) from t_scene)',
-                    'select t_s.scene, t_p.pattern from t_scene t_s '
-                    + 'inner join t_pattern t_p on t_s.id = t_p.scene_id '
-                    + 'where t_s.timestamp = (select max(timestamp) from t_scene) AND t_p.timestamp = (select max(timestamp) from t_pattern)',
+                    'select t_s.scene, t_p.pattern from t_scene t_s' +
+                    ' inner join t_pattern t_p on t_s.id = t_p.scene_id' +
+                    ' ORDER BY t_s.timestamp DESC LIMIT 1',
                     (queryErr, results) =>{
                         if (queryErr) reject(queryErr);
                         resolve(results);

@@ -26,16 +26,16 @@ export default class utilAnimation {
 
         /* アニメーション用html定数 */
         //家族用
-        this.ANIMATION_RETURN_HOME_JOY_HTML = '../../animation/sample_animation/project.html';
-        this.ANIMTION_RETURN_HOME_ANGRY_HTML = '../../animation/sample_animation/project.html';
-        this.ANIMATION_HEARTHSTONE_HTML = '../../animation/sample_animation/project.html';
-        this.ANIMATION_SILENCE_HTML = '../../animation/sample_animation/project.html';
+        this.ANIMATION_RETURN_HOME_JOY_HTML = '../../animation/a1_momHappy/project.html';
+        this.ANIMTION_RETURN_HOME_ANGRY_HTML = '../../animation/a1_momOko/project.html';
+        this.ANIMATION_HEARTHSTONE_HTML = '../../animation/a3_famDanran/project.html';
+        this.ANIMATION_SILENCE_HTML = '../../animation/a3_famMugon/project.html';
 
         //留守用
-        this.ANIMATION_RETURN_HOME_HTML = '../../animation/sample_animation/project.html';
-        this.ANIMTION_RONELY_HTML = '../../animation/sample_animation/project.html';
-        this.ANIMATION_TRIDE_HTML = '../../animation/sample_animation/project.html';
-        this.ANIMATION_HAPPINESS_HTML = '../../animation/sample_animation/project.html';
+        this.ANIMATION_RETURN_HOME_HTML = '../../animation/a2/project.html';
+        this.ANIMTION_RONELY_HTML = '../../animation/a3_papaSamishi/project.html';
+        this.ANIMATION_TRIDE_HTML = '../../animation/a3_papaTsukare/project.html';
+        this.ANIMATION_HAPPINESS_HTML = '../../animation/a3_papaHappy/project.html';
 
         //単体
         this.ANIMATION_COMMON_HTML = '../../animation/sample_animation/project.html';
@@ -46,9 +46,10 @@ export default class utilAnimation {
 
             // process.on('unhandledRejection', console.dir);
 
-            const animationDao = new AnimationDao;
+            const animationDao = new AnimationDao();
             /* シーンID取得 */
             const scene_pattern_list = await animationDao.getScenePattern().catch((err) => { reject(err); });
+            console.log(scene_pattern_list)
 
             let management_id = 0;
 
