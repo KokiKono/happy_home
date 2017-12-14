@@ -4,6 +4,7 @@
 import FamilyModel from '../models/family';
 import EmotionModel from '../models/emotion';
 import * as path from 'path';
+import typeColor from '../../type_color.json';
 
 const run = async (app) => {
     try {
@@ -83,7 +84,10 @@ const run = async (app) => {
         const familyStructure = await familyModel.getFamilyStructre(latestFamily[0].id);
         Promise.all(familyStructure.map((item) => {
             const emotion = modelEmotions.find(element => element.face_id === item.face_id);
-            socketGrafData[item.name] = emotion.emotion.happiness * 100;
+            socketGrafData[item.name] = {
+                num: emotion.emotion.happiness * 100,
+                color: typeColor[item.type],
+            };
             const imageData = [];
             imageData.push(item.name);
             Object.keys(emotion.emotion).forEach((element) => {
@@ -92,7 +96,9 @@ const run = async (app) => {
             socketImagedata.push(imageData);
             return true;
         }));
-        socketGrafData['幸せ指数'] = 10;// 仮
+        socketGrafData['幸せ指数'] = {
+            num: 10,
+        };// 仮
 
         // setInterval(() => {
         //     app.socket.io.emit('graph update', socketGrafData);
