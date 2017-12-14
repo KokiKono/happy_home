@@ -65,6 +65,9 @@ function postStatus(status) {
 }
 
 // 実行したい任意の関数
-function hoge() {
-	console.log('called hoge function!!');
+function finish() {
+	console.log('before finished!');
+	$('#target').addClass('hidden');
+	$('#image').removeClass('hidden')
+	postStatus('end');
 }
