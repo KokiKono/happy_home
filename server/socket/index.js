@@ -33,15 +33,21 @@ const ioEvent = function (io) {
 
         setInterval(() => {
             let obj = {
-                name: 10,
-                kaki: 20,
-                // sasi: 30,
-                "等や": 10,
-                "幸せ指数": 40,
+                // name: 10,
+                // kaki: 20,
+                // // sasi: 30,
+                "等や": {
+                    num: 10,
+                    color: '#1d4293',
+                },
+                "幸せ指数": {
+                    num: 40,
+                    color: '#c60019',
+                },
             };
 
             for (const key in obj) {
-                obj[key] = Math.floor(Math.random() * 101);
+                obj[key].num = Math.floor(Math.random() * 101);
             }
             console.log(obj);
             io.emit('graph update', obj);

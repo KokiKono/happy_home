@@ -161,13 +161,13 @@
                 // for (const labels in chart.data.datasets.label) {
                     if (dataset.label === key) {
                         flg = true;
-                        chart.data.datasets[index].data.push(datas[key]);
+                        chart.data.datasets[index].data.push(datas[key].num);
                     }
                 });
 
                 if (flg === false) {
                     const newDatasets = {
-                        backgroundColor: $.graph.randCode(),
+                        backgroundColor: datas[key].color,
                         label: key,
                         data: [],
                         borderColor: 'rgba(0, 0, 0, 0.1)',
@@ -176,7 +176,7 @@
                     for (let i = 0; i <= chart.data.labels.length - 1; i++) {
                         newDatasets.data.push(0);
                     }
-                    newDatasets.data.push(datas[key]);
+                    newDatasets.data.push(datas[key].num);
                     chart.data.datasets.push(newDatasets);
                 }
             }
