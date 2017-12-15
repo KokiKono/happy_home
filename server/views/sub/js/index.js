@@ -135,9 +135,9 @@
         socket.on('image update', (path, data) => {
             const image = new Image();
             image.src = path;
-            // width 416, height 206
+            // width 634, height 314
             let percentage = 1;
-            if (image.width > 416 || image.height > 231) {
+            if (image.width > 634 || image.height > 314) {
                 if (image.width >= image.height) {
                     percentage = 416 / image.width;
                 } else {
