@@ -55,9 +55,14 @@ export default class createFamilyPreparation {
                 const faceImagePath = path.join(__dirname, `../../views/public/images/${modelFaceId}.jpg`);
                 console.log(`http://localhost:8080/public/images/${modelFaceId}.jpg`);
                 console.log(faceImagePath);
+
+                /* 顔画像のサイズ */
+                const thisFaceRectangle = { top: result.faceRectangle['top'] - 50, left: result.faceRectangle['left'] - 50, width: result.faceRectangle['width'] + 100, height: result.faceRectangle['height'] + 100 }
+                
                 // 顔ファイルを作成
                 sharp(filePath)
-                    .extract(result.faceRectangle)
+                    // .extract(result.faceRectangle)
+                    .extract(thisFaceRectangle)
                     .toFile(faceImagePath, (err) => {
                         if (err) console.log('顔ファイル作成失敗', err);
                     });
