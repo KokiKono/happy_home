@@ -54,7 +54,7 @@
                   // formatter: Math.round,
                   formatter(value, context) {
                       if (context.dataset.label !== '幸せ指数') {
-                          if (Math.round(value) > 15) {
+                          if (Math.round(value) > 20) {
                               return `${context.dataset.label}\n${Math.round(value)}`;
                           }
                           return null;
@@ -139,9 +139,9 @@
             let percentage = 1;
             if (image.width > 634 || image.height > 314) {
                 if (image.width >= image.height) {
-                    percentage = 416 / image.width;
+                    percentage = 634 / image.width;
                 } else {
-                    percentage = 206 / image.height;
+                    percentage = 314 / image.height;
                 }
             }
             $(frame).empty();
@@ -160,12 +160,15 @@
 
             for (const key in datas) {
                 // datasetsの中身か存在しなかった時の処理
-                let flg = false;
+                const flg = false;
                 chart.data.datasets.forEach((dataset, index) => {
                 // for (const labels in chart.data.datasets.label) {
                     if (dataset.label === key) {
-                        flg = true;
-                        chart.data.datasets[index].data.push(datas[key].num);
+                        if (datas[key].num > 20) {
+                            chart.data.datasets[index].data.push(datas[key].num);
+                        } else {
+                            chart.data.datasets[index].data.push(datas[key].minus);
+                        }
                     }
                 });
 
@@ -181,6 +184,11 @@
                         newDatasets.data.push(0);
                     }
                     newDatasets.data.push(datas[key].num);
+                    if (datas[key].num > 20) {
+                        newDatasets.data.push(datas[key].num);
+                    } else {
+                        newDatasets.data.push(datas[key].minus);
+                    }
                     chart.data.datasets.push(newDatasets);
                 }
             }
