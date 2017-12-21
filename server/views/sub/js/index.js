@@ -145,15 +145,19 @@
             image.src = path;
             // width 634, height 314
             let percentage = 1;
-            if (image.width > 634 || image.height > 314) {
-                if (image.width >= image.height) {
-                    percentage = 634 / image.width;
-                } else {
-                    percentage = 314 / image.height;
+            $(image).bind('load', () => {
+                console.log(image.naturalWidth);
+                console.log(image.naturalHeight);
+                if (image.width > 634 || image.height > 314) {
+                    if (image.width <= image.height) {
+                        percentage = 634 / image.width;
+                    } else {
+                        percentage = 314 / image.height;
+                    }
                 }
-            }
-            $(frame).empty();
-            $(frame).append(`<img height="${image.height * percentage}" width="${image.width * percentage}" src="${path}"/>`);
+                $(frame).empty();
+                $(frame).append(`<img height="${image.height * percentage}" width="${image.width * percentage}" src="${path}"/>`);
+            });
             $.text.change(data);
         });
 
