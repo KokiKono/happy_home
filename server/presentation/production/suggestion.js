@@ -4,10 +4,11 @@
  */
 
 import SuggestionDao from '../models/suggestion';
+import FamilyDao from '../models/family';
+import SuggestionPermissionDao from '../models/suggestionPermision';
 import Led from '../../models/led';
 
 export default class suggestion {
-
     constructor(){
         this.TYPE_MOBILE = 'mobile';
         this.TYPE_TALK = 'talk';
@@ -20,64 +21,165 @@ export default class suggestion {
         this.TO_TYPE_SON = '息子';
 
         this.SAMPLE_NOTICE_CONTENTS = '家族円満に協力してください。';
+
+        this.ANGER_TITLE = 'toTypeがdegree怒っています。';
+        this.CONTEMP_TITLE = 'toTypeがdegree軽蔑感を抱いています。';
+        this.DISGUST_TITLE = 'toTypeがdegree嫌なことがあったみたいです。';
+        this.FEAR_TITLE = 'toTypeがdegree怖がっています。';
+        this.NEUTRAL_TITLE = 'toTypeの機嫌がdegree悪いみたいです。';
+        this.SADNESS_TITLE = 'toTypeがdegree悲しんでいます。';
+        this.HAPPINESS_TITLE = 'toTypeがdegree幸せを感じています';
+        this.SURPRISE_TITLE = 'toTypeにdegreeな驚きがあったみたいです。';
     }
+
 
     start(app){
         return new Promise(async (resolve, reject) => {
 
-            const suggestionDao = new SuggestionDao;
+            const suggestionDao = new SuggestionDao();
+            const familyDao = new FamilyDao();
+
+            const latestScenePattern = await suggestionDao.getLatestScenePattern()
+                .catch(err => reject(err));
+            console.log(latestScenePattern)
             /* 提案許可されている提案ID取得 */
-            const suggestionIdList = await suggestionDao.getPermissionSuggestionId().catch((err) => { reject(err); });
-
+            const suggestionIdList = await suggestionDao.getPermissionSuggestionId(latestScenePattern[0].pattern)
+                .catch((err) => { reject(err); });
+            // 提案タイプごとにまとめる
+            const suggestionIds = {
+                mobile: [],
+                light: [],
+                reform: [],
+                talk: [],
+            };
+            suggestionIdList.forEach((element) => {
+                suggestionIds[element.type].push(element);
+            });
+            console.info(suggestionIdList);
+            console.log(suggestionIds);
+            // return;
             /* 提案許可された提案があるか */
-            if(suggestionIdList.length > 0){
+            if (suggestionIdList.length > 0) {
                 /* 提案許可された提案を実行する */
-                for(let i = 0; i < suggestionIdList.length; i++){
+                // モバイル
+                suggestionIds.mobile.forEach(async (item) => {
+                    // モバイル通知
 
-                    switch (suggestionIdList[i]['type']) {
+                    const latestFamily = await familyDao.latestFamily().catch(err => reject(err));
+                    console.log(latestFamily);
+                    const familys = await familyDao.getFamilyStructre(latestFamily[0].id)
+                        .catch(err => reject(err));
+                    // 提案判断の取得
+                    const suggestionPermissionDao = new SuggestionPermissionDao();
+                    const judgments = await suggestionPermissionDao.getJudgmentAll(item.suggestion_id)
+                        .catch(err => reject(err));
+                    const descJudgments = judgments.sort((a, b) => a.val < b.val);
 
-                        case this.TYPE_MOBILE:
-                            //モバイル通知
-
-                            //family_structure_id取得
-                            const family_structure_id = await suggestionDao.getFamilyStructureId().catch((err) => { reject(err); });
-
-                            //タイトル作成
-                            let title = '';
-                            if(suggestionIdList[i]['to_type'] !== 'ALL'){
-                                const name = await suggestionDao.getFamilyStructureName(family_structure_id[0], suggestionIdList[i]['to_type']).catch((err) => { reject(err); });
-
-                                title = name + 'の機嫌が悪いよ〜';
-                            } else {
-                                title = 'ALLだよ〜';
-                            }
-
-                            //t_noticeにデータ挿入
-                            suggestionDao.insertNoticeData(family_structure_id, title, this.SAMPLE_NOTICE_CONTENTS).catch((err) => { reject(err); });
+                    console.log(judgments);
+                    console.log(familys)
+                    console.log(item)
+                    // family_structure_id取得
+                    const toType = item['to_type'];
+                    let title = '';
+                    switch (descJudgments[0].key_name) {
+                        case 'anger': {
+                            title = this.ANGER_TITLE;
                             break;
-
-                        case this.TYPE_RIGHT:
-                            //ライトのRGB or pinkで色変更処理
-                            //未検証部分
-                            const led = new Led(1);
-                            led.on();
-                            led.setBrightness(led.MAX_BRIGHTNESS);
-                            led.pink();
-                            led.close();
-                            // led.setColor();
+                        }
+                        case 'contempt': {
+                            title = this.CONTEMP_TITLE;
                             break;
-
-                        case this.TYPE_REFORM:
-                            //アニメーション再生処理
-                            app.socket.io.emit('url', suggestionIdList[i]['note']);
+                        }
+                        case 'disgust': {
+                            title = this.DISGUST_TITLE;
                             break;
-
-                        case this.TYPE_TALK:
-                            //喋らせる処理
-                            app.socket.io.emit('voice', suggestionIdList[i]['note']);
+                        }
+                        case 'fear': {
+                            title = this.FEAR_TITLE;
                             break;
+                        }
+                        case 'happiness': {
+                            title = this.HAPPINESS_TITLE;
+                            break;
+                        }
+                        case 'neutral': {
+                            title = this.NEUTRAL_TITLE;
+                            break;
+                        }
+                        case 'sadness': {
+                            title = this.SADNESS_TITLE;
+                            break;
+                        }
+                        case 'surprise': {
+                            title = this.SURPRISE_TITLE;
+                            break;
+                        }
+                        default: {
+                            title = 'toTypeのことで提案があります。';
+                        }
                     }
-                }
+                    switch (true) {
+                        case (descJudgments[0].val > 0.8): {
+                            title = title.replace('degree', 'ものすごく');
+                            break;
+                        }
+                        case (descJudgments[0].val > 0.6 && descJudgments[0].val <= 0.8): {
+                            title = title.replace('degree', 'とても');
+                            break;
+                        }
+                        case (descJudgments[0].val > 0.3 && descJudgments[0].val <= 0.6): {
+                            title = title.replace('degree', 'すこし');
+                            break;
+                        }
+                        case (descJudgments[0].val > 0.1 && descJudgments[0].val <= 0.3): {
+                            title = title.replace('degree', '気にするほどでもありませんが、');
+                            break;
+                        }
+                        default: {
+                            title = title.replace('degree', '');
+                            break;
+                        }
+                    }
+                    if (toType === 'ALL') {
+                        title = title.replace('toType', '家族');
+                        familys.forEach((element) => {
+                            // t_noticeにデータ挿入
+                            suggestionDao
+                                .insertNoticeData(element.id, title, this.SAMPLE_NOTICE_CONTENTS)
+                                .catch((err) => { reject(err); });
+                        });
+                    } else {
+                        const familyStructure = familys.find(element => element.type === toType);
+                        console.info(familyStructure)
+                        if (typeof familyStructure === 'undefined') return;
+                        title = title.replace('toType', familyStructure.name);
+                        // t_noticeにデータ挿入
+                        suggestionDao.insertNoticeData(
+                            familyStructure.id,
+                            title,
+                            this.SAMPLE_NOTICE_CONTENTS,
+                        ).catch((err) => { reject(err); });
+                    }
+                });
+                // ライト
+                suggestionIds.light.forEach((item) => {
+                    // ライトのRGB or pinkで色変更処理
+                    // 未検証部分
+                    const led = new Led(1);
+                    led.on();
+                    led.setBrightness(led.MAX_BRIGHTNESS);
+                    led.pink();
+                    led.close();
+                    // led.setColor();
+                });
+                // リフォーム
+                suggestionIds.reform.forEach((item) => {
+                    app.socket.io.emit('url', item['note']);
+                });
+                // talk
+                suggestionIds.talk.forEach((item) => {
+                    app.socket.io.emit('voice', item['note']);
+                });
             }
             resolve('success');
         });
