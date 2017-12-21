@@ -32,7 +32,6 @@ export default class suggestion {
         this.SURPRISE_TITLE = 'toTypeにdegreeな驚きがあったみたいです。';
     }
 
-
     start(app){
         return new Promise(async (resolve, reject) => {
 
@@ -60,26 +59,21 @@ export default class suggestion {
             // return;
             /* 提案許可された提案があるか */
             if (suggestionIdList.length > 0) {
-                /* 提案許可された提案を実行する */
-                // モバイル
-                suggestionIds.mobile.forEach(async (item) => {
-                    // モバイル通知
-
+                /* 提案許可された提案を通知する */
+                if (suggestionIds.mobile.length > 0) {
+                    // 最も判断の多い提案を取得する。
+                    const modelSuggestion = suggestionIds.mobile[0];
                     const latestFamily = await familyDao.latestFamily().catch(err => reject(err));
-                    console.log(latestFamily);
                     const familys = await familyDao.getFamilyStructre(latestFamily[0].id)
                         .catch(err => reject(err));
                     // 提案判断の取得
                     const suggestionPermissionDao = new SuggestionPermissionDao();
-                    const judgments = await suggestionPermissionDao.getJudgmentAll(item.suggestion_id)
+                    const judgments = await suggestionPermissionDao.getJudgmentAll(modelSuggestion.suggestion_id)
                         .catch(err => reject(err));
                     const descJudgments = judgments.sort((a, b) => a.val < b.val);
 
-                    console.log(judgments);
-                    console.log(familys)
-                    console.log(item)
                     // family_structure_id取得
-                    const toType = item['to_type'];
+                    const toType = modelSuggestion['to_type'];
                     let title = '';
                     switch (descJudgments[0].key_name) {
                         case 'anger': {
@@ -142,25 +136,36 @@ export default class suggestion {
                     }
                     if (toType === 'ALL') {
                         title = title.replace('toType', '家族');
-                        familys.forEach((element) => {
+                        familys.forEach(async (element) => {
                             // t_noticeにデータ挿入
-                            suggestionDao
+                            const insertId = await suggestionDao
                                 .insertNoticeData(element.id, title, this.SAMPLE_NOTICE_CONTENTS)
                                 .catch((err) => { reject(err); });
+                            await suggestionDao.insertNoticeSuggestion(insertId, modelSuggestion.suggestion_id);
                         });
                     } else {
                         const familyStructure = familys.find(element => element.type === toType);
-                        console.info(familyStructure)
                         if (typeof familyStructure === 'undefined') return;
                         title = title.replace('toType', familyStructure.name);
                         // t_noticeにデータ挿入
-                        suggestionDao.insertNoticeData(
+                        console.info('insert notice')
+                        const insertId = await suggestionDao.insertNoticeData(
                             familyStructure.id,
                             title,
                             this.SAMPLE_NOTICE_CONTENTS,
-                        ).catch((err) => { reject(err); });
+                        ).catch(err => reject(err));
+                        suggestionIds.mobile.forEach(async (item) => {
+                            await suggestionDao.insertNoticeSuggestion(insertId, item.suggestion_id);
+                        });
                     }
-                });
+                }
+                // モバイル
+                // suggestionIds.mobile.forEach(async (item) => {
+                //     // モバイル通知
+                //
+                //
+                //
+                // });
                 // ライト
                 suggestionIds.light.forEach((item) => {
                     // ライトのRGB or pinkで色変更処理
