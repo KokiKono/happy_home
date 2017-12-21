@@ -70,6 +70,12 @@
             color: #fff;
             z-index: 2;
         }
+        #header_tile {
+            font-size: 60px;
+        }
+        .breadcrumb_box *{
+            font-size: 30px;
+        }
         
     </style>
 
@@ -87,12 +93,12 @@
                 setTimeout('stopload()',10000);
             });
         }
-        $(function() {
-            var h = $(window).height();
-
-            $('#wrap').css('display','none');
-            $('#loader-bg ,#loader').height(h).css('display','block');
-        });
+//        $(function() {
+//            var h = $(window).height();
+//
+//            $('#wrap').css('display','none');
+//            $('#loader-bg ,#loader').height(h).css('display','block');
+//        });
 
         $(window).load(function () { //全ての読み込みが完了したら実行
             $('#loader-bg').delay(900).fadeOut(800);

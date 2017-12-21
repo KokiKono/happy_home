@@ -38,7 +38,7 @@ export default class utilAnimation {
         this.ANIMATION_HAPPINESS_HTML = '../../animation/a3_papaHappy/project.html';
 
         //単体
-        this.ANIMATION_COMMON_HTML = '../../animation/sample_animation/project.html';
+        this.ANIMATION_COMMON_HTML = '../../animation/a4/project.html';
     }
 
     start(app){
@@ -81,7 +81,7 @@ export default class utilAnimation {
                         app.socket.io.emit('url', this.ANIMATION_COMMON_HTML);
                         break;
                 }
-
+                // return resolve('success');
             } else {
 
                 //パターンIDが1桁（シーンIDがある）の処理

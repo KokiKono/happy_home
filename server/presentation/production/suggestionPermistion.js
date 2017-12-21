@@ -6,7 +6,7 @@ import SuggestionPermission from '../models/suggestionPermision';
 import EmotionModel from '../models/emotion';
 import PresentationModel from '../models/presentation';
 
-const run = () => (
+const run = (suggestionTypes = []) => (
     new Promise(async (resolve, reject) => {
         try {
             const familyModel = new FamilyModel();
@@ -48,7 +48,7 @@ const run = () => (
                 await emotionModel.getLatestEmotionAVGWidthFaceId(latestFamily[0].id);
             // 提案許可処理
             // 提案許可リスト
-            const modelPermissions = [];
+            let modelPermissions = [];
             // 提案許可を判断するロジックは、現在の感情総和と近さが一定ギャップのものを取得する。
             // 提案判断と感情総和とのギャップ
             const ejFar = 0;
@@ -117,6 +117,19 @@ const run = () => (
                 if (isPermission) modelPermissions.push(item);
             });
             console.log(`提案許可された数:${modelPermissions.length}`);
+            // 絞込
+            if (suggestionTypes.length > 0) {
+                modelPermissions = modelPermissions.filter((item) => {
+                    console.log('フィルター');
+                    console.log(item);
+                    if (suggestionTypes.find(type => item.suggestion.type === type)) {
+                        return item;
+                    }
+                });
+            }
+            console.log('最終的に提案されたもの');
+            console.log(modelPermissions);
+
             const presentationModel = new PresentationModel();
             const latestScene = await presentationModel.getLatestScene(latestFamily[0].id);
             const latestPattern = await presentationModel.getLatestPattern(latestScene[0].id);

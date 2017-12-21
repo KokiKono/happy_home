@@ -23,7 +23,7 @@ export default class Animation {
                     // 'select scene from t_scene where timestamp = (select max(timestamp) from t_scene)',
                     'select t_s.scene, t_p.pattern from t_scene t_s' +
                     ' inner join t_pattern t_p on t_s.id = t_p.scene_id' +
-                    ' ORDER BY t_s.timestamp DESC LIMIT 1',
+                    ' ORDER BY t_p.timestamp DESC LIMIT 1',
                     (queryErr, results) =>{
                         if (queryErr) reject(queryErr);
                         resolve(results);

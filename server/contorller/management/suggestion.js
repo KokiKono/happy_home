@@ -33,6 +33,7 @@ exports.judgment = async (req, res) => {
 };
 exports.postJudgment = async (req, res) => {
     const suggestionModel = new SuggestionModel();
+    console.log(req.body.key_name)
     await suggestionModel.insertJudgment(req.param('suggestion_id'), req.body.key_name, req.body.val);
     res.redirect(req.originalUrl);
 }

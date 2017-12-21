@@ -25,7 +25,7 @@ const animation = () => (
                         ScenePatternContant.SCENE_ABSENCE_RETURN_HOME,
                     )
                     .catch(err => reject(err));
-                return resolve('success');
+                return resolve('out_scene');
             }
             const familyStructure = await familyModel.getFamilyStructre(familyId)
                 .catch(err => reject(err));
@@ -39,7 +39,7 @@ const animation = () => (
                         ScenePatternContant.SCENE_FAMILY_RETURN_HOME_ANGRY,
                     );
                 // 母がいない場合は怒っているシーンにする。
-                return resolve('success');
+                return resolve('mom_oko');
             }
             // 最新感情データを取得
             const emotionModel = new EmotionModel();
@@ -56,14 +56,15 @@ const animation = () => (
                         latestScene[0].id,
                         ScenePatternContant.SCENE_FAMILY_RETURN_HOME_ANGRY,
                     );
-                return resolve('success');
+                return resolve('mom_oko');
             }
             // 母喜びなので、パターン1をいれて終了。
             console.log('母は怒っていません。');
             await presentationModel
                 .insertPattern(latestScene[0].id, ScenePatternContant.SCENE_FAMILY_RETURN_HOME_JOY);
-            return resolve('success');
+            return resolve('mom_happy');
         } catch (err) {
+            console.error(err)
             return reject(err);
         }
     })

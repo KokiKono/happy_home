@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-
+    <title>家族構成作成ページ</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <style type="text/css">
@@ -63,6 +62,13 @@
             color: #fff;
             z-index: 2;
         }
+        #header_tile {
+            font-size: 60px;
+        }
+        .breadcrumb_box *{
+            font-size: 30px;
+        }
+
     </style>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script>
@@ -78,18 +84,18 @@
                 setTimeout('stopload()',10000);
             });
         }
-        $(function() {
-            var h = $(window).height();
+//        $(function() {
+//            var h = $(window).height();
+//
+//            $('#wrap').css('display','none');
+//            $('#loader-bg ,#loader').height(h).css('display','block');
+//        });
 
-            $('#wrap').css('display','none');
-            $('#loader-bg ,#loader').height(h).css('display','block');
-        });
-
-        $(window).load(function () { //全ての読み込みが完了したら実行
-            $('#loader-bg').delay(900).fadeOut(800);
-            $('#loader').delay(600).fadeOut(300);
-            $('<main>').css('display', 'block');
-        });
+//        $(window).load(function () { //全ての読み込みが完了したら実行
+//            $('#loader-bg').delay(900).fadeOut(800);
+//            $('#loader').delay(600).fadeOut(300);
+//            $('<main>').css('display', 'block');
+//        });
 
 
 
@@ -113,7 +119,7 @@
     <nav class="navbar navbar-dark" style="background-color:rgb(214,56,99)">
         <!-- Image and text -->
         <nav class="navbar navbar-dark" style="background-color:rgb(214,56,99)">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" id="header_tile" href="#">
                 ハッピーホーム　ー プレゼン準備...家族構成
             </a>
         </nav>
@@ -125,8 +131,8 @@
                 <div class="col-md-12">
                     <ol class="breadcrumb breadcrumb_box">
                         <li class="active">家族構成</li>
-                        <li>シーン選択</a></li>
-                        <li>プレゼン開始</a></li>
+                        <li>シーン選択</li>
+                        <li>プレゼン開始</li>
                     </ol>
                 </div>
             </div>
@@ -215,6 +221,13 @@
         });
         $('[name=type]').change(function() {
             var name_id = '#name' + $(this).attr("id").slice(-1);
+            var typeColor = {
+                '父': 'red',
+                '母': 'blue',
+                '息子': 'green',
+                '娘': 'orange'
+            }
+            $('.face img').css('border', `5px solid ${typeColor[$(this).val()]}`);
             if($(name_id).val() == '') {
                 $(name_id).val($(this).val());
             }
