@@ -39,8 +39,10 @@
             ],
         },
         options: {
-
             responsive: true,
+            tooltips: {
+              enabled: false,
+            },
             plugins: {
               datalabels: {
                   color: 'white',
@@ -49,15 +51,13 @@
                   },
                   font: {
                       wight: 'bold',
+                      size: 19,
                   },
                   textAlign: 'center',
                   // formatter: Math.round,
                   formatter(value, context) {
                       if (context.dataset.label !== '幸せ指数') {
-                          if (Math.round(value) > 20) {
-                              return `${context.dataset.label}\n${Math.round(value)}`;
-                          }
-                          return null;
+                          return `${context.dataset.label}\n${Math.round(value)}`;
                       }
                           return null;
                   },
@@ -78,15 +78,23 @@
 
 
         $(button).on('click', () => {
-            // chart.data.labels.splice(0, 1);
-            // chart.data.datasets[0].data.splice(0, 1);
-            // chart.data.labels.push('新しいの');
-            // chart.data.datasets[0].data.push(100);
-            // chart.update();
-            // console.log(chart.data);
-            console.log(chart.data);
-            console.log(chart.data.datasets.label);
-            // socket.emit('get image');
+            const image = new Image();
+            image.src = './abc.jpg';
+            // width 634, height 314
+            let percentage = 1;
+            $(image).bind('load', () => {
+                console.log(image.naturalWidth);
+                console.log(image.naturalHeight);
+                if (image.width > 634 || image.height > 314) {
+                    if (image.width <= image.height) {
+                        percentage = 634 / image.width;
+                    } else {
+                        percentage = 314 / image.height;
+                    }
+                }
+                $(frame).empty();
+                $(frame).append(`<img height="${image.height * percentage}" width="${image.width * percentage}" src="./abc.jpg"/>`);
+            });
         });
 
         socket.on('add date', (date) => {
@@ -160,15 +168,16 @@
 
             for (const key in datas) {
                 // datasetsの中身か存在しなかった時の処理
-                const flg = false;
+                let flg = false;
                 chart.data.datasets.forEach((dataset, index) => {
                 // for (const labels in chart.data.datasets.label) {
                     if (dataset.label === key) {
-                        if (datas[key].num > 20) {
-                            chart.data.datasets[index].data.push(datas[key].num);
-                        } else {
+                        if (datas[key].num < 20 && key !== '幸せ指数') {
                             chart.data.datasets[index].data.push(datas[key].minus);
+                        } else {
+                            chart.data.datasets[index].data.push(datas[key].num);
                         }
+                        flg = true;
                     }
                 });
 
@@ -183,11 +192,10 @@
                     for (let i = 0; i <= chart.data.labels.length - 1; i++) {
                         newDatasets.data.push(0);
                     }
-                    newDatasets.data.push(datas[key].num);
-                    if (datas[key].num > 20) {
-                        newDatasets.data.push(datas[key].num);
-                    } else {
+                    if (datas[key].num < 20 && key !== '幸せ指数') {
                         newDatasets.data.push(datas[key].minus);
+                    } else {
+                        newDatasets.data.push(datas[key].num);
                     }
                     chart.data.datasets.push(newDatasets);
                 }
@@ -202,7 +210,7 @@
                 }
             });
             chart.update();
-            console.log(chart.data.datasets);
+            // console.log(chart.data.datasets);
         });
     });
 
