@@ -5,7 +5,7 @@ import Dao from './dao';
 
 export default class NoticeNewModel extends Dao {
     select() {
-        return super.query('SELECT t_notice.id, t_notice.family_structure_id, t_notice.title, t_notice_suggestion.suggestion_id FROM t_notice LEFT OUTER JOIN t_notice_suggestion ON t_notice.id = t_notice_suggestion.notice_id WHERE is_old = false AND is_skip = false')
+        return super.query('SELECT t_notice.id, t_notice.family_structure_id, t_notice.title,  FROM t_notice WHERE is_old = false AND is_skip = false')
             .then((success) => {
                 return success;
             })
