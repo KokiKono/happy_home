@@ -25,6 +25,11 @@ body{
   height:30%;
 }
 
+.image img {
+  display: block;
+  margin: 0 auto;
+}
+
 .text {
   float:left;
   margin-top: 5px;
