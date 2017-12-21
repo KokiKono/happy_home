@@ -2,6 +2,8 @@
  * Created by kokikono on 2017/10/29.
  */
 import Dao from './dao';
+import configFile from '../../config.json';
+const config = configFile[process.env.NODE_ENV];
 
 export default class FamilyDao extends Dao {
 
@@ -20,7 +22,7 @@ export default class FamilyDao extends Dao {
         return new Promise((resolve, reject) => {
             let result = false;
             structreList.some((item) => {
-                const url = `http://localhost:8080/public/images/${item.face_id}.jpeg`;
+                const url = `http://${config.server.url}:8080/public/images/${item.face_id}.jpg`;
                 this.connection.query(
                     'INSERT INTO t_family_structure(family_id, name, type, face_id, family_icon) VALUES(?, ?, ?, ?, ?)',
                     [familyId, item.name, item.type, item.face_id, url],

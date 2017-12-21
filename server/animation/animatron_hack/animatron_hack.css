@@ -1,0 +1,27 @@
+div#target, div#image {
+    position: fixed !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    transform: translate(-50%, -50%);
+}
+
+div#image img {
+    width: 100%;
+    height: auto;
+}
+
+canvas {
+    width: 100% !important;
+    height: auto !important;
+}
+
+canvas.anm-player {
+}
+
+canvas.anm-controls {
+}
+
+.hidden {
+    display: none;
+}
