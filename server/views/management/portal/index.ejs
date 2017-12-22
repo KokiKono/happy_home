@@ -4,18 +4,22 @@
     * {margin: 0; padding: 0;}
 
     .tree ul {
-        padding-top: 20px; position: relative;
-
+        padding-top: 20px;
+        position: relative;
         transition: all 0.5s;
         -webkit-transition: all 0.5s;
         -moz-transition: all 0.5s;
+    }
+
+    .tree ul li a {
+        width: 500px;
     }
 
     .tree li {
         float: left; text-align: center;
         list-style-type: none;
         position: relative;
-        padding: 20px 5px 0 5px;
+        /*padding: 20px 5px 0 5px;*/
 
         transition: all 0.5s;
         -webkit-transition: all 0.5s;
@@ -76,7 +80,7 @@
         text-decoration: none;
         color: #666;
         font-family: arial, verdana, tahoma;
-        font-size: 22px;
+        font-size: 35px;
         display: inline-block;
 
         border-radius: 5px;
@@ -100,38 +104,83 @@
     .tree li a:hover+ul ul::before{
         border-color:  #94a0b4;
     }
-    .tree #ul_tree {
-        float: left;
-        padding-top: 0;
-        position: relative;
-        /*left: 50%;*/
-        height: 500px;
+    /*この上触らない*/
+    main {
+        overflow: hidden;
+        height: 1040px;
+        padding: 15px;
     }
-    .tree #ul_tree #ul_tree_li {
+    .row {
+        width: 50%;
+        height:100%;
+        /*background-color: #0c8da0;*/
+        float: left;
+        border: solid 1px #000;
+        margin-right: 20px;
         position: relative;
-        vertical-align: middle;
-        top: 30%;
-        left: -50%;
-        -webkit-box-align: center;
+    }
+    .inner {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        margin: auto;
+        height: 600px;
+        width: 510px;
+        /*background-color: #0e6471;*/
     }
     #description {
-        position: relative;
+        /*overflow: hidden;*/
+        display: block;
         float: left;
-        height: 800px;
+        /*height: 1200px;*/
+        width: 48.5%;
     }
-    #next {
-        position: relative;
-        top: 80%;
+
+    .content {
+        width: 100%;
+        height: 500px;
+        background-color: #0e6471;
+        margin-bottom: 30px;
     }
-    #sentence {
-        position: relative;
-        top: 80%;
+
+    .text {
+        width: 97%;
+        /*background-color: #00d4b4;*/
+        height: 420px;
+        margin-left: 15px;
     }
-    #next_btn {
-        position: absolute;
-        top: 90%;
-        left: 100%;
+
+    .text h3 {
+        font-size: 230%;
+        margin-bottom: 10px;
     }
+
+    .text p{
+        font-size: 190%;
+    }
+
+    .button a{
+        display: block;
+        border-radius: 5px;
+        border-bottom: 1px solid #627ce3;
+        width: 80%;
+        font-size: 160%;
+        padding: 10px;
+        background: #405dca;
+        color: #fff;
+        text-align: center;
+        text-decoration: none;
+        margin:0 auto;
+    }
+    .button a:hover{
+        margin: auto;
+        text-decoration: none;
+        background: #364ea5;
+    }
+
+
     /*Thats all. I hope you enjoyed it.
     Thanks :)*/
     <% if (typeof id != 'undefined'){ %>
@@ -140,59 +189,70 @@
     }
     <% } %>
 </style>
-<main role="main" class="container">
+<main role="main" class="container" >
 
     <div class="row">
-        <div class="col align-self-start">
-            <div class="tree">
-                <ul id="ul_tree">
-                    <li id="ul_tree_li">
-                        <a href="./?id=0" id="clean">クリーン処理</a>
-                        <ul>
-                            <li>
-                                <a href="./?id=1" id="create_family_preparation">家族作成前準備</a>
-                                <ul>
-                                    <li>
-                                        <a href="./?id=2" id="create_family">家族作成</a>
-                                        <ul>
-                                            <li>
-                                                <a href="./scene/choice" id="choice">シーン選択へ</a>
-                                                <ul>
-                                                    <li>
-                                                        <a href="./scene" id="each_scene">各シーンへ</a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+        <div class="inner">
+            <div class="col align-self-start">
+                <div class="tree">
+                    <ul id="ul_tree">
+                        <li id="ul_tree_li">
+                            <a href="./?id=0" id="clean">クリーン処理</a>
+                            <ul>
+                                <li>
+                                    <a href="./?id=1" id="create_family_preparation">家族作成前準備</a>
+                                    <ul>
+                                        <li>
+                                            <a href="./?id=2" id="create_family">家族作成</a>
+                                            <ul>
+                                                <li>
+                                                    <a href="./scene/choice" id="choice">シーン選択へ</a>
+                                                    <ul>
+                                                        <li>
+                                                            <a href="./scene" id="each_scene">各シーンへ</a>
+
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
     <div id="description">
-        <h3 id="next">はじめは</h3>
-        <p id="portalController">
-            <% if (typeof sentence != 'undefined') { %>
-                <%= sentence %>
-            <% } else { %>
-                プレゼンテーションの準備を行います
-            <% } %>
-        </p>
-        <% if (typeof next_btn_href != 'undefined') { %>
-        <a class="btn btn-primary" href="<%= next_btn_href %>" role="button" id="next_btn">
-                <% }else { %>
-            <a class="btn btn-primary" href="./?id=0" role="button" id="next_btn">
+        <div class="content">
+
+        </div>
+        <div class="text">
+            <h3 id="next">はじめは</h3>
+            <p id="portalController">
+                <% if (typeof sentence != 'undefined') { %>
+                    <%= sentence %>
+                <% } else { %>
+                    プレゼンテーションの準備を行います
                 <% } %>
-        <% if (typeof next_btn != 'undefined') { %>
-            <%= next_btn %>
-        <% } else { %>
-            次のステージに進みます。
-        <% } %>
-        </a>
+            </p>
+        </div>
+        <div class="button">
+            <% if (typeof next_btn_href != 'undefined') { %>
+            <a class="btn btn-primary" href="<%= next_btn_href %>" role="button" id="next_btn">
+                    <% }else { %>
+                <a class="btn btn-primary" href="./?id=0" role="button" id="next_btn">
+                    <% } %>
+            <% if (typeof next_btn != 'undefined') { %>
+                <%= next_btn %>
+            <% } else { %>
+                次のステージに進みます。
+            <% } %>
+
+            </a>
+        </div>
     </div>
 </main>
 <% include ./footer %>
