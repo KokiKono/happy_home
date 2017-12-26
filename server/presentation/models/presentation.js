@@ -26,11 +26,11 @@ export default class Presentation {
         });
     }
 
-    getLatestPattern(patternId) {
+    getLatestPattern(sceneId) {
         return new Promise((resolve, reject) => {
             this.connection.query(
                 'SELECT * FROM t_pattern WHERE scene_id = ? ORDER BY timestamp DESC LIMIT 1',
-                [patternId],
+                [sceneId],
                 (queryErr, results) => {
                     if (queryErr) reject(queryErr);
                     resolve(results);

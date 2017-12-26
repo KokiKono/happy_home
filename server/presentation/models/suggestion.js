@@ -15,11 +15,26 @@ export default class Suggestion {
         });
     }
 
-    getPermissionSuggestionId(){
+    getLatestScenePattern() {
+        return new Promise((resolve, reject) => {
+            this.connection.query(
+                'select t_s.scene, t_p.pattern from t_scene t_s' +
+                ' inner join t_pattern t_p on t_s.id = t_p.scene_id' +
+                ' ORDER BY t_p.timestamp DESC LIMIT 1',
+                (queryErr, results) =>{
+                    if (queryErr) reject(queryErr);
+                    resolve(results);
+                },
+            );
+        });
+    }
+
+    getPermissionSuggestionId(patternId){
         return new Promise((resolve, reject) => {
             this.connection.query(
                 'select t_sp.suggestion_id, m_s.title, m_s.point, m_s.note, m_s.type, m_s.to_type, m_s.from_type from t_suggestion_permission t_sp ' +
-                'inner join m_suggestion m_s on t_sp.suggestion_id = m_s.id',
+                'inner join m_suggestion m_s on t_sp.suggestion_id = m_s.id where t_sp.pattern_id = ?',
+                [patternId],
                 (queryErr, results) =>{
                     if (queryErr) reject(queryErr);
                     resolve(results);
@@ -51,6 +66,28 @@ export default class Suggestion {
         });
     }
 
+    insertNoticeSuggestion(noticeId, suggestionId) {
+        return new Promise((resolve, reject) => {
+            this.connection.beginTransaction((beginTransactionErr) => {
+                if (beginTransactionErr) reject(beginTransactionErr);
+                this.connection.query(
+                    'insert into t_notice_suggestion(notice_id, suggestion_id, receiving) values(?, ?, ?)',
+                    [noticeId, suggestionId, false],
+                    (queryErr, results) => {
+                        if (queryErr) {
+                            this.connection.rollback(() => (reject(queryErr)));
+                        }
+                        this.connection.commit((commitErr) => {
+                            if (commitErr) {
+                                this.connection.rollback(() => (reject(commitErr)));
+                            }
+                            resolve(results.insertId);
+                        });
+                    },
+                );
+            });
+        });
+    }
     getFamilyStructureId(){
         return new Promise((resolve, reject) => {
             this.connection.query(
