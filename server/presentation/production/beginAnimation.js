@@ -110,3 +110,39 @@ export const beginSuggestion = () => (
     })
 )
 
+export const beginClean = () => (
+    new Promise(async (resolve, reject) => {
+        try {
+            const familyModel = new FamilyModel();
+            const latestFamily = await familyModel.latestFamily()
+                .catch(err => reject(err));
+            const familyId = latestFamily[0].id;
+            const presentationModel = new PresentationModel();
+            const latestScene = await presentationModel.getLatestScene(familyId);
+            await presentationModel
+                .insertPattern(latestScene[0].id, ScenePatternConst.CLEAN);
+            return resolve('success');
+        } catch (err) {
+            return reject(err);
+        }
+    })
+)
+
+export const beginCreateFamily = () => (
+    new Promise(async (resolve, reject) => {
+        try {
+            const familyModel = new FamilyModel();
+            const latestFamily = await familyModel.latestFamily()
+                .catch(err => reject(err));
+            const familyId = latestFamily[0].id;
+            const presentationModel = new PresentationModel();
+            const latestScene = await presentationModel.getLatestScene(familyId);
+            await presentationModel
+                .insertPattern(latestScene[0].id, ScenePatternConst.CREATE_FAMILY);
+            return resolve('success');
+        } catch (err) {
+            return reject(err);
+        }
+    })
+)
+

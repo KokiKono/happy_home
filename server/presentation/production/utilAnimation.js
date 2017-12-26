@@ -39,6 +39,10 @@ export default class utilAnimation {
 
         //単体
         this.ANIMATION_COMMON_HTML = '../../animation/a4/project.html';
+        this.ANIMATION_COMMON_EMOTION = '../../animation/emotion_scaning/index.html';
+        this.ANIMATION_COMMON_SUGGESTION_LOAGING = '../../animation/suggestion_loading/index.html';
+        this.ANIMATION_COMMON_CREATE_FAMILY = '../../animation/create_family/index.html';
+        this.ANIMATION_COMMON_CLEAN = '../../animation/clean/index.html';
     }
 
     start(app){
@@ -59,29 +63,37 @@ export default class utilAnimation {
                 //パターンIDが二桁以上の処理
                 switch (scene_pattern_list[0]['pattern']) {
                     case ScenePatternConst.ANIMATION_COMMON:
-                        management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_COMMONNESS_NAME).catch((err) => { reject(err); });
+                        // management_id = await animationDao.insertAnimationFirstData(this.ANIMATION_COMMONNESS_NAME).catch((err) => { reject(err); });
                         app.socket.io.emit('url', this.ANIMATION_COMMON_HTML);
                         break;
 
                     case ScenePatternConst.PHOTO_EMOTION_READING:
                         //感情読み取り画像
-                        management_id = await animationDao.insertAnimationFirstData(this.PHOTO_EMOTION_READING_NAME).catch((err) => { reject(err); });
-                        app.socket.io.emit('url', this.ANIMATION_COMMON_HTML);
+                        // management_id = await animationDao.insertAnimationFirstData(this.PHOTO_EMOTION_READING_NAME).catch((err) => { reject(err); });
+                        app.socket.io.emit('url', this.ANIMATION_COMMON_EMOTION);
                         break;
 
                     case ScenePatternConst.PHOTO_TEIAN_KUN:
                         //提案君画像
-                        management_id = await animationDao.insertAnimationFirstData(this.PHOTO_TEIAN_KUN_NAME).catch((err) => { reject(err); });
-                        app.socket.io.emit('url', this.ANIMATION_COMMON_HTML);
+                        // management_id = await animationDao.insertAnimationFirstData(this.PHOTO_TEIAN_KUN_NAME).catch((err) => { reject(err); });
+                        app.socket.io.emit('url', this.ANIMATION_COMMON_SUGGESTION_LOAGING);
                         break;
 
                     case ScenePatternConst.PHOTO_SMART_PHONE_CONFIRM:
                         //スマホ確認画像
-                        management_id = await animationDao.insertAnimationFirstData(this.PHOTO_SMART_PHONE_CONFIRM_NAME).catch((err) => { reject(err); });
+                        // management_id = await animationDao.insertAnimationFirstData(this.PHOTO_SMART_PHONE_CONFIRM_NAME).catch((err) => { reject(err); });
                         app.socket.io.emit('url', this.ANIMATION_COMMON_HTML);
                         break;
+                    case ScenePatternConst.CREATE_FAMILY: {
+                        app.socket.io.emit('url', this.ANIMATION_COMMON_CREATE_FAMILY);
+                        break;
+                    }
+                    case ScenePatternConst.CLEAN: {
+                        app.socket.io.emit('url', this.ANIMATION_COMMON_CLEAN);
+                        break;
+                    }
                 }
-                // return resolve('success');
+                return resolve('success');
             } else {
 
                 //パターンIDが1桁（シーンIDがある）の処理

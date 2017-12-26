@@ -20,3 +20,5 @@ export const ANIMATION_COMMON = 99;
 export const PHOTO_EMOTION_READING = 111;
 export const PHOTO_TEIAN_KUN = 222;
 export const PHOTO_SMART_PHONE_CONFIRM = 333;
+export const CREATE_FAMILY = 444;
+export const CLEAN = 555;
