@@ -87,7 +87,12 @@ const run = async (app) => {
         const familyStructure = await familyModel.getFamilyStructre(latestFamily[0].id);
         Promise.all(familyStructure.map((item) => {
             const emotion = modelEmotions.find(element => element.face_id === item.face_id);
+            // マイナス値の取得
+            const minusKeys = ['anger', 'neutral', 'contempt'];
+            const minusList = minusKeys.map(key => emotion.emotion[key]);
+            const minus = minusList.sort((a, b) => a < b)[0];
             socketGrafData[item.name] = {
+                minus: minus * -100,
                 num: emotion.emotion.happiness * 100,
                 color: typeColor[item.type],
             };
