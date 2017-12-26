@@ -40,9 +40,9 @@ export default class suggestion {
 
             const latestScenePattern = await suggestionDao.getLatestScenePattern()
                 .catch(err => reject(err));
-            console.log(latestScenePattern)
             /* 提案許可されている提案ID取得 */
-            const suggestionIdList = await suggestionDao.getPermissionSuggestionId(latestScenePattern[0].pattern)
+            const suggestionIdList = await suggestionDao
+                .getPermissionSuggestionId(latestScenePattern[0].pattern)
                 .catch((err) => { reject(err); });
             // 提案タイプごとにまとめる
             const suggestionIds = {
@@ -54,8 +54,6 @@ export default class suggestion {
             suggestionIdList.forEach((element) => {
                 suggestionIds[element.type].push(element);
             });
-            console.info(suggestionIdList);
-            console.log(suggestionIds);
             // return;
             /* 提案許可された提案があるか */
             if (suggestionIdList.length > 0) {
@@ -68,12 +66,13 @@ export default class suggestion {
                         .catch(err => reject(err));
                     // 提案判断の取得
                     const suggestionPermissionDao = new SuggestionPermissionDao();
-                    const judgments = await suggestionPermissionDao.getJudgmentAll(modelSuggestion.suggestion_id)
+                    const judgments = await suggestionPermissionDao
+                        .getJudgmentAll(modelSuggestion.suggestion_id)
                         .catch(err => reject(err));
                     const descJudgments = judgments.sort((a, b) => a.val < b.val);
 
                     // family_structure_id取得
-                    const toType = modelSuggestion['to_type'];
+                    const toType = modelSuggestion.to_type;
                     let title = '';
                     switch (descJudgments[0].key_name) {
                         case 'anger': {
@@ -134,6 +133,7 @@ export default class suggestion {
                             break;
                         }
                     }
+                    // 対象家族がALLの場合は全員に通知を送る
                     if (toType === 'ALL') {
                         title = title.replace('toType', '家族');
                         familys.forEach(async (element) => {
@@ -141,9 +141,11 @@ export default class suggestion {
                             const insertId = await suggestionDao
                                 .insertNoticeData(element.id, title, this.SAMPLE_NOTICE_CONTENTS)
                                 .catch((err) => { reject(err); });
-                            await suggestionDao.insertNoticeSuggestion(insertId, modelSuggestion.suggestion_id);
+                            await suggestionDao
+                                .insertNoticeSuggestion(insertId, modelSuggestion.suggestion_id);
                         });
                     } else {
+                        // 対象家族に通知を送る
                         const familyStructure = familys.find(element => element.type === toType);
                         if (typeof familyStructure === 'undefined') return;
                         title = title.replace('toType', familyStructure.name);
@@ -155,19 +157,13 @@ export default class suggestion {
                             this.SAMPLE_NOTICE_CONTENTS,
                         ).catch(err => reject(err));
                         suggestionIds.mobile.forEach(async (item) => {
-                            await suggestionDao.insertNoticeSuggestion(insertId, item.suggestion_id);
+                            await suggestionDao
+                                .insertNoticeSuggestion(insertId, item.suggestion_id);
                         });
                     }
                 }
-                // モバイル
-                // suggestionIds.mobile.forEach(async (item) => {
-                //     // モバイル通知
-                //
-                //
-                //
-                // });
                 // ライト
-                suggestionIds.light.forEach((item) => {
+                suggestionIds.light.forEach(() => {
                     // ライトのRGB or pinkで色変更処理
                     // 未検証部分
                     const led = new Led(1);
