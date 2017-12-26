@@ -190,7 +190,6 @@
     <% } %>
 </style>
 <main role="main" class="container" >
-
     <div class="row">
         <div class="inner">
             <div class="col align-self-start">
@@ -230,10 +229,15 @@
 
         </div>
         <div class="text">
-            <h3 id="next">はじめは</h3>
+            <h3 id="next">
+                <% if (typeof sentence_title != 'undefined') { %>
+                <%- sentence_title %>
+                <% } else { %>
+                <% } %>
+            </h3>
             <p id="portalController">
                 <% if (typeof sentence != 'undefined') { %>
-                    <%= sentence %>
+                    <%- sentence %>
                 <% } else { %>
                     プレゼンテーションの準備を行います
                 <% } %>

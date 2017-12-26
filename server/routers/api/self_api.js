@@ -199,9 +199,11 @@ router.get('/notice_list/new/:id', (req, res, next) => {
 });
 router.put('/notice_list/new/:id', (req, res, next) => {
     const noticeNewModel = new NoticeNewModel();
+    console.log('skip---------')
+    console.info(req.body);
     noticeNewModel.updateSkip(
         req.param('id'),
-        req.body.is_skip,
+        req.body.body.is_skip,
     )
         .then(() => res.sendStatus(204))
         .catch(err => next(err));

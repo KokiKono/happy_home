@@ -1,7 +1,17 @@
 <% include ../partial/header %>
+<script>
+    const listOnClick = (id) => {
+        $('#suggestion_edit').attr('href', `./management?suggestion_id=${id}`);
+        $('#suggestion_delete').attr('href', `/delete?suggestion_id=${id}`);
+        $('#judgment_management').attr('href', `./judgment?suggestion_id=${id}`);
+        $('#suggestion_modal').modal('show');
+    }
+</script>
 <main role="main" class="container-fluid">
-    <h1>判断する提案を選択してください</h1>
+    <h1>提案一覧</h1>
     <div>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_suggestion_modal">
+                提案追加</button>
         <table class="table table-bordered table-striped table-hover">
             <tr>
                 <th>ID</th>
@@ -14,7 +24,7 @@
                 <th>対象元家族タイプ</th>
             </tr>
             <% suggestion_list.forEach((item) => { %>
-            <tr onclick="window.location.href = './judgment?suggestion_id=<%= item.id %>';">
+            <tr onclick="listOnClick(<%= item.id %>)">
                 <td><%= item.id %></td>
                 <td><%= item.title %></td>
                 <td><%= item.point %></td>
@@ -27,5 +37,69 @@
             </tr>
         </table>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="suggestion_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">処理したいものを選んでください。</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                       <div class="list-group">
+                           <a class="list-group-item list-group-item-action" id="suggestion_edit">提案編集</a>
+                           <a class="list-group-item list-group-item-action" id="judgment_management">提案判断管理</a>
+                           <a class="list-group-item list-group-item-action list-group-item-danger" id="suggestion_delete">削除</a>
+                       </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+        </div>
+    </div>
+    <!-- add sugggesion Modal -->
+    <div class="modal fade" id="add_suggestion_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="タイトル">
+                            </div>
+                            <div class="form-group">
+                                <input type="number" class="form-control" placeholder="ポイント">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="ノート">
+                            </div>
+                            <div class="form-group">
+                                <select>
+                                    <option value="mobile">モバイル</option>
+                                    <option value="light">ライト</option>
+                                    <option value="reform">リフォーム</option>
+                                    <option value="talk">トーク</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </main>
 <% include ../partial/footer %>
