@@ -1,0 +1,9 @@
+@charset "UTF-8";
+
+#camera {
+	width: 700px;
+	height: 500px;
+}
+#canvas {
+	display: none;
+}
