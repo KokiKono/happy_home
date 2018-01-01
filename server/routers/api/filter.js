@@ -19,6 +19,7 @@ const noSecurityPathList = [
     createNoSecurity('/family_list', 'GET'),
     createNoSecurity('/emotions', 'POST'),
     createNoSecurity('/family_list', 'POST'),
+    createNoSecurity('/image/upload', 'POST'),
 ];
 
 // filtering

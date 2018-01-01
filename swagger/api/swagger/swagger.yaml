@@ -52,6 +52,8 @@ tags:
   description: "提案タスク系"
 - name: "Award"
   description: "ランキング"
+- name: 'image'
+  description: '画像関連'
 paths:
   /sample:
     x-swagger-router-controller: sample
@@ -75,6 +77,25 @@ paths:
           description: Success
           schema:
             $ref: "#/definitions/Sample"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /image/upload:
+    post:
+      tags:
+      - 'image'
+      summary: Uploads a file.
+      consumes:
+       - multipart/form-data
+      parameters:
+      - in: formData
+        name: image
+        type: file
+        description: The file to upload.
+      responses:
+        "200":
+          description: Success
         default:
           description: Error
           schema:

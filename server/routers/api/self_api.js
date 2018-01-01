@@ -1,6 +1,8 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import Async from 'async';
+import expressFileUplpad from 'express-fileupload';
+import * as path from 'path';
 import SampleModel from '../../models/sample';
 import FamilyModel from '../../models/family';
 import NoticeNewModel from '../../models/notice_list_new';
@@ -12,6 +14,7 @@ import AnimationModel from '../../models/animations';
 import LoveNumberModel from '../../models/loveNumber';
 
 const router = express.Router();
+router.use(expressFileUplpad());
 
 router.post('/login', (req, res) => {
     // auth
@@ -363,5 +366,20 @@ router.get('/awards', async (req, res, next) => {
 
     res.json(resObj);
 
-})
+});
+
+router.post('/image/upload', (req, res) => {
+    if (!req.files) return res.status(400).send('No files were uploaded.');
+
+    // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+    const imageFile = req.files.image;
+
+    const timestamp = Date.now().toString();
+    // Use the mv() method to place the file somewhere on your server
+    return imageFile.mv(`${path.join(__dirname, '../../views/public/images/')}${timestamp}.jpg`, (err) => {
+        if (err) return res.status(500).send(err);
+        return res.sendStatus(200);
+    });
+});
+
 export default router;
