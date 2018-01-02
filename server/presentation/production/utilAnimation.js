@@ -43,6 +43,7 @@ export default class utilAnimation {
         this.ANIMATION_COMMON_SUGGESTION_LOAGING = '../../animation/suggestion_loading/index.html';
         this.ANIMATION_COMMON_CREATE_FAMILY = '../../animation/create_family/index.html';
         this.ANIMATION_COMMON_CLEAN = '../../animation/clean/index.html';
+        this.ANIMATION_COMMON_MOBILE = '../../animation/mobile/index.html';
     }
 
     start(app){
@@ -82,7 +83,7 @@ export default class utilAnimation {
                     case ScenePatternConst.PHOTO_SMART_PHONE_CONFIRM:
                         //スマホ確認画像
                         // management_id = await animationDao.insertAnimationFirstData(this.PHOTO_SMART_PHONE_CONFIRM_NAME).catch((err) => { reject(err); });
-                        app.socket.io.emit('url', this.ANIMATION_COMMON_HTML);
+                        app.socket.io.emit('url', this.ANIMATION_COMMON_MOBILE);
                         break;
                     case ScenePatternConst.CREATE_FAMILY: {
                         app.socket.io.emit('url', this.ANIMATION_COMMON_CREATE_FAMILY);
