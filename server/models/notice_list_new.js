@@ -4,8 +4,16 @@
 import Dao from './dao';
 
 export default class NoticeNewModel extends Dao {
+    constructor(familyId, structureId) {
+        super();
+        this.familyId = familyId;
+        this.structureId = structureId;
+    }
     select() {
-        return super.query('SELECT t_notice.id, t_notice.family_structure_id, t_notice.title,  FROM t_notice WHERE is_old = false AND is_skip = false')
+        return super.query(
+            'SELECT t_notice.id, t_notice.family_structure_id, t_notice.title FROM t_notice WHERE is_old = false AND is_skip = false AND family_structure_id = ?',
+            [this.familyId],
+        )
             .then((success) => {
                 return success;
             })

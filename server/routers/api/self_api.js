@@ -73,7 +73,7 @@ router.post('/family_list', (req, res, next) => {
 });
 
 router.get('/notice_list/new', (req, res, next) => {
-    const noticeNewModel = new NoticeNewModel();
+    const noticeNewModel = new NoticeNewModel(req.user.family_id, req.user.family_structure_id);
     noticeNewModel.select()
         .then((result) => {
             res.json(result.results);
@@ -173,7 +173,7 @@ router.get('/suggestion_now', (req, res, next) => {
 });
 
 router.get('/notice_list/new/:id', (req, res, next) => {
-    const noticeNewModel = new NoticeNewModel();
+    const noticeNewModel = new NoticeNewModel(req.user.family_id, req.user.family_structure_id);
     noticeNewModel.selectAtId(req.param('id'))
         .then((result) => {
             let suggestion_list = [];
@@ -201,7 +201,7 @@ router.get('/notice_list/new/:id', (req, res, next) => {
     });
 });
 router.put('/notice_list/new/:id', (req, res, next) => {
-    const noticeNewModel = new NoticeNewModel();
+    const noticeNewModel = new NoticeNewModel(req.user.family_id, req.user.family_structure_id);
     console.log('skip---------')
     console.info(req.body);
     noticeNewModel.updateSkip(
@@ -238,7 +238,7 @@ router.put('/notice_list/:id/:suggestionId/:suggestionDetailId', async (req, res
 });
 
 router.get('/notice_list/old', (req, res, next) => {
-    const noticeOldModel = new NoticeOldModel();
+    const noticeOldModel = new NoticeOldModel(req.user.family_id, req.user.family_structure_id);
     noticeOldModel.select()
         .then((result) => {
             res.json(result.results);
@@ -249,7 +249,7 @@ router.get('/notice_list/old', (req, res, next) => {
 });
 
 router.get('/notice_list/old/:id', (req, res, next) => {
-    const noticeOldModel = new NoticeOldModel();
+    const noticeOldModel = new NoticeOldModel(req.user.family_id, req.user.family_structure_id);
     noticeOldModel.selectAtId(req.param('id'))
         .then((result) => {
             let suggestion_list = [];
