@@ -77,6 +77,46 @@ export default class Suggestion {
                         if (queryErr) {
                             this.connection.rollback(() => (reject(queryErr)));
                         }
+                        this.connection.query(
+                            'SELECT id FROM m_suggestion_detail WHERE suggestion_id = ?',
+                            [suggestionId],
+                            async (selectErr, selectResults) => {
+                                if (selectErr) return;
+                                console.info(selectResults)
+                                await Promise.all(selectResults.map((item) => {
+                                    this.connection.query(
+                                        'INSERT INTO t_suggestion_task(suggestion_detail_id, notice_id) VALUES(?,?)',
+                                        [item.id, noticeId],
+                                        (taskErr) => {
+                                            console.error(taskErr);
+                                        },
+                                    );
+                                }));
+                            },
+                        )
+                        this.connection.commit((commitErr) => {
+                            if (commitErr) {
+                                this.connection.rollback(() => (reject(commitErr)));
+                            }
+                            resolve(results.insertId);
+                        });
+                    },
+                );
+            });
+        });
+    }
+
+    inserSuggestionTask(suggestionDetailId, noticeId) {
+        return new Promise((resolve, reject) => {
+            this.connection.beginTransaction((beginTransactionErr) => {
+                if (beginTransactionErr) reject(beginTransactionErr);
+                this.connection.query(
+                    'insert into t_suggestion_task(suggestion_detail_id, notice_id) values(?, ?)',
+                    [suggestionDetailId, noticeId],
+                    (queryErr, results) => {
+                        if (queryErr) {
+                            this.connection.rollback(() => (reject(queryErr)));
+                        }
                         this.connection.commit((commitErr) => {
                             if (commitErr) {
                                 this.connection.rollback(() => (reject(commitErr)));
