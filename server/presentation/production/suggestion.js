@@ -42,7 +42,7 @@ export default class suggestion {
                 .catch(err => reject(err));
             /* 提案許可されている提案ID取得 */
             const suggestionIdList = await suggestionDao
-                .getPermissionSuggestionId(latestScenePattern[0].pattern)
+                .getPermissionSuggestionId(latestScenePattern[0].pattern_id)
                 .catch((err) => { reject(err); });
             // 提案タイプごとにまとめる
             const suggestionIds = {

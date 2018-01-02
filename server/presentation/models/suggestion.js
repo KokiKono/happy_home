@@ -18,7 +18,7 @@ export default class Suggestion {
     getLatestScenePattern() {
         return new Promise((resolve, reject) => {
             this.connection.query(
-                'select t_s.scene, t_p.pattern from t_scene t_s' +
+                'select t_s.scene, t_p.pattern, t_p.id as pattern_id from t_scene t_s' +
                 ' inner join t_pattern t_p on t_s.id = t_p.scene_id' +
                 ' ORDER BY t_p.timestamp DESC LIMIT 1',
                 (queryErr, results) =>{

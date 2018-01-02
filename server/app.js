@@ -8,9 +8,10 @@ import apiRouter from './routers/api';
 import managementRouter from './routers/management';
 import socket from './socket/index';
 import Watch from './watch/index';
-import presentation from './presentation/mock';
 import familyList from './contorller/views/family_list';
+import presentation from './presentation/production';
 import mainRouter from './routers/main';
+
 eventLogger.debug('boot');
 motionLogger.debug('boot');
 
@@ -32,13 +33,18 @@ app.use('/sub', express.static('views/sub'));
 app.use('/animation', express.static('animation'));
 app.use('/public', express.static('views/public'));
 app.use('/main', express.static('views/main'));
-
+app.use('/management', express.static('views/management'));
+app.use('/camera', express.static('views/camera_test'));
 app.get('/', (req, res) => {
     res.send('Hello World hoge');
 });
 
 app.use('/api', apiRouter);
 
+app.use('/management', (req, res, next) => {
+    req.socket = Socket;
+    next();
+});
 app.use('/management', managementRouter);
 
 app.use('/main', mainRouter);

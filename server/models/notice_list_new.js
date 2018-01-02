@@ -12,7 +12,7 @@ export default class NoticeNewModel extends Dao {
     select() {
         return super.query(
             'SELECT t_notice.id, t_notice.family_structure_id, t_notice.title FROM t_notice WHERE is_old = false AND is_skip = false AND family_structure_id = ?',
-            [this.familyId],
+            [this.structureId],
         )
             .then((success) => {
                 return success;

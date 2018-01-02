@@ -135,7 +135,7 @@ const run = (suggestionTypes = []) => (
             const latestPattern = await presentationModel.getLatestPattern(latestScene[0].id);
             await Promise.all(modelPermissions.map(async (item) => {
                 await suggestionPermission
-                    .insertPermistion(latestPattern[0].pattern, item.suggestion.id);
+                    .insertPermistion(latestPattern[0].id, item.suggestion.id);
             }));
             return resolve('success');
         } catch (err) {

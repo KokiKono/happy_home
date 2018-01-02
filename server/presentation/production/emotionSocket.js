@@ -114,7 +114,7 @@ const run = async (app) => {
         //     app.socket.io.emit('image update', `http://${config.server.url}:8080/public/images/${path.basename(latestEmotions[0].image_path)}`, socketImagedata);
         // }, 5000)
         app.socket.io.emit('graph update', socketGrafData);
-        app.socket.io.emit('image update', `http://${config.server.url}:8080/public/images/${path.basename(latestEmotions[0].image_path)}`, socketImagedata);
+        app.socket.io.emit('image update', `http://${config.server.url}:8080/public/images/${path.basename(latestEmotions[1].image_path)}`, socketImagedata);
         return 'emotion socket success';
     } catch (err) {
         return err;
