@@ -7,11 +7,15 @@ import moment from 'moment';
 import deepEqual from 'deep-equal';
 
 export default class Camera {
-    constructor(imageNum, imagePath) {
+    constructor(imageNum, imagePath, beginTime) {
         this.imageNum = imageNum;
         this.imagePath = imagePath;
         const nowTime = momentTimezone().tz('Asia/Tokyo').format();
-        this.now = moment(nowTime);
+        if (beginTime) {
+            this.now = beginTime;
+        } else {
+            this.now = moment(nowTime);
+        }
     }
 
     /**

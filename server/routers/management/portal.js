@@ -14,7 +14,7 @@ const isSetting = (req, res, next) => {
 
 router.get('/', portalController.indexParam);
 router.get('/', portalController.index);
-
+router.get('/root', portalController.root);
 const sceneRouter = express.Router();
 sceneRouter.get('/', isSetting);
 // sceneRouter.get('/*', isSetting);
@@ -29,6 +29,9 @@ router.get('/emotion', portalController.emotion);
 
 const animationRouter = express.Router();
 animationRouter.get('/start', portalController.homeAnimation);
+animationRouter.get('/mobile', portalController.mobileAnimation);
+animationRouter.get('/home_comeback', portalController.homeComebackAnimation);
+animationRouter.get('/dinner', portalController.dinner);
 router.use('/animation', animationRouter);
 
 router.get('/suggestion', portalController.suggestionStart);

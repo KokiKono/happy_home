@@ -146,3 +146,39 @@ export const beginCreateFamily = () => (
     })
 )
 
+export const beginFamilyHearthstone = () => (
+    new Promise(async (resolve, reject) => {
+        try {
+            const familyModel = new FamilyModel();
+            const latestFamily = await familyModel.latestFamily()
+                .catch(err => reject(err));
+            const familyId = latestFamily[0].id;
+            const presentationModel = new PresentationModel();
+            const latestScene = await presentationModel.getLatestScene(familyId);
+            await presentationModel
+                .insertPattern(latestScene[0].id, ScenePatternConst.SCENE_FAMILY_HEARTHSTONE);
+            return resolve('success');
+        } catch (err) {
+            return reject(err);
+        }
+    })
+)
+
+export const beginFamilySilence = () => (
+    new Promise(async (resolve, reject) => {
+        try {
+            const familyModel = new FamilyModel();
+            const latestFamily = await familyModel.latestFamily()
+                .catch(err => reject(err));
+            const familyId = latestFamily[0].id;
+            const presentationModel = new PresentationModel();
+            const latestScene = await presentationModel.getLatestScene(familyId);
+            await presentationModel
+                .insertPattern(latestScene[0].id, ScenePatternConst.SCENE_FAMILY_SILENCE);
+            return resolve('success');
+        } catch (err) {
+            return reject(err);
+        }
+    })
+)
+
