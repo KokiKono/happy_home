@@ -19,13 +19,13 @@ export default class createFamilyPreparation {
         this.imagePath = imagePath;
     }
 
-    start() {
+    start(beginTime) {
         return new Promise(async (resolve, reject) => {
             // MicroSoft Azure API Client
             const faceClient = new oxford.Client(configFile['api-key'].faceAPI, configFile.azureApi.region.faceAPI);
             // カメラ起動して複数枚写真をとる。
-            const camera = new Camera(this.imageNum, this.imagePath);
-            await camera.take();
+            const camera = new Camera(this.imageNum, this.imagePath, beginTime);
+            // await camera.take();
             // 撮った写真の取得
             const files = await camera.readCarefullySelectedImageFiles()
                 .catch((err) => { reject(err); });

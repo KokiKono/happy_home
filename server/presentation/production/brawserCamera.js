@@ -9,6 +9,8 @@ import Async from 'async';
 import momentTimezone from 'moment-timezone';
 import moment from 'moment';
 import CreateFamilyPreparation from './createFamilyPreparation';
+import configFile from '../../../config.json';
+
 require('waitjs');
 
 export default class brawserCamera {
@@ -17,6 +19,7 @@ export default class brawserCamera {
         this.SCOPE_DIR = './views/public/images/';
         const nowTime = momentTimezone().tz('Asia/Tokyo').format();
         this.now = moment(nowTime);
+        this.config = configFile[process.env.NODE_ENV];
     }
 
     fileStatus(filePath) { // eslint-disable-line
@@ -61,16 +64,19 @@ export default class brawserCamera {
             process.on('unhandledRejection', console.dir);
 
             //メイン画面の切り替え
-            // app.socket.io.emit('url', 'http://' + location.hostname + ':8080/brawser_camera/index.html');
+            app.socket.io.emit('url', 'http://' + this.config.server.url + ':8080/brawser_camera/index.html');
 
-            await this.watchDir().then(async function(result) {
+            const beginTime = this.now;
+            this.watchDir().then(async (result) => {
+                console.warn('作成前！！！！！！！！！！！')
                 const createFamilyPreparation = new CreateFamilyPreparation(10, path.join(__dirname, '../../views/public/images/'));
-                result = await createFamilyPreparation.start().catch(err => console.log(err));
+                result = await createFamilyPreparation.start(beginTime).catch(err => console.log(err));
 
-                resolve(result);
-            }).catch(function (error) {
-              console.log('err '+error);
+                return resolve(result);
+            }).catch((error) => {
+              console.log('err ' + error);
+              return reject(error);
             });
-        })
+        });
     }
 }

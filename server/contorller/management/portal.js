@@ -16,7 +16,7 @@ import Suggestion from '../../presentation/production/suggestion';
 
 import FamilyModel from '../../presentation/models/family';
 import Presentation from '../../presentation/models/presentation';
-
+import BrawserCamera from '../../presentation/production/brawserCamera';
 let renderId = '';
 const renderParam = {
     id: renderId,
@@ -30,34 +30,39 @@ exports.indexParam = async (req, res, next) => {
     const id = req.param('id');
     console.log(`id=${id}`);
     const animation = new utilAnimation();
-    switch (id) {
-        case '0': {
+    if (id === '0') {
+        {
             console.log('クリーン処理');
             await beginAnimation.beginClean();
-            animation.start({ socket: req.socket });
+            animation.start({socket: req.socket});
             const tmpFace = new TmpFace();
             await tmpFace.deleteAll().catch(e => console.error(e));
             renderId = 'clean';
             return next();
         }
-        case '1': {
+    } else if (id === '1') {
+        {
             console.log('家族作成前準備');
-            await beginAnimation.beginCreateFamily();
-            animation.start({ socket: req.socket });
-            const createFamilyPreparation = new CreateFamilyPreparation(10, path.join(__dirname, '../../views/public/images/'));
-            await createFamilyPreparation.start()
-                .catch(e => console.error(e));
+            // await beginAnimation.beginCreateFamily();
+            // animation.start({socket: req.socket});
+            // const createFamilyPreparation = new CreateFamilyPreparation(10, path.join(__dirname, '../../views/public/images/'));
+            // await createFamilyPreparation.start()
+            //     .catch(e => console.error(e));
+            const brawserCamera = new BrawserCamera();
+            await brawserCamera.start({socket: req.socket});
             renderId = 'create_family_preparation';
             return next();
         }
-        case '2': {
+    } else if (id === '2') {
+        {
             console.log('家族作成');
-            createFamily({ socket: req.socket }).then(s => console.log(s))
+            createFamily({socket: req.socket}).then(s => console.log(s))
                 .catch(e => console.error(e));
             renderId = 'create_family';
             return next();
         }
-        default: return next();
+    } else {
+        return next();
     }
 }
 exports.index = (req, res) => {
