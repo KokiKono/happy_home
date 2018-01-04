@@ -33,6 +33,7 @@ app.use('/sub', express.static('views/sub'));
 app.use('/animation', express.static('animation'));
 app.use('/public', express.static('views/public'));
 app.use('/main', express.static('views/main'));
+app.use('/brawser_camera', express.static('views/brawser_camera'));
 app.use('/management', express.static('views/management'));
 app.use('/camera', express.static('views/camera_test'));
 app.get('/', (req, res) => {
