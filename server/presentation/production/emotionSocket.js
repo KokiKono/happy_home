@@ -104,8 +104,11 @@ const run = async (app) => {
             socketImagedata.push(imageData);
             return true;
         }));
+
+        //幸せ指数の合計値を取得
+        const lovePoint = await emotionModel.getLovePoint(latestFamily[0].id);
         socketGrafData['幸せ指数'] = {
-            num: 10,
+            num: lovePoint[0].point,
         };// 仮
         console.log('socketGrafData')
         console.log(socketGrafData)

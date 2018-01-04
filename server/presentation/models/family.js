@@ -159,4 +159,20 @@ export default class Family {
             );
         });
     }
+
+    getLovePoint(family_id) {
+        return new Promise((resolve, reject) => {
+            this.connection.query(
+                'select sum(t_ln.point) as point from t_love_number t_ln '
+                + 'inner join t_family_structure t_fs on t_ln.family_structure_id = t_fs.id '
+                + 'inner join m_family m_f on t_fs.family_id = m_f.id '
+                + 'where m_f.id = ?',
+                [family_id],
+                (queryErr, results) => {
+                    if (queryErr) reject(queryErr);
+                    resolve(results);
+                },
+            );
+        });
+    }
 }
