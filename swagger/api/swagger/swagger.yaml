@@ -621,6 +621,9 @@ definitions:
       id:
         type: integer
         description: 提案ID
+      is_receiving:
+        type: boolean
+        description: 受け入れ可否
       title:
         type: string
       point:

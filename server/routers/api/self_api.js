@@ -124,13 +124,15 @@ function getFamilyStructure(family_structure_id, fam_id){
     })
 };
 
-router.get('/suggestion/:id', (req, res, next) => {
+router.get('/suggestion/:id', async (req, res, next) => {
     const suggestionModel = new SuggestionModel();
     suggestionModel.selectSuggestion(req.param('id'))
     .then(async (result) => {
+        const isReceiving = await suggestionModel.isReceiving(req.param('notice_id'), req.param('id'))
+            .catch(err => console.error(err));
         const resObj = {
-
             id: result.results[0].id,
+            is_receiving: isReceiving,
             title: result.results[0].title,
             point: result.results[0].point,
             family_structure: await getFamilyStructure(
@@ -214,6 +216,8 @@ router.put('/notice_list/new/:id', (req, res, next) => {
 
 router.put('/notice_list/:id/:suggestionId/:suggestionDetailId', async (req, res) => {
     const noticeId = req.param('id');
+    console.info(req.params);
+    // console.info(req.body.is_done)
     const suggestionId = req.param('suggestionId');
     const suggestionDetailId = req.param('suggestionDetailId');
 
@@ -229,7 +233,7 @@ router.put('/notice_list/:id/:suggestionId/:suggestionDetailId', async (req, res
         res.sendStatus(409);
         return;
     }
-    suggestionModel.toggleSuggestionTask(suggestionDetailId, noticeId, req.body.is_done)
+    suggestionModel.toggleSuggestionTask(suggestionDetailId, noticeId, req.body.body.is_done)
         .then(() => res.sendStatus(204))
         .catch((err) => {
             res.status(500);

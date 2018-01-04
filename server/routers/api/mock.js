@@ -124,6 +124,7 @@ const createTaskList = () => {
 router.get('/suggestion/:id', (req, res) => {
     const resObj = {
         id: req.param('id'),
+        is_receiving: Math.random() >= 0.5,
         title: 'タイトル',
         point: parseInt(((Math.random() * 10) * (Math.random() * 10)), 10),
         family_structure: {
