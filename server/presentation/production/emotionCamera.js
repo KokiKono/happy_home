@@ -67,7 +67,7 @@ export default class emotionCamera {
             const beginTime = this.now;
             this.watchDir().then(async (result) => {
                 console.warn('感情読み取り前！！！！！！！！！！！')
-                const emotion = new Emotion(10, path.join(__dirname, '../views/public/images/'))
+                const emotion = new Emotion(10, path.join(__dirname, '../../views/public/images/'))
                 result = await emotion.start().catch((err) => {
                     console.log('emotion err!!!!!!!1');
                     console.log(err);
