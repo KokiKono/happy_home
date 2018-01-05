@@ -239,6 +239,24 @@ router.put('/notice_list/:id/:suggestionId/:suggestionDetailId', async (req, res
             res.status(500);
             res.json(err);
         });
+
+    suggestion.selectSuggestionDone(noticeId)
+        .then((result) => {
+            let flg = true;
+            for (let i = 0; i < result.results.length; i++) {
+                if(result.results[i].done != true){
+                    flg = false;
+                }
+            }
+
+            if(flg === true){
+                for (let i = 0; i < result.results.length; i++) {
+                    suggestion.insertLovePoint(result.results[i].family_structure_id, result.results[i].point, noticeId)
+                }
+            }
+
+    })
+
 });
 
 router.get('/notice_list/old', (req, res, next) => {
