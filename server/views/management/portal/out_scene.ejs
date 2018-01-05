@@ -191,66 +191,38 @@
 
     /*Thats all. I hope you enjoyed it.
     Thanks :)*/
+    <% if (typeof id != 'undefined'){ %>
+    #<%= id %> {
+        background-color: #FF5296;
+    }
+    <% } %>
 </style>
 <main role="main" class="container-fluid">
     <div class="tree">
         <ul>
             <li>
-                <a>留守シーン</a>
+                <a id="first">留守シーン</a>
                 <ul>
                     <li>
-                        <a>感情読み取り</a>
+                        <a id="home_comeback">帰宅アニメーション</a>
                         <ul id="haba">
                             <li>
-                                <a>帰宅中（母おこ）</a>
+                                <a id="emotion1">感情読み取り</a>
                                 <ul>
                                     <li>
-                                        <a>提案開始</a>
+                                        <a>晩御飯アニメーション</a>
                                         <ul>
                                             <li>
-                                                <a>スマホ操作中アニメーション（共通）</a>
+                                                <a id="father_ronely">晩御飯（寂しい）</a>
                                                 <ul>
                                                     <li>
-                                                        <a>帰宅前アニメーション(共通）</a>
+                                                        <a id="father_ronely-suggestion">提案開始</a>
                                                         <ul>
                                                             <li>
-                                                                <a>感情読み取り</a>
+                                                                <a id="father_ronely-suggestion-end-emotion">感情読み取り</a>
                                                                 <ul>
                                                                     <li>
-                                                                        <a>家族団欒ご飯（母喜び）</a>
-                                                                        <ul>
-                                                                            <li>
-                                                                                <a>提案開始</a>
-                                                                                <ul>
-                                                                                    <li>
-                                                                                        <a>感情読み取り</a>
-                                                                                        <ul>
-                                                                                            <li>
-                                                                                                <a>プレゼン終了</a>
-                                                                                            </li>
-                                                                                        </ul>
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a>家族団欒ご飯（無言）</a>
-                                                                        <ul>
-                                                                            <li>
-                                                                                <a>提案開始</a>
-                                                                                <ul>
-                                                                                    <li>
-                                                                                        <a>感情読み取り</a>
-                                                                                        <ul>
-                                                                                            <li>
-                                                                                                <a>プレゼン終了</a>
-                                                                                            </li>
-                                                                                        </ul>
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </li>
-                                                                        </ul>
+                                                                        <a>プレゼン終了</a>
                                                                     </li>
                                                                 </ul>
                                                             </li>
@@ -258,63 +230,38 @@
                                                     </li>
                                                 </ul>
                                             </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a>帰宅中（母喜び）</a>
-                                <ul>
-                                    <li>
-                                        <a>提案開始</a>
-                                        <ul>
                                             <li>
-                                                <a>スマホ操作中アニメーション（共通）</a>
+                                                <a id="father_tried">晩御飯（疲れた）</a>
                                                 <ul>
                                                     <li>
-                                                        <a>帰宅前アニメーション(共通）</a>
+                                                        <a id="father_tried-suggestion">提案開始</a>
                                                         <ul>
                                                             <li>
-                                                                <a>感情読み取り</a>
+                                                                <a id="father_tried-suggestion-end-emotion">感情読み取り</a>
                                                                 <ul>
                                                                     <li>
-                                                                        <a>家族団欒ご飯（母喜び）</a>
-                                                                        <ul>
-                                                                            <li>
-                                                                                <a>提案開始</a>
-                                                                                <ul>
-                                                                                    <li>
-                                                                                        <a>感情読み取り</a>
-                                                                                        <ul>
-                                                                                            <li>
-                                                                                                <a>プレゼン終了</a>
-                                                                                            </li>
-                                                                                        </ul>
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a>家族団欒ご飯（無言）</a>
-                                                                        <ul>
-                                                                            <li>
-                                                                                <a>提案開始</a>
-                                                                                <ul>
-                                                                                    <li>
-                                                                                        <a>感情読み取り</a>
-                                                                                        <ul>
-                                                                                            <li>
-                                                                                                <a>プレゼン終了</a>
-                                                                                            </li>
-                                                                                        </ul>
-                                                                                    </li>
-                                                                                </ul>
-                                                                            </li>
-                                                                        </ul>
+                                                                        <a>プレゼン終了</a>
                                                                     </li>
                                                                 </ul>
                                                             </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <a id="father_happy">晩御飯（幸せ）</a>
+                                                <ul>
+                                                    <li>
+                                                       <a id="father_happy-suggestion">提案開始</a>
+                                                        <ul>
+                                                          <li>
+                                                              <a id="father_happy-suggestion-end-emotion">感情読み取り</a>
+                                                               <ul>
+                                                                  <li>
+                                                                      <a>プレゼン終了</a>
+                                                                  </li>
+                                                              </ul>
+                                                           </li>
                                                         </ul>
                                                     </li>
                                                 </ul>

@@ -32,6 +32,8 @@ animationRouter.get('/start', portalController.homeAnimation);
 animationRouter.get('/mobile', portalController.mobileAnimation);
 animationRouter.get('/home_comeback', portalController.homeComebackAnimation);
 animationRouter.get('/dinner', portalController.dinner);
+animationRouter.get('/out/comeback', portalController.outHomeComeback);
+animationRouter.get('/out/dinner', portalController.outDinner);
 router.use('/animation', animationRouter);
 
 router.get('/suggestion', portalController.suggestionStart);

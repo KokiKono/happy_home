@@ -3,10 +3,8 @@
  */
 import * as path from 'path';
 import TmpFace from '../../presentation/models/tmpFace';
-import CreateFamilyPreparation from '../../presentation/production/createFamilyPreparation';
 import createFamily from '../../presentation/production/createFamily';
 import scene from '../../presentation/production/scene';
-import Emotion from '../../presentation/production/emotion';
 import emotionSocket from '../../presentation/production/emotionSocket';
 import homeAnimationChoice from '../../presentation/production/homeAnimationChoice';
 import utilAnimation from '../../presentation/production/utilAnimation';
@@ -17,6 +15,8 @@ import homeDinnerAnimation from '../../presentation/production/homeDinnerAnimati
 import FamilyModel from '../../presentation/models/family';
 import Presentation from '../../presentation/models/presentation';
 import BrawserCamera from '../../presentation/production/brawserCamera';
+import EmotionCamera from '../../presentation/production/emotionCamera';
+
 let renderId = '';
 const renderParam = {
     id: renderId,
@@ -25,6 +25,7 @@ const renderParam = {
     next_btn: '',
     next_btn_href: '',
     emotion_id: 0,
+    is_family_scene: false,
 };
 exports.indexParam = async (req, res, next) => {
     if (!req.param('id')) return next();
@@ -44,11 +45,6 @@ exports.indexParam = async (req, res, next) => {
     } else if (id === '1') {
         {
             console.log('家族作成前準備');
-            // await beginAnimation.beginCreateFamily();
-            // animation.start({socket: req.socket});
-            // const createFamilyPreparation = new CreateFamilyPreparation(10, path.join(__dirname, '../../views/public/images/'));
-            // await createFamilyPreparation.start()
-            //     .catch(e => console.error(e));
             const brawserCamera = new BrawserCamera();
             await brawserCamera.start({socket: req.socket});
             renderId = 'create_family_preparation';
@@ -137,13 +133,14 @@ exports.scene = async (req, res, next) => {
         renderParam.next_btn_href = '../emotion?id=1';
         res.redirect('./scene/family');
     } else {
+        renderParam.id = 'first';
         renderParam.sentence_title = '留守シーンでHappy Homeを体験していきます。';
         renderParam.sentence = '今、奥さんは子供たちと年末年始のため実家に帰郷しています。' +
             '<br>仕事熱心なお父さんは仕事追われているため、一人でお留守番をしています。' +
             '<br>Happy Homeは家族のために仕事を頑張っているために旦那さんを幸せにしようと考えました。' +
-            '<br>ここで、帰宅直前のお父さんの感情を測定してみましょう。';
-        renderParam.next_btn = '感情測定を開始する。';
-        renderParam.next_btn_href = '../emotion?id=1';
+            '<br>まずは、帰宅しましょう。';
+        renderParam.next_btn = '家にかえる。';
+        renderParam.next_btn_href = '../animation/out/comeback';
         res.redirect('./scene/out');
     }
 }
@@ -154,18 +151,17 @@ exports.choice = (req, res) => {
     // res.redirect('../../');
 }
 exports.familyScene = (req, res) => {
+    renderParam.is_family_scene = true;
     res.render('management/portal/family_scene', renderParam);
 }
 
 exports.outScene = (req, res) => {
+    renderParam.is_family_scene = false;
     res.render('management/portal/out_scene', renderParam);
 }
 exports.emotion = async (req, res) => {
-    await beginAnimation.beginEmotion();
-    const animation = new utilAnimation();
-    animation.start({ socket: req.socket });
-    const emotion = new Emotion(5, path.join(__dirname, '../../views/public/images/'));
-    await emotion.start().catch(err => console.error(err));
+    const emotionCamera = new EmotionCamera();
+    await emotionCamera.start({ socket: req.socket });
     emotionSocket({ socket: req.socket });
 
     renderParam.sentence_title = '感情読み取りが完了しました。';
@@ -185,6 +181,13 @@ exports.emotion = async (req, res) => {
                 renderParam.sentence += '次は、測定した感情を元に家族の様子を見てみましょう';
                 renderParam.next_btn = '家族の様子を見る。';
                 renderParam.next_btn_href = '../animation/start';
+                if (renderParam.is_family_scene === false) {
+                    // 留守シーン用
+                    renderParam.sentence += 'お父さんは今から、晩御飯を食べるようです。<br>' +
+                        'その様子を見てみましょう';
+                    renderParam.next_btn = '晩御飯の様子を見る。';
+                    renderParam.next_btn_href = '../animation/out/dinner';
+                }
                 break;
             }
             case '2': {
@@ -243,6 +246,14 @@ exports.suggestionStart = async (req, res) => {
         renderParam.sentence = '今回の提案は家族が家の中にいるということで、<br>' +
             '家の中からできる提案のみに絞っています。<br>' +
             'Happy Homeが提案した結果の感情読み取りを開始する。';
+        renderParam.next_btn = '感情読み取りを開始する。';
+        renderParam.next_btn_href = `../emotion?id=${renderParam.id}-end`;
+    }
+    if (renderParam.is_family_scene === false) {
+        // 留守シーん用の提案
+        renderParam.sentence = '今回の提案は、帰郷している家族に対しての通知提案と<br>' +
+            '家に一人でいるお父さんに対してできる提案に絞っています。' +
+            'Happy Homeが提案した結果を確認したあとは、お父さんの感情を読み取ってみましょう。';
         renderParam.next_btn = '感情読み取りを開始する。';
         renderParam.next_btn_href = `../emotion?id=${renderParam.id}-end`;
     }
@@ -329,3 +340,32 @@ exports.dinner = async (req, res) => {
     res.redirect(req.header('referer'));
 }
 
+exports.outHomeComeback = async (req, res) => {
+    // TODO 留守シーン用の帰宅アニメーションに帰る。
+    await beginAnimation.beginComebackHome();
+    const animation = new utilAnimation();
+    animation.start({ socket: req.socket });
+    renderParam.id = 'home_comeback';
+    renderParam.sentence_title = 'おかえりなさい！';
+    renderParam.sentence = '仕事に追われたお父さんはようやく、家にかえることができました。' +
+        'Happy Homeは帰宅時に、家族の感情を読み取り、最適な提案を行います。<br>' +
+        '早速、感情読み取りを開始しましょう。';
+    renderParam.next_btn = '感情読み取りを開始する。';
+    renderParam.next_btn_href = '../emotion?id=1';
+    res.redirect(req.header('referer'));
+}
+
+exports.outDinner = async (req, res) => {
+    const result = await homeDinnerAnimation().catch(err => console.error(err));
+    const animation = new utilAnimation();
+    animation.start({ socket: req.socket });
+    renderParam.id = `${result}`;
+    renderParam.sentence_title = '帰宅後のお父さんの晩御飯の様子は確認できました';
+    renderParam.sentence = '今はお父さん一人でご飯を食べています。<br>' +
+        '留守シーンでは、離れている家族にも、モバイルアプリを通じて、提案できるところが特徴的です。<br>' +
+        'また、感情によっては、おしゃべりくんやリフォームくんが家にいるお父さんにも直接される場合もあります。'
+    renderParam.next_btn = '提案を開始する。';
+    renderParam.next_btn_href = '../suggestion';
+    console.info(renderParam)
+    res.redirect(req.header('referer'));
+}
