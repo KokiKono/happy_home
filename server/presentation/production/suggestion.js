@@ -73,6 +73,7 @@ export default class suggestion {
 
                     // family_structure_id取得
                     const toType = modelSuggestion.to_type;
+                    const fromType = modelSuggestion.from_type;
                     let title = '';
                     switch (descJudgments[0].key_name) {
                         case 'anger': {
@@ -87,6 +88,7 @@ export default class suggestion {
                             title = this.DISGUST_TITLE;
                             break;
                         }
+
                         case 'fear': {
                             title = this.FEAR_TITLE;
                             break;
@@ -147,19 +149,24 @@ export default class suggestion {
                     } else {
                         // 対象家族に通知を送る
                         const familyStructure = familys.find(element => element.type === toType);
-                        if (typeof familyStructure === 'undefined') return;
+                        if (typeof  familyStructure === 'undefined') return;
                         title = title.replace('toType', familyStructure.name);
                         // t_noticeにデータ挿入
-                        console.info('insert notice')
-                        const insertId = await suggestionDao.insertNoticeData(
-                            familyStructure.id,
-                            title,
-                            this.SAMPLE_NOTICE_CONTENTS,
-                        ).catch(err => reject(err));
-                        suggestionIds.mobile.forEach(async (item) => {
-                            await suggestionDao
-                                .insertNoticeSuggestion(insertId, item.suggestion_id);
-                        });
+                        await Promise.all(familys.map(async (familyItem) => {
+                            if (fromType !== 'ALL') {
+                                if (familyItem.from_type !== fromType) return;
+                            }
+                            const insertId = await suggestionDao.insertNoticeData(
+                                familyItem.id,
+                                title,
+                                this.SAMPLE_NOTICE_CONTENTS,
+                            ).catch(err => reject(err));
+                            suggestionIds.mobile.forEach(async (item) => {
+                                await suggestionDao
+                                    .insertNoticeSuggestion(insertId, item.suggestion_id)
+                                    .catch(err => console.error(err));
+                            });
+                        }));
                     }
                 }
                 // ライト

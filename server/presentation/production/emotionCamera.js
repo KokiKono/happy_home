@@ -65,11 +65,11 @@ export default class emotionCamera {
             app.socket.io.emit('url', 'http://' + this.config.server.url + ':8080/brawser_camera/emotion_camera.html');
 
             const beginTime = this.now;
-            this.watchDir().then(async (result) => {
+            return this.watchDir().then(async (result) => {
                 console.warn('感情読み取り前！！！！！！！！！！！')
                 app.socket.io.emit('url', 'http://' + this.config.server.url + ':8080/animation/emotion_scaning/index.html');
                 const emotion = new Emotion(10, path.join(__dirname, '../../views/public/images/'))
-                result = await emotion.start().catch((err) => {
+                result = await emotion.start(beginTime).catch((err) => {
                     console.log('emotion err!!!!!!!1');
                     console.log(err);
                     throw err;

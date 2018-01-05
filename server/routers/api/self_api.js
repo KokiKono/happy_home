@@ -227,35 +227,53 @@ router.put('/notice_list/:id/:suggestionId/:suggestionDetailId', async (req, res
         res.sendStatus(404)
         return;
     }
-    const suggestionModel = new SuggestionModel();
+    let suggestionModel = new SuggestionModel();
     const isReceiving = await suggestionModel.isReceiving(noticeId, suggestionId);
     if (!isReceiving) {
         res.sendStatus(409);
         return;
     }
     suggestionModel.toggleSuggestionTask(suggestionDetailId, noticeId, req.body.body.is_done)
-        .then(() => res.sendStatus(204))
+        .then(() => {
+            suggestionModel.selectSuggestionDone(noticeId)
+                .then((result) => {
+                    console.warn(result)
+                    let flg = true;
+                    for (let i = 0; i < result.length; i++) {
+                        if (result[i].done != true) {
+                            flg = false;
+                        }
+                    }
+
+                    if (flg === true) {
+                        // for (let i = 0; i < result.length; i++) {
+                        suggestionModel.insertLovePoint(result[0].family_structure_id, result[0].point, noticeId)
+                        // }
+                    }
+                })
+            res.sendStatus(204);
+        })
         .catch((err) => {
             res.status(500);
             res.json(err);
         });
-
-    suggestion.selectSuggestionDone(noticeId)
-        .then((result) => {
-            let flg = true;
-            for (let i = 0; i < result.results.length; i++) {
-                if(result.results[i].done != true){
-                    flg = false;
-                }
-            }
-
-            if(flg === true){
-                for (let i = 0; i < result.results.length; i++) {
-                    suggestion.insertLovePoint(result.results[i].family_structure_id, result.results[i].point, noticeId)
-                }
-            }
-
-    })
+    // suggestionModel = new SuggestionModel();
+    // suggestionModel.selectSuggestionDone(noticeId)
+    //     .then((result) => {
+    //     console.warn(result)
+    //         let flg = true;
+    //         for (let i = 0; i < result.length; i++) {
+    //             if (result[i].done != true) {
+    //                 flg = false;
+    //             }
+    //         }
+    //
+    //         if (flg === true) {
+    //             // for (let i = 0; i < result.length; i++) {
+    //             suggestionModel.insertLovePoint(result[0].family_structure_id, result[0].point, noticeId)
+    //             // }
+    //         }
+    // })
 
 });
 

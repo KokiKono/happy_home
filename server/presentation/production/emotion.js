@@ -52,7 +52,7 @@ export default class Emotion {
             }
         });
     }
-    start() {
+    start(beginTime) {
         return new Promise(async (resolve, reject) => {
             try {
                 const familyDao = new FamilyDao();
@@ -63,7 +63,7 @@ export default class Emotion {
                 const faceClient = new oxford.Client(configFile['api-key'].faceAPI, configFile.azureApi.region.faceAPI);
                 const emotionClient = new oxford.Client(configFile['api-key'].emotionAPI, configFile.azureApi.region.emotionAPI);
                 // カメラを起動して複数枚写真を撮る。
-                const camera = new Camera(this.imageNum, this.imagePath);
+                const camera = new Camera(this.imageNum, this.imagePath, beginTime);
                 // await camera.take();
                 // 撮った写真の取得
                 const files = await camera.readCarefullySelectedImageFiles();
@@ -123,6 +123,7 @@ export default class Emotion {
                         }));
                         return true;
                 }));
+                console.warn('感情読み取り完了')
                 return resolve('success');
             } catch (err) {
                 return reject(err);
