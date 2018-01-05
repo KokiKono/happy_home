@@ -257,5 +257,46 @@ export default class SuggestionModel extends Dao {
     selectAllEmotion() {
         return super.query('SELECT * FROM t_emotion');
     }
+
+
+    selectSuggestionDone(noticeId) {
+        if (this.isEnd) super.createConnection();
+        return new Promise((resolve, reject) => {
+            this.connection.query(
+                'select t_st.done, m_s.point, t_n.family_structure_id from t_suggestion_task t_st '
+                + 'inner join m_suggestion_detail m_sd on t_st.suggestion_detail_id = m_sd.id '
+                + 'inner join m_suggestion m_s on m_sd.suggestion_id = m_s.id '
+                + 'inner join t_notice t_n on t_st.notice_id = t_n.id '
+                + 'where t_st.notice_id = ?',
+                [noticeId],
+                (queryErr, results) => {
+                    if (queryErr) reject(queryErr);
+                    resolve(results);
+                },
+            );
+        });
+    }
+
+    insertLovePoint(family_structure_id, point, notice_id) {
+        if (this.isEnd) super.createConnection();
+        return new Promise((resolve, reject) => {
+            this.connection.beginTransaction((transactionErr) => {
+                if (transactionErr) reject(transactionErr);
+                this.connection.query(
+                    'insert into t_love_number(family_structure_id, point, notice_id) values(?, ?, ?)',
+                    [family_structure_id, point, notice_id],
+                    (queryErr) => {
+                        if (queryErr) {
+                            this.connection.rollback();
+                            reject(queryErr);
+                        } else {
+                            this.connection.commit();
+                            resolve('success');
+                        }
+                    },
+                );
+            });
+        });
+    }
 }
 
