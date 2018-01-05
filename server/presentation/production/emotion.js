@@ -64,7 +64,7 @@ export default class Emotion {
                 const emotionClient = new oxford.Client(configFile['api-key'].emotionAPI, configFile.azureApi.region.emotionAPI);
                 // カメラを起動して複数枚写真を撮る。
                 const camera = new Camera(this.imageNum, this.imagePath);
-                await camera.take();
+                // await camera.take();
                 // 撮った写真の取得
                 const files = await camera.readCarefullySelectedImageFiles();
                 // 撮った写真をfaceAPIに投げる。

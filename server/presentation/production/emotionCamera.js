@@ -8,7 +8,7 @@ import * as fs from 'fs';
 import Async from 'async';
 import momentTimezone from 'moment-timezone';
 import moment from 'moment';
-import CreateFamilyPreparation from './createFamilyPreparation';
+import Emotion from './emotion';
 import configFile from '../../../config.json';
 
 require('waitjs');
@@ -67,8 +67,12 @@ export default class emotionCamera {
             const beginTime = this.now;
             this.watchDir().then(async (result) => {
                 console.warn('感情読み取り前！！！！！！！！！！！')
-                const createFamilyPreparation = new CreateFamilyPreparation(10, path.join(__dirname, '../../views/public/images/'));
-                result = await createFamilyPreparation.start(beginTime).catch(err => console.log(err));
+                const emotion = new Emotion(10, path.join(__dirname, '../views/public/images/'))
+                result = await emotion.start().catch((err) => {
+                    console.log('emotion err!!!!!!!1');
+                    console.log(err);
+                    throw err;
+                });
 
                 return resolve(result);
             }).catch((error) => {
