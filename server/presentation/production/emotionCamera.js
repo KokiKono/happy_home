@@ -1,5 +1,5 @@
 /**
- * ブラウザカメラ起動用
+ * ブラウザカメラ(感情取得)起動用
  * Created by I.Asakawa on 2018/01/03.
  */
 
@@ -13,7 +13,7 @@ import configFile from '../../../config.json';
 
 require('waitjs');
 
-export default class brawserCamera {
+export default class emotionCamera {
 
     constructor() {
         this.SCOPE_DIR = './views/public/images/';
@@ -46,7 +46,7 @@ export default class brawserCamera {
                         if (diffSec > 0) {
                             fileList.push(`${this.SCOPE_DIR}${file}`);
                         }
-                        if (fileList.length >= 10) {
+                        if (fileList.length >= 5) {
                             clear('watch_dir')
                             return resolve('success');
                         }
@@ -62,11 +62,11 @@ export default class brawserCamera {
         return new Promise(async (resolve, reject) => {
 
             //メイン画面の切り替え
-            app.socket.io.emit('url', 'http://' + this.config.server.url + ':8080/brawser_camera/create_family_camera.html');
+            app.socket.io.emit('url', 'http://' + this.config.server.url + ':8080/brawser_camera/emotion_camera.html');
 
             const beginTime = this.now;
             this.watchDir().then(async (result) => {
-                console.warn('作成前！！！！！！！！！！！')
+                console.warn('感情読み取り前！！！！！！！！！！！')
                 const createFamilyPreparation = new CreateFamilyPreparation(10, path.join(__dirname, '../../views/public/images/'));
                 result = await createFamilyPreparation.start(beginTime).catch(err => console.log(err));
 
