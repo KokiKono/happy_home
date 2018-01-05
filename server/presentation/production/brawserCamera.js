@@ -67,9 +67,10 @@ export default class brawserCamera {
             const beginTime = this.now;
             this.watchDir().then(async (result) => {
                 console.warn('作成前！！！！！！！！！！！')
+                app.socket.io.emit('url', 'http://' + this.config.server.url + ':8080/animation/create_family_camera/index.html');
                 const createFamilyPreparation = new CreateFamilyPreparation(10, path.join(__dirname, '../../views/public/images/'));
                 result = await createFamilyPreparation.start(beginTime).catch(err => console.log(err));
-
+                app.socket.io.emit('url', 'http://' + this.config.server.url + ':8080/animation/emotion_scaning_finish/index.html');
                 return resolve(result);
             }).catch((error) => {
               console.log('err ' + error);
