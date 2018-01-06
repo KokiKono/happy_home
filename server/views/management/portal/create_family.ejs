@@ -1,3 +1,80 @@
+<style type="text/css">
+
+    form {
+        overflow: hidden;
+        height: 1040px;
+        border: 1px solid #0A0A0A;
+    }
+
+    .family_list {
+        height: 940px;
+        margin-bottom: 25px;
+        overflow: auto;
+    }
+
+    .recode {
+        clear: both;
+        display: block;
+        overflow: hidden;
+        margin: 20px 10px;
+        width: 98%;
+    }
+
+    .face_img {
+        border-radius: 25%;
+        float: left;
+    }
+
+    .input {
+        float: left;
+        width: 70%;
+        height: 200px;
+    }
+
+    .input select {
+        height: 40px;
+        width: 95%;
+        margin: 23px;
+        font-size: 150%;
+    }
+
+    .input p {
+        height: 40px;
+        width: 95%;
+        font-size: 150%;
+        margin: 0 20px;
+    }
+
+    .input input {
+        height: 40px;
+        width: 80%;
+        margin: 20px;
+        font-size: 150%;
+        border-radius: 3px;
+    }
+
+    .btn {
+        clear: both;
+        display: block;
+        border-radius: 5px;
+        border-bottom: 1px solid #627ce3;
+        width: 80%;
+        font-size: 160%;
+        padding: 10px;
+        background: #405dca;
+        color: #fff;
+        text-align: center;
+        text-decoration: none;
+        margin:0 auto;
+    }
+
+    .btn:hover {
+        margin: auto;
+        text-decoration: none;
+        background: #364ea5;
+    }
+
+</style>
 <form method="post" action="./create_family">
     <!-- 家族作画面のレンダリング -->
     <%
@@ -7,28 +84,24 @@
     <% if (i % 2 == 0) { %>
     <div class="family_list">
         <% } %>
-        <div class="col-md-6">
+        <div class="recode">
             <input type="hidden" name="face_id" value="<%= value.face_id %>">
-            <table>
-                <tr>
-                    <th rowspan="2" class="face"><img src="../../public/images/<%= value.face_id %>.jpg" alt="" class="face_img" width="150" height="150"></th>
-                    <td>
-                        <select name="type" class="form-control" id="type<%= i %>">
-                            <option value="">-----</option>
-                            <option value="父">おとうさん</option>
-                            <option value="母">おかあさん</option>
-                            <option value="娘">むすめ</option>
-                            <option value="息子">むすこ</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        なまえ<br>
-                        <input type="text" name="name" class="form-control" class="name" id="name<%= i %>">
-                    </td>
-                </tr>
-            </table>
+
+            <div class="image">
+                <img src="../../public/images/<%= value.face_id %>.jpg" alt="" class="face_img" width="200" height="200">
+            </div>
+            <div class="input">
+                <select name="type" class="form-control" id="type<%= i %>">
+                    <option value="">-----</option>
+                    <option value="父">おとうさん</option>
+                    <option value="母">おかあさん</option>
+                    <option value="娘">むすめ</option>
+                    <option value="息子">むすこ</option>
+                </select>
+
+                <p>名前<input type="text" name="name" class="form-control" class="name" id="name<%= i %>"></p>
+
+            </div>
         </div>
         <% if (i % 2 == 1) { %>
     </div>
@@ -38,9 +111,6 @@
         i++;
     });
     %>
-    <div class="row">
-        <div class="col-md-12 text-center">
-            <input type='submit' id="send" class="btn" value="送信">
-        </div>
-    </div>
+    <input type='submit' id="send" class="btn" value="送信">
+
 </form>
