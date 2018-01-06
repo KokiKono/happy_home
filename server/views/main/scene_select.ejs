@@ -89,9 +89,9 @@
                 $('#loader-bg ,#loader').height(h).css('display','block');
             });
             //10秒たったら強制的にロード画面を非表示
-            $(function(){
-                setTimeout('stopload()',10000);
-            });
+//            $(function(){
+//                setTimeout('stopload()',10000);
+//            });
         }
 //        $(function() {
 //            var h = $(window).height();
@@ -116,7 +116,12 @@
     </script>
 </head>
 <body>
-
+    <div id="loader-bg">
+        <div id="loader">
+            <img src="img-loading.gif" width="80" height="80" alt="Now Loading..." />
+            <p>Now Loading...</p>
+        </div>
+    </div>
     <!-- top navigation -->
     <nav class="navbar navbar-dark" style="background-color:rgb(214,56,99)">
         <!-- Image and text -->
@@ -154,33 +159,38 @@
 <script type="text/javascript">
     $(function() {
         $('#family').click(function() {
+            var audio = new Audio('http://' + location.hostname + ':8080/main/sound/click.mp3');
+            audio.play();
             loading();
-            $.ajax({
-                type:'POST',
-                url:'<%= api_url %>',
-                data: { "type" : 0 },
-                dataType: 'json',
-            })
-            .done(function (response) {
-                console.log('成功');
-            })
-            .fail(function(){
-                console.log('失敗');
-            });
+            <!--$.ajax({-->
+                <!--type:'POST',-->
+                <!--url:'<%= api_url %>',-->
+                <!--data: { "type" : 0 },-->
+                <!--dataType: 'json',-->
+            <!--})-->
+            <!--.done(function (response) {-->
+                <!--console.log('成功');-->
+            <!--})-->
+            <!--.fail(function(){-->
+                <!--console.log('失敗');-->
+            <!--});-->
         });
         $('#absence').click(function() {
-            $.ajax({
-                type:'POST',
-                url:'<%= api_url %>',
-                data: { "type" : 1 },
-                dataType: 'json',
-            })
-            .done(function (response) {
-                console.log('成功');
-            })
-            .fail(function(){
-                console.log('失敗');
-            });
+            var audio = new Audio('http://' + location.hostname + ':8080/main/sound/click.mp3');
+            audio.play();
+            loading();
+            <!--$.ajax({-->
+                <!--type:'POST',-->
+                <!--url:'<%= api_url %>',-->
+                <!--data: { "type" : 1 },-->
+                <!--dataType: 'json',-->
+            <!--})-->
+            <!--.done(function (response) {-->
+                <!--console.log('成功');-->
+            <!--})-->
+            <!--.fail(function(){-->
+                <!--console.log('失敗');-->
+            <!--});-->
         });
     });
 </script>

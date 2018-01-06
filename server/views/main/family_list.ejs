@@ -80,9 +80,9 @@
                 $('#loader-bg ,#loader').height(h).css('display','block');
             });
             //10秒たったら強制的にロード画面を非表示
-            $(function(){
-                setTimeout('stopload()',10000);
-            });
+//            $(function(){
+//                setTimeout('stopload()',10000);
+//            });
         }
 //        $(function() {
 //            var h = $(window).height();
@@ -220,6 +220,8 @@
             });
         });
         $('[name=type]').change(function() {
+            var audio = new Audio('http://' + location.hostname + ':8080/main/sound/click.mp3');
+            audio.play();
             var name_id = '#name' + $(this).attr("id").slice(-1);
             var typeColor = {
                 '父': 'red',
