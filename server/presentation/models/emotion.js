@@ -16,7 +16,7 @@ export default class Emotion {
     getLatestEmotions(familyId) {
         return new Promise((resolve, reject) => {
             this.connection.query(
-                'SELECT * FROM t_emotion WHERE family_id = ?',
+                'SELECT * FROM t_emotion WHERE family_id = ? ORDER BY timestamp DESC LIMIT 10',
                 [familyId],
                 (queryErr, results) => {
                     if (queryErr) reject(queryErr);
@@ -119,6 +119,23 @@ export default class Emotion {
                 result.push(resultItem);
             });
             resolve(result);
+        });
+    }
+
+    getLovePoint(familyId) {
+        return new Promise((resolve, reject) => {
+            this.connection.query(
+                'select sum(t_ln.point) as point from t_love_number t_ln '
+                + 'inner join t_family_structure t_fs on t_ln.family_structure_id = t_fs.id '
+                + 'inner join m_family m_f on t_fs.family_id = m_f.id '
+                + 'where m_f.id = ?',
+                [familyId],
+                (queryErr, results) => {
+                    console.error(results)
+                    if (queryErr) reject(queryErr);
+                    resolve(results);
+                },
+            );
         });
     }
 }

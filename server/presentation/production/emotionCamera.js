@@ -46,7 +46,8 @@ export default class emotionCamera {
                         if (diffSec > 0) {
                             fileList.push(`${this.SCOPE_DIR}${file}`);
                         }
-                        if (fileList.length >= 5) {
+                        console.log(fileList)
+                        if (fileList.length >= 10) {
                             clear('watch_dir')
                             return resolve('success');
                         }

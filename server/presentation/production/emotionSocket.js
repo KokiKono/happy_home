@@ -16,70 +16,8 @@ const run = async (app) => {
         // 最新感情取得
         const emotionModel = new EmotionModel();
         const latestEmotions = await emotionModel.getLatestEmotions(latestFamily[0].id);
-        // // console.log(latestEmotions[0])
-        // // 個別感情テーブルの総和
-        // const modelEmotions = [];
-        // // 一時感情
-        // const tmpEmotions = [];
-        // await Promise.all(latestEmotions.map(async (item) => {
-        //     const emotions = await emotionModel.getEmotionIndividuals(item.id);
-        //     emotions.forEach((emotion) => {
-        //         // すでにfaceIdがtmpEmotionsにはいっているか検索する
-        //         const findEmotion = tmpEmotions.find((tmp) => {
-        //             if (tmp.face_id === emotion.face_id) return true;
-        //             return false;
-        //         });
-        //         // console.log(tmpIndex);
-        //         if (findEmotion) {
-        //             tmpEmotions[tmpEmotions.indexOf(findEmotion)]
-        //                 .jsonDataList.push(emotion.json_data);
-        //             return;
-        //         }
-        //         tmpEmotions.push({
-        //             face_id: emotion.face_id,
-        //             jsonDataList: [emotion.json_data],
-        //         });
-        //     });
-        // }));
-        // // console.log(tmpEmotions);
-        // // faceIdごとに合算する
-        // tmpEmotions.forEach((tmpEmotion) => {
-        //     const modelJsonData = {};
-        //     const modelJsonDataKeysLength = {};
-        //     tmpEmotion.jsonDataList.forEach((strJson) => {
-        //         const jsonData = JSON.parse(strJson);
-        //         const jsonEmotion = jsonData.emotion.scores;
-        //         const jsonDataKeys = Object.keys(jsonEmotion);
-        //         const modelJSONDataKeys = Object.keys(modelJsonData);
-        //         // console.log(jsonDataKeys)
-        //         jsonDataKeys.forEach((key) => {
-        //             // console.log(modelJSONDataKeys.indexOf(key));
-        //             if (modelJSONDataKeys.indexOf(key) === -1) {
-        //                 // modelJsonData = Object.assign(modelJsonData, jsonEmotion[key]);
-        //                 // console.log(key)
-        //                 modelJsonData[key] = jsonEmotion[key];
-        //                 modelJsonDataKeysLength[key] = 1;
-        //             } else {
-        //                 // console.log(modelJSONDataKeys.indexOf(key));
-        //                 modelJsonData[key] += jsonEmotion[key];
-        //                 modelJsonDataKeysLength[key] += 1;
-        //             }
-        //             // console.log('modelJsonData',modelJsonData)
-        //         });
-        //     });
-        //     // avg 処理
-        //     Object.keys(modelJsonData)
-        //         .forEach((element) => {
-        //             modelJsonData[element] /= modelJsonDataKeysLength[element];
-        //             return true;
-        //         });
-        //     modelEmotions.push({
-        //         face_id: tmpEmotion.face_id,
-        //         emotion: modelJsonData,
-        //         modelJsonDataKeysLength,
-        //     });
-        // });
         const modelEmotions = await emotionModel.getLatestEmotionAVGWidthFaceId(latestFamily[0].id);
+        console.log(modelEmotions)
         // ソケットで飛ばすデータ
         const socketGrafData = {};
         const socketImagedata = [];
@@ -105,11 +43,13 @@ const run = async (app) => {
             return true;
         }));
 
-        //幸せ指数の合計値を取得
-        const lovePoint = await emotionModel.getLovePoint(latestFamily[0].id);
+        const emotionModel2 = new EmotionModel();
+        const lovePoint = await emotionModel2.getLovePoint(latestFamily[0].id)
+            .catch(err => console.error(err));
+        console.warn(lovePoint)
         socketGrafData['幸せ指数'] = {
             num: lovePoint[0].point,
-        };// 仮
+        };
         console.log('socketGrafData')
         console.log(socketGrafData)
         // setInterval(() => {
@@ -123,5 +63,6 @@ const run = async (app) => {
         return err;
     }
 }
+
 
 export default run;

@@ -162,6 +162,7 @@
         });
 
         socket.on('graph update', (datas) => {
+            console.log(datas);
             // 一番古いデータ削除
 
             if (chart.data.labels.length >= 10) {

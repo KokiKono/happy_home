@@ -149,18 +149,24 @@ export default class suggestion {
                     } else {
                         // 対象家族に通知を送る
                         const familyStructure = familys.find(element => element.type === toType);
-                        if (typeof  familyStructure === 'undefined') return;
+                        if (typeof familyStructure === 'undefined') return;
                         title = title.replace('toType', familyStructure.name);
                         // t_noticeにデータ挿入
                         await Promise.all(familys.map(async (familyItem) => {
                             if (fromType !== 'ALL') {
-                                if (familyItem.from_type !== fromType) return;
+                                if (familyItem.type !== fromType) {
+                                    console.warn('skip');
+                                    return;
+                                }
                             }
                             const insertId = await suggestionDao.insertNoticeData(
                                 familyItem.id,
                                 title,
                                 this.SAMPLE_NOTICE_CONTENTS,
-                            ).catch(err => reject(err));
+                            ).catch(err => {
+                                console.error(err);
+                                reject(err);
+                            });
                             suggestionIds.mobile.forEach(async (item) => {
                                 await suggestionDao
                                     .insertNoticeSuggestion(insertId, item.suggestion_id)

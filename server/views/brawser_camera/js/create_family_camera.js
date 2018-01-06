@@ -200,7 +200,7 @@ $(function() {
                 processData: false,
                 cache: false,
             }).then(function() {
-                if (count === 10) {
+                if (count === 12) {
                     var message = '撮影が終了しました。';
                     document.getElementById("message").innerHTML = message;
                 }

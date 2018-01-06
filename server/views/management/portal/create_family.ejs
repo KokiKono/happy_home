@@ -91,7 +91,7 @@
                 <img src="../../public/images/<%= value.face_id %>.jpg" alt="" class="face_img" width="200" height="200">
             </div>
             <div class="input">
-                <select name="type" class="form-control" id="type<%= i %>">
+                <select name="type" class="form-control select" id="type<%= i %>">
                     <option value="">-----</option>
                     <option value="父">おとうさん</option>
                     <option value="母">おかあさん</option>
@@ -112,5 +112,21 @@
     });
     %>
     <input type='submit' id="send" class="btn" value="送信">
-
 </form>
+<script type="text/javascript">
+    $(function(){
+        $('[name=type]').change(function() {
+            var name_id = '#name' + $(this).attr("id").slice(-1);
+            var typeColor = {
+                '父': 'red',
+                '母': 'blue',
+                '息子': 'green',
+                '娘': 'orange'
+            }
+            $('.face img').css('border', `5px solid ${typeColor[$(this).val()]}`);
+            if($(name_id).val() == '') {
+                $(name_id).val($(this).val());
+            }
+        });
+    })
+</script>
