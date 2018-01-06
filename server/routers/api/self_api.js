@@ -12,6 +12,7 @@ import PointsModel from '../../models/points';
 import SceneModel from '../../models/scene';
 import AnimationModel from '../../models/animations';
 import LoveNumberModel from '../../models/loveNumber';
+import Led from '../../models/led';
 
 const router = express.Router();
 router.use(expressFileUplpad());
@@ -370,6 +371,14 @@ router.post('/event/animations', async (req, res) => {
             res.json(err);
         });
 });
+
+router.post('/event/iot', (req, res) => {
+    const led = new Led(2);
+    led.on();
+    led.setBrightness(led.MAX_BRIGHTNESS);
+    led.white();
+    led.close();
+})
 
 router.get('/awards', async (req, res, next) => {
     const loveNumberModel = new LoveNumberModel();
