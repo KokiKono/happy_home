@@ -4,12 +4,16 @@ video, canvas {
 	position: absolute;
 }
 
-#video, #canvas {
-	width: 1200px;
-	height: 800px;
+#video {
+	width: 1920px;
+	height: 1080px;
 	z-index: -9999;
 }
-
+#canvas {
+	width: 1920px;
+	height: 1080px;
+	z-index: -9999;
+}
 #message {
 	color: red;
 	font-size: 28px;
