@@ -90,9 +90,16 @@ exports.indexParam = async (req, res, next) => {
             // renderParam.id = 'create_family';
             // return next();
         }
+    } else if (id === '3') {
+        renderParam.main = null;
+        renderParam.id = 'create_family';
+        return next();
     } else {
         return next();
     }
+}
+exports.postCreateFamily = (req, res) => {
+    res.redirect('./?id=3');
 }
 exports.root = (req, res) => {
     renderParam.id = 'root';
