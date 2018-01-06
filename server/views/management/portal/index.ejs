@@ -196,9 +196,9 @@
                 <div class="tree">
                     <ul id="ul_tree">
                         <li id="ul_tree_li">
-                            <a href="./?id=0" id="clean">クリーン処理</a>
-                            <ul>
-                                <li>
+                            <!--<a href="./?id=0" id="clean">クリーン処理</a>-->
+                            <!--<ul>-->
+                                <!--<li>-->
                                     <a href="./?id=1" id="create_family_preparation">家族作成前準備</a>
                                     <ul>
                                         <li>
@@ -216,8 +216,8 @@
                                             </ul>
                                         </li>
                                     </ul>
-                                </li>
-                            </ul>
+                                <!--</li>-->
+                            <!--</ul>-->
                         </li>
                     </ul>
                 </div>
@@ -225,6 +225,52 @@
         </div>
     </div>
     <div id="description">
+        <% if (typeof family_list != 'undefined') { %>
+        <!-- 家族作画面のレンダリング -->
+        <%
+            var i = 0;
+        family_list.forEach((value, key) => {
+        %>
+        <% if (i % 2 == 0) { %>
+        <div class="family_list">
+            <% } %>
+            <div class="col-md-6">
+                <input type="hidden" name="face_id" value="<%= value.face_id %>">
+                <table>
+                    <tr>
+                        <th rowspan="2" class="face"><img src="../../public/images/<%= value.face_id %>.jpg" alt="" class="face_img" width="150" height="150"></th>
+                        <td>
+                            <select name="type" class="form-control" id="type<%= i %>">
+                                <option value="">-----</option>
+                                <option value="父">おとうさん</option>
+                                <option value="母">おかあさん</option>
+                                <option value="娘">むすめ</option>
+                                <option value="息子">むすこ</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            なまえ<br>
+                            <input type="text" name="name" class="form-control" class="name" id="name<%= i %>">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <% if (i % 2 == 1) { %>
+        </div>
+        <% } %>
+
+        <%
+            i++;
+        });
+        %>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <input type='button' id="send" class="btn" value="送信">
+            </div>
+        </div>
+        <% } else { %>
         <div class="content">
 
         </div>
@@ -257,6 +303,7 @@
 
             </a>
         </div>
+        <% } %>
     </div>
 </main>
 <% include ./footer %>

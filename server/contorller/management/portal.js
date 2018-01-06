@@ -16,10 +16,14 @@ import FamilyModel from '../../presentation/models/family';
 import Presentation from '../../presentation/models/presentation';
 import BrawserCamera from '../../presentation/production/brawserCamera';
 import EmotionCamera from '../../presentation/production/emotionCamera';
+import FamilyListModel from '../../models/family_list';
+import * as fs from 'fs';
+import configFile from '../../../config.json';
 
-let renderId = '';
+const config = configFile[process.env.NODE_ENV];
+
 const renderParam = {
-    id: renderId,
+    id: '',
     sentence_title: '',
     sentence: '',
     next_btn: '',
@@ -28,6 +32,7 @@ const renderParam = {
     is_family_scene: false,
 };
 exports.indexParam = async (req, res, next) => {
+    renderParam.family_list = undefined;
     if (!req.param('id')) return next();
     const id = req.param('id');
     console.log(`id=${id}`);
@@ -35,28 +40,55 @@ exports.indexParam = async (req, res, next) => {
     if (id === '0') {
         {
             console.log('クリーン処理');
-            await beginAnimation.beginClean();
-            animation.start({socket: req.socket});
+            // await beginAnimation.beginClean();
+            // animation.start({socket: req.socket});
+            req.socket.io.emit('url', '../../animation/clean/index.html');
             const tmpFace = new TmpFace();
             await tmpFace.deleteAll().catch(e => console.error(e));
-            renderId = 'clean';
+            renderParam.id = 'clean';
+            console.info('cleaned')
             return next();
         }
     } else if (id === '1') {
         {
+            const tmpFace = new TmpFace();
+            await tmpFace.deleteAll().catch(e => console.error(e));
             console.log('家族作成前準備');
             const brawserCamera = new BrawserCamera();
             await brawserCamera.start({socket: req.socket});
-            renderId = 'create_family_preparation';
+            renderParam.id = 'create_family_preparation';
             return next();
         }
     } else if (id === '2') {
         {
             console.log('家族作成');
-            createFamily({socket: req.socket}).then(s => console.log(s))
-                .catch(e => console.error(e));
-            renderId = 'create_family';
-            return next();
+            // createFamily({socket: req.socket}).then(s => console.log(s))
+            //     .catch(e => console.error(e));
+            // 素材取得
+            const familyListModel = new FamilyListModel();
+            familyListModel.select()
+                .then((result) => {
+                    console.log(result.results);
+                    const main = result.results.filter((element) => {
+                        try {
+                            fs.statSync(path.join(__dirname, `../../views/public/images/${element.face_id}.jpg`));
+                            return element;
+                        } catch (er) {
+                            return false;
+                        }
+                    });
+                    console
+                        .warn(main);
+                    renderParam.id = 'create_family';
+                    renderParam.family_list = main;
+                    renderParam.api_url = `http://${config.server.url}:${config.server.port}/api/family_list`;
+                   return next();
+                })
+                .catch((err) => {
+                    next(err);
+                });
+            // renderParam.id = 'create_family';
+            // return next();
         }
     } else {
         return next();
@@ -101,14 +133,14 @@ exports.index = (req, res) => {
             renderParam.sentence = 'シーンを再選択したい場合は、右のフローチャートの<br>' +
                 '「シーン選択」を直接押してください。';
             renderParam.next_btn = '家族の再作成へ';
-            renderParam.next_btn_href = './id=0';
+            renderParam.next_btn_href = './';
             return res.render('management/portal/index', renderParam);
         }
         default: {
-            renderParam.sentence_title = 'システムエラー';
-            renderParam.sentence = '異常終了しました。<br>お手数ですが、前回のステージからやり直してください。';
-            renderParam.next_btn = '前回のステージへ';
-            renderParam.next_btn_href = './';
+            renderParam.sentence_title = 'はじめは、家族情報の作成を行います。';
+            renderParam.sentence = '家族情報で重要な顔情報を撮影します。';
+            renderParam.next_btn = '写真撮影に進む。';
+            renderParam.next_btn_href = './?id=1';
             return res.render('management/portal/index', renderParam); // eslint-disable-line
         }
     }
@@ -146,7 +178,7 @@ exports.scene = async (req, res, next) => {
 }
 exports.choice = (req, res) => {
     scene({ socket: req.socket }).catch(e => console.error(e));
-    renderId = 'scene_choice';
+    renderParam.id = 'scene_choice';
     res.redirect('../');
     // res.redirect('../../');
 }
