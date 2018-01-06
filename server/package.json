@@ -13,7 +13,8 @@
     "production": "NODE_ENV=production $(npm bin)/nodemon app.js --exec babel-node",
     "mock-run": "$(npm bin)/concurrently \"npm run mock\" \"cd ../swagger && npm run mock\"",
     "real-run": "$(npm bin)/concurrently \"npm run real\" \"cd ../swagger && npm run mock\"",
-    "production-run": "DEBUG=express:* $(npm bin)/concurrently \"npm run production\" \"cd ../swagger && npm run real\"",
+    "production-run": "$(npm bin)/concurrently \"npm run production\" \"cd ../swagger && npm run real\"",
+    "debug-production-run": "DEBUG=express:* $(npm bin)/concurrently \"npm run production\" \"cd ../swagger && npm run real\"",
     "debug-mock-run": "DEBUG=express:* $(npm bin)/concurrently \"npm run mock\" \"cd ../swagger && npm run mock\""
   },
   "author": "k.kono",
