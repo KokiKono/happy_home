@@ -48,6 +48,7 @@ p {
 	justify-content: center;
 	margin: 0;
 	position: static;
+	text-align: center;
 }
 
 p span#ttl {
@@ -204,7 +205,7 @@ span.leader {
 }
 
 span.jp-width{
-	width: 200px;
+	width: 164px;
 }
 
 span.us-width{

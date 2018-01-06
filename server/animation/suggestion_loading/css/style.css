@@ -35,13 +35,13 @@ p {
 	width: 90vw;
 	/*height: 60vh;*/
 	height: 90vh;
-	font-size: 15vw;
+	font-size: 200px;
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 	background-image: linear-gradient(90deg, #d8b95e, #d7d85e, #aed85e, #7fd85e, #5ed876, #5ed8cb, #5ec3d8, #5eb4d8, #5e8ed8, #5e67d8, #675ed8);
 	text-shadow: 0 2px 2px rgba(255, 255, 255, 0.3);
 	white-space: nowrap;
-	text-align: left;
+	text-align: center;
 	vertical-align: middle;
 	display: flex;
 	flex-flow: column nowrap;
@@ -204,7 +204,7 @@ span.leader {
 }
 
 span.jp-width{
-	width: 200px;
+	width: 139px;
 }
 
 span.us-width{
