@@ -227,7 +227,9 @@
     <div id="description">
         <% if (typeof family_list != 'undefined') { %>
             <% include ./create_family %>
-        <% } else { %>
+        <% } else if (typeof scene_select != 'undefined') { %>
+            <% include ./scene_select %>
+        <% } else {%>
         <div class="content">
 
         </div>

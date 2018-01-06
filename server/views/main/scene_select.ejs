@@ -162,35 +162,35 @@
             var audio = new Audio('http://' + location.hostname + ':8080/main/sound/click.mp3');
             audio.play();
             loading();
-            <!--$.ajax({-->
-                <!--type:'POST',-->
-                <!--url:'<%= api_url %>',-->
-                <!--data: { "type" : 0 },-->
-                <!--dataType: 'json',-->
-            <!--})-->
-            <!--.done(function (response) {-->
-                <!--console.log('成功');-->
-            <!--})-->
-            <!--.fail(function(){-->
-                <!--console.log('失敗');-->
-            <!--});-->
+            $.ajax({
+                type:'POST',
+                url:'<%= api_url %>',
+                data: { "type" : 0 },
+                dataType: 'json',
+            })
+            .done(function (response) {
+                console.log('成功');
+            })
+            .fail(function(){
+                console.log('失敗');
+            });
         });
         $('#absence').click(function() {
             var audio = new Audio('http://' + location.hostname + ':8080/main/sound/click.mp3');
             audio.play();
             loading();
-            <!--$.ajax({-->
-                <!--type:'POST',-->
-                <!--url:'<%= api_url %>',-->
-                <!--data: { "type" : 1 },-->
-                <!--dataType: 'json',-->
-            <!--})-->
-            <!--.done(function (response) {-->
-                <!--console.log('成功');-->
-            <!--})-->
-            <!--.fail(function(){-->
-                <!--console.log('失敗');-->
-            <!--});-->
+            $.ajax({
+                type:'POST',
+                url:'<%= api_url %>',
+                data: { "type" : 1 },
+                dataType: 'json',
+            })
+            .done(function (response) {
+                console.log('成功');
+            })
+            .fail(function(){
+                console.log('失敗');
+            });
         });
     });
 </script>

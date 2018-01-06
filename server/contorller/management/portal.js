@@ -2,6 +2,7 @@
  * Created by kokikono on 2017/12/15.
  */
 import * as path from 'path';
+import * as fs from 'fs';
 import TmpFace from '../../presentation/models/tmpFace';
 import createFamily from '../../presentation/production/createFamily';
 import scene from '../../presentation/production/scene';
@@ -17,8 +18,9 @@ import Presentation from '../../presentation/models/presentation';
 import BrawserCamera from '../../presentation/production/brawserCamera';
 import EmotionCamera from '../../presentation/production/emotionCamera';
 import FamilyListModel from '../../models/family_list';
-import * as fs from 'fs';
 import configFile from '../../../config.json';
+import FamilyDao from '../../models/family';
+import SceneModel from '../../models/scene';
 
 const config = configFile[process.env.NODE_ENV];
 
@@ -77,8 +79,6 @@ exports.indexParam = async (req, res, next) => {
                             return false;
                         }
                     });
-                    console
-                        .warn(main);
                     renderParam.id = 'create_family';
                     renderParam.family_list = main;
                     renderParam.api_url = `http://${config.server.url}:${config.server.port}/api/family_list`;
@@ -98,7 +98,21 @@ exports.indexParam = async (req, res, next) => {
         return next();
     }
 }
-exports.postCreateFamily = (req, res) => {
+exports.postCreateFamily = async (req, res) => {
+    console.warn(req.body);
+    // request body の作成
+    const body = [];
+    req.body.face_id.forEach((element, index) => {
+        const bodyItem = {};
+        bodyItem.face_id = element;
+        bodyItem.type = req.body.type[index];
+        bodyItem.name = req.body.name[index];
+        body.push(bodyItem);
+    });
+    console.warn(body);
+    const familyModel = new FamilyDao();
+    await familyModel.postFamily(body)
+        .catch(err => console.error(err));
     res.redirect('./?id=3');
 }
 exports.root = (req, res) => {
@@ -184,10 +198,21 @@ exports.scene = async (req, res, next) => {
     }
 }
 exports.choice = (req, res) => {
-    scene({ socket: req.socket }).catch(e => console.error(e));
-    renderParam.id = 'scene_choice';
+    // scene({ socket: req.socket }).catch(e => console.error(e));
+    renderParam.scene_select = true;
     res.redirect('../');
     // res.redirect('../../');
+}
+
+exports.postChoice = async (req, res) => {
+    const familyModel = new FamilyDao();
+    const latestFamily = await familyModel.latestFamily();
+    const sceneModel = new SceneModel();
+    await sceneModel.insertScene(latestFamily[0].id, req.body.type)
+        .catch(err => console.error(err));
+    renderParam.id = 'scene_choice';
+    renderParam.scene_select = undefined;
+    res.redirect('../');
 }
 exports.familyScene = (req, res) => {
     renderParam.is_family_scene = true;

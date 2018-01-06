@@ -15,12 +15,14 @@ const isSetting = (req, res, next) => {
 router.get('/', portalController.indexParam);
 router.get('/', portalController.index);
 router.get('/root', portalController.root);
+router.post('/create_family', portalController.postCreateFamily);
 const sceneRouter = express.Router();
 sceneRouter.get('/', isSetting);
 // sceneRouter.get('/*', isSetting);
 
 sceneRouter.get('/', portalController.scene);
 sceneRouter.get('/choice', portalController.choice);
+sceneRouter.post('/choice', portalController.postChoice);
 sceneRouter.get('/out', portalController.outScene);
 sceneRouter.get('/family', portalController.familyScene);
 router.use('/scene', sceneRouter);
