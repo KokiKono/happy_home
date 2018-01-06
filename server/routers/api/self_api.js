@@ -373,11 +373,13 @@ router.post('/event/animations', async (req, res) => {
 });
 
 router.post('/event/iot', (req, res) => {
+    console.warn('event/iot')
     const led = new Led(2);
     led.on();
-    led.setBrightness(led.MAX_BRIGHTNESS);
+    led.setBrightness(10);
     led.white();
     led.close();
+    res.sendStatus(200);
 })
 
 router.get('/awards', async (req, res, next) => {
