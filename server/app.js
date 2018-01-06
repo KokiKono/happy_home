@@ -11,6 +11,7 @@ import Watch from './watch/index';
 import familyList from './contorller/views/family_list';
 import presentation from './presentation/production';
 import mainRouter from './routers/main';
+import Led from './models/led';
 
 eventLogger.debug('boot');
 motionLogger.debug('boot');
@@ -53,6 +54,23 @@ app.use('/main', mainRouter);
 Socket.server.listen(config.server.port, config.server.url, () => {
     console.log(`happy home app mode is ${process.env.NODE_ENV} listening on http://${config.server.url}:${config.server.port}`);
 });
+
+// ライトの初期化
+let led = new Led(1);
+led.on();
+led.setBrightness(led.MAX_BRIGHTNESS);
+led.close();
+// 街灯
+led = new Led(2);
+led.on();
+led.off();
+led.close();
+// 屋根
+led = new Led(3);
+led.on();
+led.setBrightness(led.MAX_BRIGHTNESS);
+led.close();
+
 
 // うざいので、
 // presentation(app);
