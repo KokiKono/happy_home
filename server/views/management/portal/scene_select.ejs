@@ -1,10 +1,59 @@
-<form class="form" method="post" action="./scene/choice">
-    <input type="hidden" value="0" name="type">
-    <input type="submit" value="家族シーン">
-    <span class="gray">家族全員がいる一日</span>
-</form>
-<form class="form" method="post" action="./scene/choice">
-    <input type="hidden" value="1" name="type">
-    <input type="submit" value="留守シーン">
-    <span class="gray">お父さん以外が、３が日で帰郷している一日</span>
-</form>
+<style type="text/css">
+    .select {
+        width:100%;
+        height: 1040px;
+        overflow: hidden;
+
+    }
+
+    .select p {
+        font-size: 200%;
+        text-align: center;
+        margin-top: 0px;
+        border-radius: 5px;
+        padding: 20px 0;
+        border: 1px solid #fc8c84;
+        background: #FC8AA6;
+        color: #fff;
+    }
+
+    .select form button {
+        display: block;
+        border-radius: 5px;
+        width: 82%;
+        font-size: 182%;
+        padding: 150px 10px;
+        color: #fff;
+        text-align: center;
+        text-decoration: none;
+        margin: 60px auto;
+        background-color: #FF2C99;
+    }
+
+    .select form button:hover {
+        text-decoration: none;
+        background-color: #FF0a88;
+    }
+
+    .select .inai {
+        background: #405dca;
+    }
+
+    .select .inai:hover {
+        text-decoration: none;
+        background-color: #364ea5;
+    }
+
+</style>
+<div class="select">
+    <p>あなたはどっち？</p>
+    <form class="form" method="post" action="./scene/choice">
+        <input type="hidden" value="0" name="type">
+        <button>家族シーン<br/>家族全員がいる一日</button>
+    </form>
+    <form class="form" method="post" action="./scene/choice">
+        <input type="hidden" value="1" name="type">
+        <button class="inai">留守シーン<br/>お父さん以外が、３が日で帰郷している一日</button>
+
+    </form>
+</div>
