@@ -295,6 +295,13 @@
     </div>
     <div id="description">
         <div class="content">
+            <% if (typeof image == 'undefined') { %>
+            <img src="../../../public/portal_images/happy_home.png">
+            <% } else if (image == '') { %>
+            <img src="../../../public/portal_images/happy_home.png">
+            <% } else { %>
+            <img src="<%= image %>">
+            <% } %>
         </div>
         <div class="text">
             <h3 id="next">

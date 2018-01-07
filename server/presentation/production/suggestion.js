@@ -176,14 +176,34 @@ export default class suggestion {
                     }
                 }
                 // ライト
-                suggestionIds.light.forEach(() => {
+                suggestionIds.light.forEach((item) => {
                     // ライトのRGB or pinkで色変更処理
                     // 未検証部分
                     const led = new Led(1);
+                    const led3 =  new Led(3);
                     led.on();
                     led.setBrightness(led.MAX_BRIGHTNESS);
-                    led.pink();
+                    led3.on();
+                    led3.setBrightness(led3.MAX_BRIGHTNESS)
+                    switch (item.note) {
+                        case 'pink': {
+                            led.pink();
+                            led3.pink();
+                            break;
+                        }
+                        case 'white': {
+                            led.white();
+                            led3.white();
+                            break;
+                        }
+                        default: {
+                            led.night();
+                            led3.night();
+                            break;
+                        }
+                    }
                     led.close();
+                    led3.close();
                     // led.setColor();
                 });
                 // リフォーム
