@@ -32,9 +32,11 @@ const renderParam = {
     next_btn_href: '',
     emotion_id: 0,
     is_family_scene: false,
+    image: undefined,
 };
 exports.indexParam = async (req, res, next) => {
     renderParam.family_list = undefined;
+    renderParam.image = undefined;
     if (!req.param('id')) return next();
     const id = req.param('id');
     console.log(`id=${id}`);
@@ -73,7 +75,7 @@ exports.indexParam = async (req, res, next) => {
                     console.log(result.results);
                     const main = result.results.filter((element) => {
                         try {
-                            fs.statSync(path.join(__dirname, `../../views/public/images/${element.face_id}.jpg`));
+                            fs.statSync(path.join(__dirname, `../../views/public/images/${element.face_id}.png`));
                             return element;
                         } catch (er) {
                             return false;
@@ -133,6 +135,7 @@ exports.index = (req, res) => {
             renderParam.sentence = '先程撮った写真から顔写真を自動作成し顔写真に名前をつけましょう。';
             renderParam.next_btn = '撮った写真に名前をつける。';
             renderParam.next_btn_href = './?id=2';
+            renderParam.image = `http://${config.server.url}:8080/public/portal_images/create_family.png`;
             return res.render('management/portal/index', renderParam);
         }
         case 'create_family': {
@@ -140,6 +143,7 @@ exports.index = (req, res) => {
             renderParam.sentence = '家族情報の登録が終わったあとは、家族のシーンを選択します。';
             renderParam.next_btn = 'シーン選択へ';
             renderParam.next_btn_href = './scene/choice';
+            renderParam.image = `http://${config.server.url}:8080/public/portal_images/created_family.png`;
             return res.render('management/portal/index', renderParam);
         }
         case 'scene_choice': {
@@ -147,6 +151,7 @@ exports.index = (req, res) => {
             renderParam.sentence = 'では、選択したシーンを体験してみましょう。';
             renderParam.next_btn = '選択シーンへ';
             renderParam.next_btn_href = './scene';
+            renderParam.image = `http://${config.server.url}:8080/public/portal_images/happy_home.png`;
             return res.render('management/portal/index', renderParam);
         }
         case 'root': {
@@ -155,6 +160,7 @@ exports.index = (req, res) => {
                 '「シーン選択」を直接押してください。';
             renderParam.next_btn = '家族の再作成へ';
             renderParam.next_btn_href = './';
+            renderParam.image = `http://${config.server.url}:8080/public/portal_images/happy_home.png`;
             return res.render('management/portal/index', renderParam);
         }
         default: {
@@ -162,12 +168,14 @@ exports.index = (req, res) => {
             renderParam.sentence = '家族情報で重要な顔情報を撮影します。';
             renderParam.next_btn = '写真撮影に進む。';
             renderParam.next_btn_href = './?id=1';
+            renderParam.image = `http://${config.server.url}:8080/public/portal_images/create_family_presentation.png`;
             return res.render('management/portal/index', renderParam); // eslint-disable-line
         }
     }
 }
 
 exports.scene = async (req, res, next) => {
+    renderParam.image = undefined;
     const familyModel = new FamilyModel();
     const latestFamily = await familyModel.latestFamily()
         .catch(e => console.error(e));
@@ -184,6 +192,7 @@ exports.scene = async (req, res, next) => {
             'ここで、奥さんの今の感情を測定してみましょう。';
         renderParam.next_btn = '感情測定を開始する。';
         renderParam.next_btn_href = '../emotion?id=1';
+        renderParam.image = `http://${config.server.url}:8080/public/portal_images/emotion_scanning.png`;
         res.redirect('./scene/family');
     } else {
         renderParam.id = 'first';
@@ -194,12 +203,14 @@ exports.scene = async (req, res, next) => {
             '<br>まずは、帰宅しましょう。';
         renderParam.next_btn = '家にかえる。';
         renderParam.next_btn_href = '../animation/out/comeback';
+        renderParam.image = `http://${config.server.url}:8080/public/portal_images/happy_home.png`;
         res.redirect('./scene/out');
     }
 }
 exports.choice = (req, res) => {
     // scene({ socket: req.socket }).catch(e => console.error(e));
     renderParam.scene_select = true;
+    renderParam.image = `http://${config.server.url}:8080/public/portal_images/scene.png`;
     res.redirect('../');
     // res.redirect('../../');
 }
@@ -212,6 +223,7 @@ exports.postChoice = async (req, res) => {
         .catch(err => console.error(err));
     renderParam.id = 'scene_choice';
     renderParam.scene_select = undefined;
+    renderParam.image = undefined;
     res.redirect('../');
 }
 exports.familyScene = (req, res) => {
@@ -227,6 +239,7 @@ exports.emotion = async (req, res) => {
     const emotionCamera = new EmotionCamera();
     await emotionCamera.start({ socket: req.socket });
     emotionSocket({ socket: req.socket });
+    renderParam.image = `http://${config.server.url}:8080/public/portal_images/emotion_scanning.png`;
 
     renderParam.sentence_title = '感情読み取りが完了しました。';
     renderParam.sentence = 'Happy Home動作確認画面をご覧ください。<br>' +
@@ -251,12 +264,14 @@ exports.emotion = async (req, res) => {
                         'その様子を見てみましょう';
                     renderParam.next_btn = '晩御飯の様子を見る。';
                     renderParam.next_btn_href = '../animation/out/dinner';
+                    renderParam.image = `http://${config.server.url}:8080/public/portal_images/happy_home.png`;
                 }
                 break;
             }
             case '2': {
                 renderParam.sentence += '旦那さんの帰りを待っている家族の元に帰りましょう。'
                 renderParam.next_btn = '家にかえる。';
+                renderParam.image = `http://${config.server.url}:8080/public/portal_images/happy_home.png`;
                 renderParam.next_btn_href = '../animation/home_comeback?types[]=light';
                 break;
             }
@@ -267,6 +282,7 @@ exports.emotion = async (req, res) => {
 }
 
 exports.homeAnimation = async (req, res) => {
+    renderParam.image = undefined;
     const result = await homeAnimationChoice().catch(e => console.error(e));
     const animation = new utilAnimation();
     animation.start({ socket: req.socket });
@@ -278,6 +294,7 @@ exports.homeAnimation = async (req, res) => {
         '左のフロー図に、分岐結果がピンク色でマークされています。<br>' +
         'Happy Homeは家族の愛を深めるには、お母さんが重要な役割を担っていると考えています。<br>' +
         'その為、怒っている場合は機嫌が直る提案を考え、喜びの場合はさらに幸せになるように提案します。';
+    renderParam.image = `http://${config.server.url}:8080/public/portal_images/suggestion.png`;
     renderParam.next_btn = '提案を開始する。';
     renderParam.next_btn_href = '../suggestion?types[]=mobile';
     console.info(renderParam)
@@ -285,6 +302,7 @@ exports.homeAnimation = async (req, res) => {
 }
 
 exports.suggestionStart = async (req, res) => {
+    renderParam.image = undefined;
     await beginAnimation.beginSuggestion();
     const animation = new utilAnimation();
     animation.start({ socket: req.socket });
@@ -298,12 +316,14 @@ exports.suggestionStart = async (req, res) => {
             'Happy Homeが提案した内容を確認してみましょう。<br>';
         renderParam.next_btn = '提案内容を確認する。';
         renderParam.next_btn_href = '../animation/mobile';
+        renderParam.image = `http://${config.server.url}:8080/public/portal_images/suggestion.png`;
     } else {
         renderParam.sentence_title = '提案処理が完了しました。';
         renderParam.sentence = '今回の提案は家族が家の中にいるということで、<br>' +
             '家の中からできる提案のみに絞っています。<br>' +
             'Happy Homeが提案した結果の感情読み取りを開始する。';
         renderParam.next_btn = '感情読み取りを開始する。';
+        renderParam.image = `http://${config.server.url}:8080/public/portal_images/suggestion.png`;
         renderParam.next_btn_href = '../emotion';
     }
     if (renderParam.id.indexOf('comeback_animation') >= 0) {
@@ -311,6 +331,7 @@ exports.suggestionStart = async (req, res) => {
             '家の中からできる提案のみに絞っています。<br>' +
             'Happy Homeが提案した結果の感情読み取りを開始する。';
         renderParam.next_btn = '感情読み取りを開始する。';
+        renderParam.image = `http://${config.server.url}:8080/public/portal_images/suggestion.png`;
         renderParam.next_btn_href = `../emotion?id=${renderParam.id}-end`;
     }
     if (renderParam.is_family_scene === false) {
@@ -319,6 +340,7 @@ exports.suggestionStart = async (req, res) => {
             '家に一人でいるお父さんに対してできる提案に絞っています。' +
             'Happy Homeが提案した結果を確認したあとは、お父さんの感情を読み取ってみましょう。';
         renderParam.next_btn = '感情読み取りを開始する。';
+        renderParam.image = `http://${config.server.url}:8080/public/portal_images/suggestion.png`;
         renderParam.next_btn_href = `../emotion?id=${renderParam.id}-end`;
     }
     res.redirect(req.header('referer'));
@@ -337,6 +359,7 @@ exports.suggestionHome = async (req, res) => {
         '家の中からできる提案のみに絞っています。<br>' +
         'Happy Homeが提案した結果の感情読み取りを開始する。';
     renderParam.next_btn = '感情読み取りを開始する。';
+    renderParam.image = `http://${config.server.url}:8080/public/portal_images/suggestion.png`;
     renderParam.next_btn_href = `../emotion?id=${renderParam.emotion_id}`
     res.redirect(req.header('referer'));
 }
@@ -356,6 +379,7 @@ exports.mobileAnimation = async (req, res) => {
         '旦那さんは通知内容を確認し、家族が幸せになるように頑張って行動してみましょう。<br>' +
         '提案内容を実行したあとは、家族の感情をもう一度測定し、旦那さんの頑張りが家族に反映されたかを感情測定してみましょう。';
     renderParam.next_btn = '感情測定を行う。';
+    renderParam.image = `http://${config.server.url}:8080/public/portal_images/mobile.png`;
     renderParam.next_btn_href = '../emotion?id=2';
     res.redirect(req.header('referer'));
 }
@@ -379,6 +403,7 @@ exports.homeComebackAnimation = async (req, res) => {
         }
     }
     renderParam.id = renderParam.id.replace('mobile_animation', 'home_comeback_animation');
+    renderParam.image = `http://${config.server.url}:8080/public/portal_images/happy_home.png`;
     renderParam.sentence_title = '家族の様子は屋根ライトで確認できましたか？';
     renderParam.sentence = 'ピンク色なら家族が幸せな雰囲気だということです。<br>' +
         'Happy Homeは家にいる家族の様子を観察し、何か提案がある場合は<br>' +
