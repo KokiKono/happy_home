@@ -28,6 +28,7 @@
     "ejs": "2.5.7",
     "express": "4.16.2",
     "express-fileupload": "^0.3.0",
+    "https": "^1.0.0",
     "jsonwebtoken": "8.1.0",
     "log4js": "2.3.12",
     "moment": "2.19.1",

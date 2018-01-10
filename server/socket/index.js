@@ -1,6 +1,8 @@
 import http from 'http';
+import https from 'https';
 import socketIo from 'socket.io';
 import fs from 'fs';
+import * as path from 'path';
 import Watch from '../watch/index';
 
 const ioEvent = function (io) {
@@ -81,7 +83,11 @@ const ioEvent = function (io) {
 
 const init = function (app) {
 
-    const server = http.Server(app);
+    // const server = http.Server(app);
+    const server = https.createServer({
+        pfx: fs.readFileSync(path.join(__dirname, '../happy_home.pfx')),
+        passphrase: 'B61747641',
+    }, app);
     const io = socketIo(server);
     // const watch = new Watch(io);
     ioEvent(io);
