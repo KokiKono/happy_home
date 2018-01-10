@@ -81,9 +81,9 @@
     var i = 0;
     family_list.forEach((value, key) => {
     %>
-    <% if (i % 2 == 0) { %>
-    <div class="family_list">
-        <% } %>
+    <!--<% if (i % 2 == 0) { %>-->
+    <!--<div class="family_list">-->
+        <!--<% } %>-->
         <div class="recode">
             <input type="hidden" name="face_id" value="<%= value.face_id %>">
 
@@ -104,7 +104,7 @@
             </div>
         </div>
         <% if (i % 2 == 1) { %>
-    </div>
+    <!--</div>-->
     <% } %>
 
     <%
@@ -124,9 +124,9 @@
                 '娘': 'orange'
             }
             $('.face img').css('border', `5px solid ${typeColor[$(this).val()]}`);
-            if($(name_id).val() == '') {
+//            if($(name_id).val() == '') {
                 $(name_id).val($(this).val());
-            }
+//            }
         });
     })
 </script>

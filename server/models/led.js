@@ -114,6 +114,9 @@ export default class LedModel {
     pink() {
         this.light.sendCommands(commands.rgbw.rgb(this.zone, COLOR_PINK[0], COLOR_PINK[1], COLOR_PINK[2]));
     }
+    blue() {
+        this.light.sendCommands(commands.rgbw.rgb(this.zone, 0, 0, 0xff));
+    }
 
     close() {
         this.light.close().then(() => {

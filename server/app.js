@@ -12,6 +12,7 @@ import familyList from './contorller/views/family_list';
 import presentation from './presentation/production';
 import mainRouter from './routers/main';
 import Led from './models/led';
+import * as LedConst from './models/led';
 
 eventLogger.debug('boot');
 motionLogger.debug('boot');
@@ -41,6 +42,10 @@ app.get('/', (req, res) => {
     res.send('Hello World hoge');
 });
 
+app.use('/api', (req, res, next) => {
+    req.socket = Socket;
+    next();
+})
 app.use('/api', apiRouter);
 
 app.use('/management', (req, res, next) => {
@@ -58,17 +63,13 @@ Socket.server.listen(config.server.port, config.server.url, () => {
 // ライトの初期化
 let led = new Led(1);
 led.on();
-led.setBrightness(led.MAX_BRIGHTNESS);
+led.setBrightness(LedConst.MAX_BRIGHTNESS);
+led.setPreset(LedConst.PRESET_COLOR_GRADATION);
+
 led.close();
 // 街灯
 led = new Led(2);
-led.on();
 led.off();
-led.close();
-// 屋根
-led = new Led(3);
-led.on();
-led.setBrightness(led.MAX_BRIGHTNESS);
 led.close();
 
 

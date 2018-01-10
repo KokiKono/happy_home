@@ -3,6 +3,8 @@
  */
 import FamilyModel from '../../models/family_list';
 import configFile from '../../../config.json';
+import * as fs from 'fs';
+import * as path from 'path';
 
 const config = configFile[process.env.NODE_ENV];
 
@@ -14,8 +16,20 @@ exports.familyList = (req, res, next) => {
     familyListModel.select()
         .then((result) => {
             console.log(result.results);
+            const main = result.results.filter((element) => {
+                try {
+                    fs.statSync(path.join(__dirname, `../../views/public/images/${element.face_id}.jpg`));
+                    return element;
+                } catch (er) {
+                    return false;
+                }
+            });
+            console
+                .warn(main);
+            // TODO 画像がない場合はスルー
+
             res.render('main/family_list', {
-                main: result.results,
+                main,
                 api_url: `http://${config.server.url}:${config.server.port}/api/family_list`,
             });
         })

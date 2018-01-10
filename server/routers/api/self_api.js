@@ -376,10 +376,12 @@ router.post('/event/iot', (req, res) => {
     const led = new Led(2);
     led.on();
     if (req.body.content === 'open') {
+        req.socket.io.emit('voice', 'おかえりなさい');
         led.setBrightness(10);
         led.white();
     }
     if (req.body.content === 'close') {
+        // req.socket.io.emit('voice', 'おかえりなさい');
         led.off();
     }
     led.close();
