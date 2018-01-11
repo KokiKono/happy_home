@@ -3,6 +3,10 @@
  */
 import * as path from 'path';
 import * as fs from 'fs';
+import multer from 'multer';
+import momentTimezone from 'moment-timezone';
+import moment from 'moment';
+
 import TmpFace from '../../presentation/models/tmpFace';
 import createFamily from '../../presentation/production/createFamily';
 import scene from '../../presentation/production/scene';
@@ -21,6 +25,8 @@ import FamilyListModel from '../../models/family_list';
 import configFile from '../../../config.json';
 import FamilyDao from '../../models/family';
 import SceneModel from '../../models/scene';
+import Emotion from '../../presentation/production/emotion';
+import CreateFamilyPresentation from '../../presentation/production/createFamilyPreparation';
 
 const config = configFile[process.env.NODE_ENV];
 
@@ -33,6 +39,7 @@ const renderParam = {
     emotion_id: 0,
     is_family_scene: false,
     image: undefined,
+    beginTime: moment(),
 };
 exports.indexParam = async (req, res, next) => {
     renderParam.family_list = undefined;
@@ -58,8 +65,8 @@ exports.indexParam = async (req, res, next) => {
             const tmpFace = new TmpFace();
             await tmpFace.deleteAll().catch(e => console.error(e));
             console.log('家族作成前準備');
-            const brawserCamera = new BrawserCamera();
-            await brawserCamera.start({socket: req.socket});
+            // const brawserCamera = new BrawserCamera();
+            // await brawserCamera.start({socket: req.socket});
             renderParam.id = 'create_family_preparation';
             return next();
         }
@@ -72,12 +79,14 @@ exports.indexParam = async (req, res, next) => {
             const familyListModel = new FamilyListModel();
             familyListModel.select()
                 .then((result) => {
+                console.warn('顔認証できた顔情報');
                     console.log(result.results);
                     const main = result.results.filter((element) => {
                         try {
-                            fs.statSync(path.join(__dirname, `../../views/public/images/${element.face_id}.png`));
+                            fs.statSync(path.join(__dirname, `../../views/public/images/${element.face_id}.jpg`));
                             return element;
                         } catch (er) {
+                            console.error(er)
                             return false;
                         }
                     });
@@ -236,9 +245,9 @@ exports.outScene = (req, res) => {
     res.render('management/portal/out_scene', renderParam);
 }
 exports.emotion = async (req, res) => {
-    const emotionCamera = new EmotionCamera();
-    await emotionCamera.start({ socket: req.socket });
-    emotionSocket({ socket: req.socket });
+    // const emotionCamera = new EmotionCamera();
+    // await emotionCamera.start({ socket: req.socket });
+    // emotionSocket({ socket: req.socket });
     renderParam.image = `http://${config.server.url}:8080/public/portal_images/emotion_scanning.png`;
 
     renderParam.sentence_title = '感情読み取りが完了しました。';
@@ -457,4 +466,67 @@ exports.outDinner = async (req, res) => {
     renderParam.next_btn_href = '../suggestion';
     console.info(renderParam)
     res.redirect(req.header('referer'));
+}
+
+exports.emotionStart = (req, res) => {
+    // 写真撮影の画面にレンダリング
+    // idをレンダリング
+}
+
+const storage = multer.diskStorage({
+    // ファイルの保存先を指定
+    destination: function (req, file, cb) {
+        console.log(path.join(__dirname, '../../views/public/images/'))
+        cb(null, path.join(__dirname, '../../views/public/images/'));
+        // cb(null, '/tmp/my-uploads');
+    },
+    // ファイル名を指定(オリジナルのファイル名を指定)
+    filename: function (req, file, cb) {
+        console.info(file)
+        // cb(null, file.fieldname + '-' + Date.now() + '.jpg');
+        cb(null, file.originalname);
+    },
+})
+const uploads = multer({ storage }).array('images[]', 10);
+const upload = multer({ storage }).single('image');
+exports.postUpload = (req, res, next) => {
+    if (!req.files) {
+        const err = new Error('files not found');
+        next(err);
+    }
+    if (!req.files.images) {
+        const err = new Error('images not found');
+        next(err);
+    }
+    req.files.images.forEach((image, index) => {
+        console.log('mv')
+        const timestamp = moment(momentTimezone().tz('Asia/Tokyo').format()).format('Y-M-d-HH-M-ss-sss');
+       image.mv(`${path.join(__dirname, '../../views/public/images/')}${timestamp}-${index}.jpg`);
+    });
+    res.sendStatus(200);
+}
+
+exports.updateBeginTime = () => {
+    const nowTime = momentTimezone().tz('Asia/Tokyo').format();
+    renderParam.beginTime = moment(nowTime);
+}
+
+exports.postEmotion = async (req, res) => {
+    const emotion = new Emotion(10, path.join(__dirname, '../../views/public/images/'));
+    await emotion.start(renderParam.beginTime);
+    req.socket.io.emit('url', 'http://' + config.server.url + ':8080/animation/emotion_scaning_finish/index.html');
+    emotionSocket({ socket: req.socket });
+    res.redirect(`../emotion?id=${req.param.id}`);
+}
+
+exports.createFamilyPresentation = (req, res) => {
+    // 写真撮影の画面にレンダリング
+    // idをレンダリング
+    res.render('management/portal/test', { action: './post_create_family?id=1' });
+}
+exports.postCreateFamilyPresentation = async (req, res) => {
+    const createFamilyPreparation = new CreateFamilyPresentation(10, path.join(__dirname, '../../views/public/images/'));
+    await createFamilyPreparation.start(renderParam.beginTime).catch(err => console.log(err));
+    req.socket.io.emit('url', 'http://' + this.config.server.url + ':8080/animation/create_family_finish/index.html');
+    res.redirect(`../?id=${req.param.id}`);
 }
