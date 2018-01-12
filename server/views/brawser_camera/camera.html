@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>camera</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="./js/test_mirror.js"></script>
+
+    <link rel="stylesheet" href="./css/style.css">
+
+</head>
+<body>
+
+    <div class="demo-frame">
+        <div class="demo-container">
+            <!-- <video id="video" preload autoplay loop muted></video>
+            <canvas id="canvas"></canvas> -->
+            <video width="1920" height="1080" src="" id="video" preload autoplay loop muted></video>
+            <!-- <video id="video" style="-webkit-transform: scaleX(-1);" width="1920" height="1080" autoplay="1" ></video> -->
+            <canvas id="canvas" width="640" height="480" style="display: inline;"></canvas>
+        </div>
+        <button class="photo" id="photo" type="submit">撮影</button>
+    </div>
+
+    <script src="./js/test_photo.js"></script>
+</body>
+</html>
