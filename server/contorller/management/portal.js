@@ -61,11 +61,7 @@ exports.indexParam = async (req, res, next) => {
         }
     } else if (id === '1') {
         {
-            const tmpFace = new TmpFace();
-            await tmpFace.deleteAll().catch(e => console.error(e));
             console.log('家族作成前準備');
-            // const brawserCamera = new BrawserCamera();
-            // await brawserCamera.start({socket: req.socket});
             renderParam.id = 'create_family_preparation';
             return next();
         }
@@ -175,7 +171,7 @@ exports.index = (req, res) => {
             renderParam.sentence_title = 'はじめは、家族情報の作成を行います。';
             renderParam.sentence = '家族情報で重要な顔情報を撮影します。';
             renderParam.next_btn = '写真撮影に進む。';
-            renderParam.next_btn_href = './?id=1';
+            renderParam.next_btn_href = './create_family_presentation';
             renderParam.image = `http://${config.server.url}:8080/public/portal_images/create_family_presentation.png`;
             return res.render('management/portal/index', renderParam); // eslint-disable-line
         }
@@ -500,11 +496,17 @@ exports.postEmotion = async (req, res) => {
 exports.createFamilyPresentation = (req, res) => {
     // 写真撮影の画面にレンダリング
     // idをレンダリング
-    res.render('management/portal/test', { action: './post_create_family?id=1' });
+    res.render(
+        'brawser_camera/create_family_camera2',
+        {
+            action: './post_create_family?id=1',
+            url: `https://${config.server.url}:5000/management/portal/post_create_family_presentation?id=1`,
+        },
+    );
 }
 exports.postCreateFamilyPresentation = async (req, res) => {
     const createFamilyPreparation = new CreateFamilyPresentation(10, path.join(__dirname, '../../views/public/images/'));
     await createFamilyPreparation.start(renderParam.beginTime).catch(err => console.log(err));
-    req.socket.io.emit('url', 'http://' + this.config.server.url + ':8080/animation/create_family_finish/index.html');
-    res.redirect(`../?id=${req.param.id}`);
+    req.socket.io.emit('url', 'http://' + config.server.url + ':8080/animation/create_family_finish/index.html');
+    res.redirect(`./?id=${req.param('id')}`);
 }

@@ -16,7 +16,7 @@ const isSetting = (req, res, next) => {
 router.get('/', portalController.indexParam);
 router.get('/', portalController.index);
 router.get('/root', portalController.root);
-router.post('/create_family', portalController.postCreateFamily);
+// router.post('/create_family', portalController.postCreateFamily);
 const sceneRouter = express.Router();
 sceneRouter.get('/', isSetting);
 // sceneRouter.get('/*', isSetting);
@@ -44,13 +44,13 @@ router.get('/hoge', (req, res) => {
     res.sendStatus(200)
 })
 
-router.get('/create_family', portalController.createFamilyPresentation);
+router.get('/create_family_presentation', portalController.createFamilyPresentation);
 router.post('/post_create_family', expressFileUplpad());
 router.post('/post_create_family', (req, res, next) => {
     portalController.updateBeginTime();
     portalController.postUpload(req, res, next);
 });
-router.post('/post_create_family', portalController.postCreateFamilyPresentation);
+router.get('/post_create_family_presentation', portalController.postCreateFamilyPresentation);
 
 router.get('/emotion_start', portalController.emotionStart);
 router.post('/post_emotion_start', expressFileUplpad());
