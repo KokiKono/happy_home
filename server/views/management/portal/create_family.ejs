@@ -12,6 +12,10 @@
         overflow: auto;
     }
 
+    .family_list::-webkit-scrollbar{
+        display:none;
+    }
+
     .recode {
         clear: both;
         display: block;
@@ -74,14 +78,25 @@
         background: #364ea5;
     }
 
+    .test {
+        width: 200px;
+        height:200px;
+        background-color: #ff2a00;
+        display: block;
+        border-radius: 3px;
+        float: left;
+    }
+
 </style>
 <form method="post" action="./create_family">
+    <div class="family_list">
     <!-- 家族作画面のレンダリング -->
     <%
     var i = 0;
     family_list.forEach((value, key) => {
     %>
     <!--<% if (i % 2 == 0) { %>-->
+        <%# for(var n = 0; n <= 10; n++) {%>
     <!--<div class="family_list">-->
         <!--<% } %>-->
         <div class="recode">
@@ -89,6 +104,7 @@
 
             <div class="image">
                 <img src="../../public/images/<%= value.face_id %>.jpg" alt="" class="face_img" width="200" height="200">
+                <!--<span class="test"></span>-->
             </div>
             <div class="input">
                 <select name="type" class="form-control select" id="type<%= i %>">
@@ -103,6 +119,7 @@
 
             </div>
         </div>
+        <!--<%#}%>-->
         <% if (i % 2 == 1) { %>
     <!--</div>-->
     <% } %>
@@ -111,7 +128,9 @@
         i++;
     });
     %>
+    </div>
     <input type='submit' id="send" class="btn" value="送信">
+
 </form>
 <script type="text/javascript">
     $(function(){
