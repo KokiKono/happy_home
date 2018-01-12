@@ -505,6 +505,8 @@ exports.createFamilyPresentation = (req, res) => {
     );
 }
 exports.postCreateFamilyPresentation = async (req, res) => {
+    const tmpFaceDao = new TmpFace();
+    await tmpFaceDao.deleteAll();
     const createFamilyPreparation = new CreateFamilyPresentation(10, path.join(__dirname, '../../views/public/images/'));
     await createFamilyPreparation.start(renderParam.beginTime).catch(err => console.log(err));
     req.socket.io.emit('url', 'http://' + config.server.url + ':8080/animation/create_family_finish/index.html');
