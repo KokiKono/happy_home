@@ -1,6 +1,9 @@
 import express from 'express';
 import morgan from 'morgan';
 import * as bodyParser from 'body-parser';
+import https from 'https';
+import * as path from 'path';
+import * as fs from 'fs';
 
 import { eventLogger, motionLogger, consoleLogger } from './log';
 import configFile from '../config.json';
@@ -56,9 +59,16 @@ app.use('/management', managementRouter);
 
 app.use('/main', mainRouter);
 
+const sslServer = https.createServer({
+    pfx: fs.readFileSync(path.join(__dirname, './happy_home.pfx')),
+    passphrase: 'B61747641',
+}, app);
+sslServer.listen(5000);
+
 Socket.server.listen(config.server.port, config.server.url, () => {
-    console.log(`happy home app mode is ${process.env.NODE_ENV} listening on http://${config.server.url}:${config.server.port}`);
+    console.log(`happy home app mode is ${process.env.NODE_ENV} listening on https://${config.server.url}:${config.server.port}`);
 });
+
 
 // ライトの初期化
 let led = new Led(1);
