@@ -3,7 +3,6 @@
  */
 import * as path from 'path';
 import * as fs from 'fs';
-import multer from 'multer';
 import momentTimezone from 'moment-timezone';
 import moment from 'moment';
 
@@ -473,36 +472,15 @@ exports.emotionStart = (req, res) => {
     // idをレンダリング
 }
 
-const storage = multer.diskStorage({
-    // ファイルの保存先を指定
-    destination: function (req, file, cb) {
-        console.log(path.join(__dirname, '../../views/public/images/'))
-        cb(null, path.join(__dirname, '../../views/public/images/'));
-        // cb(null, '/tmp/my-uploads');
-    },
-    // ファイル名を指定(オリジナルのファイル名を指定)
-    filename: function (req, file, cb) {
-        console.info(file)
-        // cb(null, file.fieldname + '-' + Date.now() + '.jpg');
-        cb(null, file.originalname);
-    },
-})
-const uploads = multer({ storage }).array('images[]', 10);
-const upload = multer({ storage }).single('image');
 exports.postUpload = (req, res, next) => {
     if (!req.files) {
         const err = new Error('files not found');
         next(err);
     }
-    if (!req.files.images) {
-        const err = new Error('images not found');
-        next(err);
-    }
-    req.files.images.forEach((image, index) => {
-        console.log('mv')
+    for (let count = 0; count < 10; count += 1) {
         const timestamp = moment(momentTimezone().tz('Asia/Tokyo').format()).format('Y-M-d-HH-M-ss-sss');
-       image.mv(`${path.join(__dirname, '../../views/public/images/')}${timestamp}-${index}.jpg`);
-    });
+        req.files[`images${count}`].mv(`${path.join(__dirname, '../../views/public/images/')}${timestamp}-${count}.jpg`);
+    }
     res.sendStatus(200);
 }
 

@@ -43,11 +43,7 @@ router.get('/hoge', (req, res) => {
     req.socket.io.emit('url', 'http://172.20.10.2:8080/animation/emotion_scaning_finish/index.html');
     res.sendStatus(200)
 })
-// router.post('/image/upload', expressFileUplpad);
-router.post('/image/upload', portalController.postUpload);
-router.post('/image/upload', (req, res) => {
-    res.sendStatus(200);
-});
+
 router.get('/create_family', portalController.createFamilyPresentation);
 router.post('/post_create_family', expressFileUplpad());
 router.post('/post_create_family', (req, res, next) => {
@@ -55,6 +51,14 @@ router.post('/post_create_family', (req, res, next) => {
     portalController.postUpload(req, res, next);
 });
 router.post('/post_create_family', portalController.postCreateFamilyPresentation);
+
+router.get('/emotion_start', portalController.emotionStart);
+router.post('/post_emotion_start', expressFileUplpad());
+router.post('/post_emotion_start', (req, res, next) => {
+    portalController.updateBeginTime();
+    portalController.postUpload(req, res, next);
+});
+
 router.get('/suggestion', portalController.suggestionStart);
 
 export default router;
