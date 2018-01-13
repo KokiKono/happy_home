@@ -158,7 +158,15 @@
                 $(frame).empty();
                 $(frame).append(`<img height="${image.height * percentage}" width="${image.width * percentage}" src="${path}"/>`);
             });
-            $.text.change(data);
+            const emotionData = data.map(dataItem => {
+                return dataItem.map((emotionItem, index) => {
+                    if (index === 0) {
+                        return emotionItem[index];
+                    }
+                    return (emotionItem * 100).toFixed(3);
+                });
+            });
+            $.text.change(emotionData);
         });
 
         socket.on('graph update', (datas) => {
