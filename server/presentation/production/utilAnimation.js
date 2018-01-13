@@ -38,7 +38,7 @@ export default class utilAnimation {
         this.ANIMATION_HAPPINESS_HTML = '../../animation/a3_papaHappy/project.html';
 
         //単体
-        this.ANIMATION_COMMON_HTML = '../../animation/a4/project.html';
+        this.ANIMATION_COMMON_HTML = '../../animation/a2/project.html';
         this.ANIMATION_COMMON_EMOTION = '../../animation/emotion_scaning/index.html';
         this.ANIMATION_COMMON_SUGGESTION_LOAGING = '../../animation/suggestion_loading/index.html';
         this.ANIMATION_COMMON_CREATE_FAMILY = '../../animation/create_family/index.html';
