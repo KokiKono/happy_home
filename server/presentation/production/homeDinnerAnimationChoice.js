@@ -41,7 +41,6 @@ const animation = () => (
                 let mostEmotionKey = Object.keys(fatherEmotion.emotion)[0];
                 Object.keys(fatherEmotion.emotion).forEach((key) => {
                     if (mostEmotionKey === null) return false;
-                    console.info(mostEmotionKey, key)
                     if (fatherEmotion.emotion[mostEmotionKey] < fatherEmotion.emotion[key]) {
                         mostEmotionKey = key;
                     }
