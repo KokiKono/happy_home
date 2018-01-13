@@ -13,10 +13,11 @@ const isSetting = (req, res, next) => {
     next();
 };
 
+// router.use(portalController.routingHistory);
 router.get('/', portalController.indexParam);
 router.get('/', portalController.index);
 router.get('/root', portalController.root);
-// router.post('/create_family', portalController.postCreateFamily);
+router.post('/create_family', portalController.postCreateFamily);
 const sceneRouter = express.Router();
 sceneRouter.get('/', isSetting);
 // sceneRouter.get('/*', isSetting);
@@ -58,6 +59,7 @@ router.post('/post_emotion_start', (req, res, next) => {
     portalController.updateBeginTime();
     portalController.postUpload(req, res, next);
 });
+router.get('/post_emotion', portalController.postEmotion);
 
 router.get('/suggestion', portalController.suggestionStart);
 
