@@ -37,33 +37,47 @@ const animation = () => (
                 // 父の感情情報を見る。
                 const fatherEmotion = latestEmotionAVG
                     .find(element => element.face_id === fatherInfo.face_id);
-                if ((fatherEmotion.emotion.sadness) > 0.5) {
-                    console.log('父が寂しがっています。');
-                    // 父の留守寂しいを入れて終了
-                    await presentationModel
-                        .insertPattern(
-                            latestScene[0].id,
-                            ScenePatternContant.SCENE_ABSENCE_RONELY,
-                        );
-                    return resolve('father_ronely');
-                } else if (fatherEmotion.emotion.happiness > 0.5){
-                    console.log('父が幸せです。')
-                    // 父しあわせを入れて終了
-                    await presentationModel
-                        .insertPattern(
-                            latestScene[0].id,
-                            ScenePatternContant.SCENE_ABSENCE_HAPPINESS,
-                        );
-                    return resolve('father_happy');
-                } else {
-                    console.log('父が疲れてます。');
-                    // 父しあわせを入れて終了
-                    await presentationModel
-                        .insertPattern(
-                            latestScene[0].id,
-                            ScenePatternContant.SCENE_ABSENCE_TRIED,
-                        );
-                    return resolve('father_tried');
+                // 父の一番大きな感情を見る
+                let mostEmotionKey = Object.keys(fatherEmotion.emotion)[0];
+                Object.keys(fatherEmotion.emotion).forEach((key) => {
+                    if (mostEmotionKey === null) return false;
+                    console.info(mostEmotionKey, key)
+                    if (fatherEmotion.emotion[mostEmotionKey] < fatherEmotion.emotion[key]) {
+                        mostEmotionKey = key;
+                    }
+                    return true;
+                });
+                switch (mostEmotionKey) {
+                    case 'happiness': {
+                        console.log('父が幸せです。')
+                        // 父しあわせを入れて終了
+                        await presentationModel
+                            .insertPattern(
+                                latestScene[0].id,
+                                ScenePatternContant.SCENE_ABSENCE_HAPPINESS,
+                            );
+                        return resolve('father_happy');
+                    }
+                    case 'sadness': {
+                        console.log('父が寂しがっています。');
+                        // 父の留守寂しいを入れて終了
+                        await presentationModel
+                            .insertPattern(
+                                latestScene[0].id,
+                                ScenePatternContant.SCENE_ABSENCE_RONELY,
+                            );
+                        return resolve('father_ronely');
+                    }
+                    default: {
+                        console.log('父が疲れてます。');
+                        // 父疲れを入れて終了
+                        await presentationModel
+                            .insertPattern(
+                                latestScene[0].id,
+                                ScenePatternContant.SCENE_ABSENCE_TRIED,
+                            );
+                        return resolve('father_tried');
+                    }
                 }
             } else {
                 // 家族シーンでは、家族全員の感情を見て判断
