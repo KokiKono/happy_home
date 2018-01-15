@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>camera</title>
+
+    <script src='../../brawser_camera/js/tracking-min.js'></script>
+    <script src="../../brawser_camera/js/face-min.js"></script>
+
+    <link rel="stylesheet" href="../../brawser_camera/css/style.css">
+
+</head>
+<body>
+
+    <div class="demo-frame">
+        <div class="demo-container">
+            <video id="video" preload autoplay loop muted></video>
+            <canvas id="canvas"></canvas>
+        </div>
+        <div>
+            <span id="message"></span>
+        </div>
+    </div>
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="../../brawser_camera/js/canvas_squad.js"></script>
+    <script>
+        function send(formData) {
+            $.ajax({
+                type: "POST",
+                url: 'https://' + location.hostname + ':5000/management/portal/post_create_family?id=1',
+                data: formData,
+                contentType: false,
+                processData: false,
+                cache: false,
+            }).then(function() {
+//                    var message = '撮影が終了しました。';
+//                    document.getElementById("message").innerHTML = message;
+                    location.href = "<%= url %>";
+            });
+        }
+    </script>
+    <script src="../../brawser_camera/js/create_family_camera2.js"></script>
+</body>
+</html>
