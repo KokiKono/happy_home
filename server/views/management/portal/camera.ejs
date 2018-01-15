@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>camera</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="./js/test_mirror.js"></script>
+
+    <link rel="stylesheet" href="./css/style.css">
+
+</head>
+<body>
+
+    <div class="demo-frame">
+        <div class="demo-container">
+            <video width="1280" height="960" src="" id="video" preload autoplay loop muted></video>
+            <canvas id="canvas" width="1280" height="960" style="display: inline;"></canvas>
+        </div>
+        <button class="photo" id="photo" type="submit">撮影</button>
+    </div>
+    <script>
+        function send(formData) {
+            $.ajax({
+                type: "POST",
+                url: 'https://' + location.hostname + ':5000/management/portal/post_create_family?id=1',
+                data: formData,
+                contentType: false,
+                processData: false,
+                cache: false,
+            }).then(function() {
+                    location.href = "<%= url %>";
+            });
+        }
+    </script>
+    <script src="./js/test_photo.js"></script>
+</body>
+</html>
