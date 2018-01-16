@@ -1,27 +1,56 @@
 <!doctype html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>camera</title>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="./js/test_mirror.js"></script>
+  <meta charset="utf-8">
+  <title>tracking.js - face with camera</title>
 
-    <link rel="stylesheet" href="./css/style.css">
+  <script src="./js/tracking-min.js"></script>
+  <script src="./js/face-min.js"></script>
 
+  <style>
+  video, canvas {
+    margin-left: 230px;
+    margin-top: 120px;
+    /* position: absolute; */
+  }
+  </style>
 </head>
 <body>
+  <div class="demo-title">
+    <p><a href="http://trackingjs.com" target="_parent">tracking.js</a> － get user's webcam and detect faces</p>
+  </div>
 
-    <div class="demo-frame">
-        <div class="demo-container">
-            <!-- <video id="video" preload autoplay loop muted></video>
-            <canvas id="canvas"></canvas> -->
-            <video width="1920" height="1080" src="" id="video" preload autoplay loop muted></video>
-            <!-- <video id="video" style="-webkit-transform: scaleX(-1);" width="1920" height="1080" autoplay="1" ></video> -->
-            <canvas id="canvas" width="640" height="480" style="display: inline;"></canvas>
-        </div>
-        <button class="photo" id="photo" type="submit">撮影</button>
+  <div class="demo-frame">
+    <div class="demo-container">
+      <video id="video" width="320" height="240" preload autoplay loop muted></video>
+      <canvas id="canvas" width="320" height="240"></canvas>
     </div>
+  </div>
 
-    <script src="./js/test_photo.js"></script>
+  <script>
+    window.onload = function() {
+      var video = document.getElementById('video');
+      var canvas = document.getElementById('canvas');
+      var context = canvas.getContext('2d');
+      var tracker = new tracking.ObjectTracker('face');
+      tracker.setInitialScale(4);
+      tracker.setStepSize(2);
+      tracker.setEdgesDensity(0.1);
+      tracking.track('#video', tracker, { camera: true });
+      tracker.on('track', function(event) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        event.data.forEach(function(rect) {
+            console.log('test');
+          context.strokeStyle = '#a64ceb';
+          context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+          context.font = '11px Helvetica';
+          context.fillStyle = "#fff";
+          context.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
+          context.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
+        });
+      });
+    };
+  </script>
+
 </body>
 </html>
