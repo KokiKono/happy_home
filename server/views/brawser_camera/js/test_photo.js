@@ -3,57 +3,10 @@ $('#photo').click(function(){
     //シャッター音の準備
     var audio = new Audio('https://' + location.hostname + ':5000/brawser_camera/sound/Camera-shutter03-1.mp3');
 
-    //一瞬反転（戻る）が鏡像するソース
-    var video = document.getElementById("video"),
-    features = document.getElementById("canvas"),
-    features_ctx;
-
-    function loop () {
-        requestAnimationFrame( loop );
-
-        if ( video.readyState === video.HAVE_ENOUGH_DATA ) {
-
-            features_ctx.drawImage( video, 0, 0, 640, 480 );
-        }
-    }
-
-    function init ( video ) {
-        video.play();
-
-        features_ctx = features.getContext( "2d" );
-        // flip
-        features_ctx.translate( 640, 0 );
-        features_ctx.scale( -1, 1 );
-
-        loop();
-    }
-
-    // web cam access
-    navigator.getUserMedia(
-        { video: true },
-        function ( stream ) {
-
-            if ( typeof video.mozSrcObject !== "undefined" ) {
-                // moz
-                video.mozSrcObject = stream;
-            } else {
-                // others
-                video.src = ( window.URL && window.URL.createObjectURL( stream ) ) || stream;
-            }
-
-            // 初期処理
-            init( video );
-        },
-        function ( error ) {
-
-            console.log( error );
-        }
-    );
-
     //音をならす
-    audio.play();
+    // audio.play();
 
-    var count = 0;
+    var formData = new FormData();
 
     for (var j = 0; j < 10; j++) {
 
@@ -66,8 +19,8 @@ $('#photo').click(function(){
 
 
         //videoの縦幅横幅を取得
-        var w = 640;
-        var h = 480;
+        var w = 1280;
+        var h = 960;
 
         //同じサイズをcanvasに指定
         canvas.setAttribute("width", w);
@@ -94,24 +47,13 @@ $('#photo').click(function(){
         });
 
         //データをセット
-        var formData = new FormData();
-        formData.append('image' + j, blob);
-        
-        for(item of formData) console.log(item);
-        //非同期通信開始
-        // $.ajax({
-        //     type: "POST",
-        //     url: 'https://' + location.hostname + ':5000/api/image/upload',
-        //     data: formData,
-        //     contentType: false,
-        //     processData: false,
-        //     cache: false,
-        // }).then(function() {
-        //     if (count === 12) {
-        //         var message = '撮影が終了しました。';
-        //         document.getElementById("message").innerHTML = message;
-        //     }
-        // });
+        formData.append(`images${j}`, blob);
+
+        const headers = {
+            'Accept': 'application/json, */*',
+            'Content-Type': 'multipart/form-data'
+        }
+        send(formData);
     }
     var message = '撮影終了';
     document.getElementById("photo").innerHTML = message;

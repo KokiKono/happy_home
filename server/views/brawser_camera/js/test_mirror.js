@@ -8,7 +8,7 @@ window.onload = function() {
 
         if ( video.readyState === video.HAVE_ENOUGH_DATA ) {
 
-            features_ctx.drawImage( video, 0, 0, 640, 480 );
+            features_ctx.drawImage( video, 0, 0, 1280, 960 );
         }
     }
 
@@ -17,7 +17,7 @@ window.onload = function() {
 
         features_ctx = features.getContext( "2d" );
         // flip
-        features_ctx.translate( 640, 0 );
+        features_ctx.translate( 1280, 0 );
         features_ctx.scale( -1, 1 );
 
         loop();

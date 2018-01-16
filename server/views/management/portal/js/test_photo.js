@@ -1,10 +1,11 @@
 $('#photo').click(function(){
 
     //シャッター音の準備
-    var audio = new Audio('https://' + location.hostname + ':5000/brawser_camera/sound/Camera-shutter03-1.mp3');
+    // var audio = new Audio('https://' + location.hostname + ':5000/brawser_camera/sound/Camera-shutter03-1.mp3');
 
     //音をならす
     // audio.play();
+
 
     var formData = new FormData();
 
@@ -15,8 +16,6 @@ $('#photo').click(function(){
         var canvas = document.getElementById('canvas');
         //canvasの描画モードを2dに
         var ctx = canvas.getContext('2d');
-        var img = document.getElementById('img');
-
 
         //videoの縦幅横幅を取得
         var w = 1280;
@@ -27,7 +26,7 @@ $('#photo').click(function(){
         canvas.setAttribute("height", h);
 
         //canvasにコピー
-        // ctx.drawImage(video, 0, 0, w, h);
+        ctx.drawImage(video, 0, 0, w, h);
 
         //ここから画像のバイナリ化
         var can = canvas.toDataURL('image/jpeg');
@@ -46,6 +45,7 @@ $('#photo').click(function(){
             type: 'image/jpeg'
         });
 
+        console.log(blob);
         //データをセット
         formData.append(`images${j}`, blob);
 
@@ -53,8 +53,6 @@ $('#photo').click(function(){
             'Accept': 'application/json, */*',
             'Content-Type': 'multipart/form-data'
         }
-        send(formData);
     }
-    var message = '撮影終了';
-    document.getElementById("photo").innerHTML = message;
+    send(formData);
 });
