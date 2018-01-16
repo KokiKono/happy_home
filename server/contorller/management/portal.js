@@ -531,7 +531,7 @@ exports.createFamilyPresentation = (req, res) => {
     // 写真撮影の画面にレンダリング
     // idをレンダリング
     res.render(
-        'brawser_camera/create_family_camera2',
+        'management/portal/camera',
         {
             action: './post_create_family?id=1',
             url: `https://${config.server.url}:5000/management/portal/post_create_family_presentation?id=1`,

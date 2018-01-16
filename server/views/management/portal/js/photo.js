@@ -1,5 +1,10 @@
 $('#photo').click(function(){
+    $(function() {
+        var h = $(window).height();
 
+        $('.demo-frame').css('display','none');
+        $('#loader-bg ,#loader').height(h).css('display','block');
+    });
     //シャッター音の準備
     // var audio = new Audio('https://' + location.hostname + ':5000/brawser_camera/sound/Camera-shutter03-1.mp3');
 
