@@ -312,8 +312,6 @@ exports.homeAnimation = async (req, res) => {
     renderParam.id = result;
     renderParam.sentence_title = '家族の様子は確認できましたか？';
     renderParam.sentence = 'ここでは、お母さんの表情で喜んでいるか、怒っているかで分岐します。<br>' +
-        '（怒っている判定は、無表情、軽蔑、怒り）' +
-        '（喜び判定は幸せ値）<br>' +
         '左のフロー図に、分岐結果がピンク色でマークされています。<br>' +
         'Happy Homeは家族の愛を深めるには、お母さんが重要な役割を担っていると考えています。<br>' +
         'その為、怒っている場合は機嫌が直る提案を考え、喜びの場合はさらに幸せになるように提案します。';
