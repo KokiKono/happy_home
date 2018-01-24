@@ -505,7 +505,7 @@ exports.postUpload = (req, res, next) => {
         const err = new Error('files not found');
         next(err);
     }
-    for (let count = 0; count < 10; count += 1) {
+    for (let count = 0; count < 5; count += 1) {
         const timestamp = moment(momentTimezone().tz('Asia/Tokyo').format()).format('Y-M-d-HH-M-ss-sss');
         req.files[`images${count}`].mv(`${path.join(__dirname, '../../views/public/images/')}${timestamp}-${count}.jpg`);
     }

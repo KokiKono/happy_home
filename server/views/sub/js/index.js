@@ -57,7 +57,9 @@
                   // formatter: Math.round,
                   formatter(value, context) {
                       if (context.dataset.label !== '幸せ指数') {
-                          return `${context.dataset.label}\n${Math.round(value)}`;
+                          if(Math.round(value)  != 0) {
+                              return `${context.dataset.label}\n${Math.round(value)}`;
+                          }
                       }
                           return null;
                   },

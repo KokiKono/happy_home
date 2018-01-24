@@ -14,7 +14,7 @@ $('#photo').click(function(){
 
     var formData = new FormData();
 
-    for (var j = 0; j < 10; j++) {
+    for (var j = 0; j < 5; j++) {
 
         // if (localMediaStream) {
         //     console.log('ok');
@@ -23,8 +23,8 @@ $('#photo').click(function(){
         var ctx = canvas.getContext('2d');
 
         //videoの縦幅横幅を取得
-        var w = 1280;
-        var h = 960;
+        var w = 800;
+        var h = 600;
 
         //同じサイズをcanvasに指定
         canvas.setAttribute("width", w);

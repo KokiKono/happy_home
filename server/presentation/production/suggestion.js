@@ -186,6 +186,7 @@ export default class suggestion {
                     switch (item.note) {
                         case 'pink': {
                             led.pink();
+                            led.rhythmStrobo();
                             break;
                         }
                         case 'white': {
